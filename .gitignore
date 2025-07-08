@@ -61,3 +61,9 @@ out/
 
 ### VS Code ###
 .vscode/
+# Environment & secrets
+.env
+.env.local
+.env.development
+.env.production
+backend/src/main/resources/application-secret.properties
