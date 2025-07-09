@@ -110,7 +110,7 @@ const toast = useToast();
       
       toast({
   title: "Email sent! 📧",
-  description: "Check your inbox for the reset link.",
+  description: "Check your inbox to get verification code.",
   status: "success",
   duration: 5000,
   isClosable: true,
@@ -130,12 +130,12 @@ const toast = useToast();
 
   return (
     <Box
-      minH="100vh"
+      // minH="100vh"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      px={4}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      // px={4}
+      // bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Box
         w="full"

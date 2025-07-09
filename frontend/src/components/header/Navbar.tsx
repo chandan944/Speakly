@@ -32,7 +32,7 @@ const Navbar = () => {
         display="flex"
         alignItems="center"
         gap={2}
-        fontFamily="'Poppins', sans-serif" // or 'Inter', 'DM Sans', etc.
+        fontFamily="'Pacifico', sans-serif" // or 'Inter', 'DM Sans', etc.
         fontWeight="bold"
       >
         <Image
@@ -47,9 +47,10 @@ const Navbar = () => {
 
       <Spacer />
       <IconButton
+       pr={2}
         aria-label="Toggle theme"
         onClick={toggleColorMode}
-        icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        icon={colorMode === "light" ? <MoonIcon color={"black"}/> : <SunIcon color={"orange"}/>}
         variant="ghost"
       />
       <MyProfile />

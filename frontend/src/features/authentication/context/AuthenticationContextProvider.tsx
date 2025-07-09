@@ -9,6 +9,7 @@ import {
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { request } from "../../../utils/api";
 import { LoadingSpinner } from "../../../components/loader/LoadingSpinner";
+import { useToast } from "@chakra-ui/react";
 
 interface AuthenticationResponse {
   token: string;
@@ -47,7 +48,7 @@ export function AuthenticationContextProvider() {
   const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
+ const toast = useToast();
   const isOnAuthPage =
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
@@ -99,6 +100,10 @@ export function AuthenticationContextProvider() {
 
   const logout = async () => {
     localStorage.removeItem("token");
+       toast({
+            title: `${user?.firstName} logout successfully.`,
+            status: "success",
+          });
     setUser(null);
   };
 

@@ -74,12 +74,12 @@ const Login = () => {
 
   return (
     <Box
-      minH="100vh"
+      // minH="100vh"
       display="flex"
       justifyContent="center"
       alignItems="center"
-      bg={useColorModeValue("gray.100", "gray.900")}
-      px={4}
+      // bg={useColorModeValue("gray.100", "gray.900")}
+      // px={4}
     >
       <Box
         w="full"
@@ -139,7 +139,8 @@ const Login = () => {
               />
             </FormControl>
 
-            <FormControl>
+<Box>
+              <FormControl>
               <FormLabel>Password</FormLabel>
               <Input
                 name="password"
@@ -152,6 +153,7 @@ const Login = () => {
             <Link to="/authentication/request-password-reset">
               <Text className="text-green-600 font-bold">Forget Password?</Text>
             </Link>
+</Box>
             {errorMessage && <p className="text-red-700">{errorMessage}</p>}
             <Button colorScheme="green" mt={4} type="submit" w="full">
               {isLoading ? "Logging in..." : "Sign in"}

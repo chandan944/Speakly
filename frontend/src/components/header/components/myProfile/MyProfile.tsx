@@ -7,7 +7,11 @@ import {
   Text,
   VStack,
   useOutsideClick,
+
+  useColorMode,
+  
 } from "@chakra-ui/react";
+
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../../../features/authentication/context/AuthenticationContextProvider";
@@ -17,7 +21,7 @@ export function MyProfile() {
   const navigate = useNavigate();
   const ref = useRef(null);
   const [open, setOpen] = useState(false);
-
+  const { colorMode } = useColorMode();
   useOutsideClick({
     ref,
     handler: () => setOpen(false),
@@ -39,10 +43,13 @@ export function MyProfile() {
         cursor="pointer"
         onClick={toggleDropdown}
         pr={4}
-        gap={2}
+        gap={1}
+       
+        
+        
       >
         <Avatar size="sm" name={user?.firstName} src={avatarUrl} />
-        <Text fontWeight="medium">
+        <Text size={"10px"}>
           {user?.firstName} {user?.lastName?.charAt(0)}.
         </Text>
       </Flex>
@@ -50,14 +57,17 @@ export function MyProfile() {
       {/* ⬇️ Dropdown Menu */}
       {open && (
         <Box
-          position="absolute"
+          bg={colorMode === "light" ? "whiteAlpha.900" : "gray.900"}
+          color={colorMode === "light" ? "gray.900" : "whiteAlpha.900"}
+           boxShadow="md"
+          borderBottom="1px solid"
+                   position="absolute"
           top="3.5rem"
           right="0"
-          bg="white"
-          border="1px solid"
-          borderColor="gray.200"
+           border="1px solid"
+          
           borderRadius="md"
-          boxShadow="md"
+          
           w="72"
           zIndex="10"
           p={4}
@@ -65,7 +75,7 @@ export function MyProfile() {
           <Flex align="center" gap={4} mb={4}>
             <Avatar size="lg" name={user?.firstName} src={avatarUrl} />
             <Box>
-              <Text fontWeight="bold">
+              <Text>
                 {user?.firstName} {user?.lastName}
               </Text>
               <Text fontSize="sm" color="gray.500">
@@ -79,8 +89,7 @@ export function MyProfile() {
           <VStack align="stretch" spacing={2}>
             <Button
               size="sm"
-              variant="outline" 
-              
+              variant="outline"
               onClick={() => {
                 setOpen(false);
                 navigate(`/profile/${user?.id}`);

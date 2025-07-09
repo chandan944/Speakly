@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuthentication } from "../features/authentication/context/AuthenticationContextProvider";
+import { useToast } from "@chakra-ui/react";
 
 
 const GOOGLE_OAUTH2_CLIENT_ID = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
@@ -16,7 +17,7 @@ export function useOauth(page: "login" | "signup") {
   const error = searchParams.get("error");
   const [isOauthInProgress, setIsOauthInProgress] = useState(code !== null || error !== null);
   const [oauthError, setOauthError] = useState("");
-
+  const toast = useToast();
   useEffect(() => {
     async function fetchData() {
       if (error) {
@@ -43,14 +44,18 @@ export function useOauth(page: "login" | "signup") {
 
       try {
         await ouathLogin(code, page);
-
+        toast({
+          title: `${page} Successfully`,
+          status: "success",
+        })
         // setTimeout to see the loading spinner
         setTimeout(() => {
           setIsOauthInProgress(false);
           setSearchParams({});
           console.log("destination", destination);
           navigate(destination || "/");
-        }, 3000);
+        }, 1000);
+
       } catch (error) {
         if (error instanceof Error) {
           setOauthError(error.message);
@@ -62,7 +67,7 @@ export function useOauth(page: "login" | "signup") {
       }
     }
     fetchData();
-  }, [code, error, navigate, ouathLogin, page, setSearchParams, state]);
+  }, [code, error, navigate, ouathLogin, page, setSearchParams, state, toast]);
 
   return {
     isOauthInProgress,

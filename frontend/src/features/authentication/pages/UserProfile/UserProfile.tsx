@@ -59,6 +59,7 @@ function UserProfile() {
         if (updatedUser.profileComplete) {
           toast({
             title: "Profile Completed Successfuly.",
+            status: "success",
           });
           navigate("/");
         } else {

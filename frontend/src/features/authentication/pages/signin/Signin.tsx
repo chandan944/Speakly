@@ -64,12 +64,12 @@ const toast = useToast();
 
   return (
     <Box
-      minH="100vh"
+      // minH="100vh"
       display="flex"
       justifyContent="center"
       alignItems="center"
-      bg={useColorModeValue("gray.100", "gray.900")}
-      px={4}
+      // bg={useColorModeValue("gray.100", "gray.900")}
+      // px={4}
     >
       <Box
         w="full"
