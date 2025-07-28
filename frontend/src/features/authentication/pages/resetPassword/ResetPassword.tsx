@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Heading,
   Text,
   VStack,
@@ -10,6 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CustomInput } from "../../../../components/input/CustomInput";
 import { CustomButton } from "../../../../components/button/CustomButton";
+import { MdOutlinePassword, MdPassword } from "react-icons/md";
 
 function ResetPassword() {
   const [emailSent, setEmailSent] = useState(false);
@@ -81,14 +83,16 @@ const toast = useToast();
 
   return (
     <Box
-      minH="100vh"
+      minH="60vh"
       display="flex"
       alignItems="center"
       justifyContent="center"
       bg={useColorModeValue("gray.50", "gray.900")}
       px={4}
+      
     >
       <Box
+      gap={10}
         w="full"
         maxW="md"
         p={8}
@@ -97,7 +101,8 @@ const toast = useToast();
         bg={useColorModeValue("white", "gray.800")}
       >
         <Heading mb={4} textAlign="center" fontSize="2xl">
-          🔐 Reset Password
+        <Flex gap={3}>  <MdOutlinePassword/>
+          <Text>Reset Password</Text></Flex>
         </Heading>
 
         {!emailSent ? (

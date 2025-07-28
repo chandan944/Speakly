@@ -34,7 +34,7 @@ export function AuthenticationLayout() {
         <Stack spacing={4} align="center" fontSize="sm">
           <Flex align="center" gap={2}>
             <Image src={logo}  height="20px" />
-            <Text>© 2024 Speakly</Text>
+            <Text>© 2025 Speakly</Text>
           </Flex>
           <Flex wrap="wrap" justify="center" gap={3}>
             {[

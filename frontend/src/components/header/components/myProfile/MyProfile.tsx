@@ -6,22 +6,45 @@ import {
   Flex,
   Text,
   VStack,
+  HStack,
   useOutsideClick,
-
   useColorMode,
-  
+  useColorModeValue,
+  Icon,
+  Badge,
+  useBreakpointValue,
+  IconButton,
 } from "@chakra-ui/react";
 
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserIcon, LogOutIcon } from "lucide-react";
 import { useAuthentication } from "../../../../features/authentication/context/AuthenticationContextProvider";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 export function MyProfile() {
+  const [open, setOpen] = useState(false);
+
+  // 📱 Responsive values
+  const dropdownWidth = useBreakpointValue({ base: "72", sm: "80", md: "80" });
+  const fontSize = useBreakpointValue({ base: "md", md: "lg" });
+  const padding = useBreakpointValue({ base: 4, md: 6 });
+
+  // 🎨 Optimized color palette
+  const bgColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textPrimary = useColorModeValue("gray.800", "white");
+  const textSecondary = useColorModeValue("gray.600", "gray.300");
+  const hoverBg = useColorModeValue("gray.50", "gray.700");
+  const gradientText = useColorModeValue("purple.600", "purple.300");
+  const logoutButtonHoverBg = useColorModeValue("red.50", "red.900");
+  const logoutButtonHoverColor = useColorModeValue("red.600", "red.300");
+
   const { logout, user } = useAuthentication();
   const navigate = useNavigate();
+  const { colorMode, toggleColorMode } = useColorMode();
   const ref = useRef(null);
-  const [open, setOpen] = useState(false);
-  const { colorMode } = useColorMode();
+
   useOutsideClick({
     ref,
     handler: () => setOpen(false),
@@ -31,65 +54,158 @@ export function MyProfile() {
     setOpen((prev) => !prev);
   };
 
-  const avatarUrl = user?.profilePicture
-    ? `${import.meta.env.VITE_API_URL}/api/v1/storage/${user.profilePicture}`
-    : "/avatar.svg";
-
   return (
     <Box position="relative" ref={ref}>
-      {/* 🔘 Avatar Button */}
+      {/* 🔘 Optimized Avatar Button */}
       <Flex
-        align="center"
         cursor="pointer"
         onClick={toggleDropdown}
-        pr={4}
-        gap={1}
-       
-        
-        
+        align="center"
+        justify="center"
+        position="relative"
+        transition="transform 0.15s ease"
+        _hover={{ transform: "scale(1.05)" }}
+        _active={{ transform: "scale(0.98)" }}
       >
-        <Avatar size="sm" name={user?.firstName} src={avatarUrl} />
-        <Text size={"10px"}>
-          {user?.firstName} {user?.lastName?.charAt(0)}.
-        </Text>
+        <Avatar
+          size="sm"
+          src={
+            user?.profilePicture
+              ? user.profilePicture.startsWith("http")
+                ? user.profilePicture
+                : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                    user.profilePicture
+                  }`
+              : "/avatar.svg"
+          }
+          name={`${user?.firstName} ${user?.lastName}`}
+        />
+
+        {/* Simple status dot */}
+        <Box
+          position="absolute"
+          bottom="0"
+          right="0"
+          w="3"
+          h="3"
+          bg="green.400"
+          borderRadius="full"
+          border="2px solid white"
+        />
       </Flex>
 
-      {/* ⬇️ Dropdown Menu */}
+      {/* ⬇️ Mobile-Optimized Dropdown */}
       {open && (
         <Box
-          bg={colorMode === "light" ? "whiteAlpha.900" : "gray.900"}
-          color={colorMode === "light" ? "gray.900" : "whiteAlpha.900"}
-           boxShadow="md"
-          borderBottom="1px solid"
-                   position="absolute"
-          top="3.5rem"
+          position="absolute"
+          top={{ base: "2.5rem", md: "3rem" }}
           right="0"
-           border="1px solid"
-          
-          borderRadius="md"
-          
-          w="72"
-          zIndex="10"
-          p={4}
+          zIndex="20"
+          w={dropdownWidth}
+          maxW="90vw" // Mobile constraint
+          bg={bgColor}
+          border="1px solid"
+          borderColor={borderColor}
+          borderRadius={{ base: "xl", md: "2xl" }}
+          boxShadow="xl"
+          overflow="hidden"
+          // Remove heavy effects for performance
+          sx={{
+            "@media (max-width: 48em)": {
+              position: "fixed",
+              top: "4rem",
+              right: "1rem",
+              left: "1rem",
+              w: "auto",
+              maxW: "none",
+            },
+          }}
         >
-          <Flex align="center" gap={4} mb={4}>
-            <Avatar size="lg" name={user?.firstName} src={avatarUrl} />
-            <Box>
-              <Text>
-                {user?.firstName} {user?.lastName}
-              </Text>
-              <Text fontSize="sm" color="gray.500">
-                I ma a
-              </Text>
-            </Box>
-          </Flex>
+          {/* Header Section */}
+          <Box p={padding}>
+            <HStack spacing={{ base: 3, md: 4 }}>
+              <Avatar
+                size="lg"
+                src={
+                  user?.profilePicture
+                    ? user.profilePicture.startsWith("http")
+                      ? user.profilePicture
+                      : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                          user.profilePicture
+                        }`
+                    : "/avatar.svg"
+                }
+                name={`${user?.firstName} ${user?.lastName}`}
+              />
+              <VStack align="flex-start" spacing={1} flex={1} minW="0">
+                <HStack spacing={2} w="full">
+                  <Text
+                    fontSize={fontSize}
+                    fontWeight="bold"
+                    color={gradientText}
+                    isTruncated
+                    flex={1}
+                  >
+                    {user?.firstName} {user?.lastName}
+                  </Text>
+                  <Badge
+                    colorScheme="green"
+                    size="sm"
+                    borderRadius="full"
+                    display={{ base: "none", sm: "inline-flex" }}
+                  >
+                    Pro
+                  </Badge>
+                </HStack>
 
-          <Divider my={2} />
+                <Text
+                  fontSize="sm"
+                  color={textSecondary}
+                  fontWeight="medium"
+                  isTruncated
+                  w="full"
+                >
+                  {user?.profession}
+                </Text>
 
-          <VStack align="stretch" spacing={2}>
+                <HStack spacing={1}>
+                  <Icon as={UserIcon} w="3" h="3" color={textSecondary} />
+                  <Text fontSize="xs" color={textSecondary} isTruncated>
+                    {user?.location || "Remote"}
+                  </Text>
+                </HStack>
+              </VStack>
+              <IconButton
+                marginX={1}
+                aria-label="Toggle Theme"
+                onClick={toggleColorMode}
+                icon={
+                  colorMode === "light" ? (
+                    <MoonIcon color="black" />
+                  ) : (
+                    <SunIcon color="orange" />
+                  )
+                }
+                variant="ghost"
+              />
+            </HStack>
+          </Box>
+
+          <Divider borderColor={borderColor} />
+
+          {/* Action Buttons - Simplified for mobile */}
+          <VStack spacing={1} p={padding}>
             <Button
-              size="sm"
-              variant="outline"
+              w="full"
+              variant="ghost"
+              justifyContent="flex-start"
+              leftIcon={<Icon as={UserIcon} w="4" h="4" />}
+              size={{ base: "md", md: "md" }}
+              fontWeight="medium"
+              color={textPrimary}
+              _hover={{ bg: hoverBg }}
+              transition="background-color 0.15s ease"
+              borderRadius="lg"
               onClick={() => {
                 setOpen(false);
                 navigate(`/profile/${user?.id}`);
@@ -97,10 +213,22 @@ export function MyProfile() {
             >
               View Profile
             </Button>
+
             <Button
-              size="sm"
-              colorScheme="red"
+              w="full"
               variant="ghost"
+              justifyContent="flex-start"
+              leftIcon={<Icon as={LogOutIcon} w="4" h="4" />}
+              size={{ base: "md", md: "md" }}
+              fontWeight="medium"
+              color="red.500"
+              _hover={{
+                bg: logoutButtonHoverBg,
+
+                color: logoutButtonHoverColor,
+              }}
+              transition="all 0.15s ease"
+              borderRadius="lg"
               onClick={() => {
                 setOpen(false);
                 logout();
@@ -109,6 +237,9 @@ export function MyProfile() {
               Sign Out
             </Button>
           </VStack>
+
+          {/* Simple accent bar */}
+          <Box h="2" bg={gradientText} opacity="0.8" />
         </Box>
       )}
     </Box>

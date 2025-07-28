@@ -17,11 +17,17 @@ interface AuthenticationResponse {
 }
 
 export interface User {
+  Status: import("c:/Users/lenovo/Desktop/Speakly/frontend/src/features/network/components/connection/Connection").Status;
+  filter(arg0: (s: any) => boolean): SetStateAction<User[]>;
+  
   id: string;
   email: string;
   emailVerified: boolean;
   firstName?: string;
   lastName?: string;
+  profession?: string;
+  location?:string;
+  bio:string
   profileComplete: boolean;
   profilePicture?: string;
 }
@@ -48,7 +54,7 @@ export function AuthenticationContextProvider() {
   const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
- const toast = useToast();
+  const toast = useToast();
   const isOnAuthPage =
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
@@ -100,24 +106,24 @@ export function AuthenticationContextProvider() {
 
   const logout = async () => {
     localStorage.removeItem("token");
-       toast({
-            title: `${user?.firstName} logout successfully.`,
-            status: "success",
-          });
+    toast({
+      title: `${user?.firstName} logout successfully.`,
+      status: "success",
+    });
     setUser(null);
   };
 
   useEffect(() => {
- if (user) {
+    if (user) {
       return;
     }
-  const token = localStorage.getItem("token");
-  if (!token) {
-    setIsLoading(false); // 🚫 No token = no need to fetch user
-    return;
-  }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setIsLoading(false); // 🚫 No token = no need to fetch user
+      return;
+    }
 
-  setIsLoading(true);
+    setIsLoading(true);
 
     const fetchUser = async () => {
       await request<User>({
@@ -130,11 +136,10 @@ export function AuthenticationContextProvider() {
       setIsLoading(false);
     };
     fetchUser();
-    
   }, [location.pathname, user]);
-  console.log("user profile complte : "+user?.profileComplete);
-  console.log("user : "+user);
-      
+  console.log("user profile complte : " + user?.profileComplete);
+  console.log("user : " + user);
+
   if (isLoading) return <LoadingSpinner />;
 
   if (!isLoading && !user && !isOnAuthPage) {
@@ -154,7 +159,7 @@ export function AuthenticationContextProvider() {
     return <Navigate to="/authentication/verify-email" />;
   }
 
-    if (
+  if (
     user &&
     user.emailVerified &&
     !user.profileComplete &&
@@ -170,8 +175,6 @@ export function AuthenticationContextProvider() {
   ) {
     return <Navigate to="/" />;
   }
-
-
 
   if (
     user &&

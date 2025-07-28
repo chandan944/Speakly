@@ -17,7 +17,7 @@ import { CustomButton } from "../../../../components/button/CustomButton";
 
 function VerifyEmail() {
   const [errorMessage, setErrorMessage] = useState("");
-  const { user, setUser } = useAuthentication();
+  const {  setUser } = useAuthentication();
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -45,6 +45,7 @@ const toast = useToast();
 
     try {
       data = JSON.parse(text); // try parsing JSON
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       data = { message: text }; // fallback to plain text
     }
@@ -156,6 +157,7 @@ const toast = useToast();
           onSubmit={async (e) => {
             e.preventDefault();
             setIsLoading(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const code = (e.currentTarget as any).code.value;
             await validateEmail(code);
           }}

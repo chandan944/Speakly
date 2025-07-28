@@ -7,17 +7,18 @@ import {
   Input,
   Stack,
   Text,
-
+ 
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import { useState, type FormEvent } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { useOauth } from "../../../../hook/useOauth";
 import { usePageTitle } from "../../../../hook/usePageTitle";
 import { useAuthentication } from "../../context/AuthenticationContextProvider";
 import { LoadingSpinner } from "../../../../components/loader/LoadingSpinner";
+
 
 const Login = () => {
   // 🌗 Color mode based values
@@ -34,7 +35,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   // 🧭 Tells us from which page the user came before redirecting to login
-  const location = useLocation();
+  
 
   // 🚀 Lets us redirect the user after successful login
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const Login = () => {
               <FormLabel>Password</FormLabel>
               <Input
                 name="password"
-                placeholder="*********"
+                
                 type="password"
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}

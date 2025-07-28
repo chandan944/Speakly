@@ -284,13 +284,17 @@ public class AuthService {
     }
     }
 
-    public User updateUserProfile(User user, String firstName, String lastName, String profession) {
+    public User updateUserProfile(User user, String firstName, String lastName, String profession,String location, String bio) {
         if(firstName !=null)
             user.setFirstName(firstName);
         if (lastName != null)
             user.setLastName(lastName);
         if(profession != null)
             user.setProfession(profession);
+        if(location != null)
+            user.setLocation(location);
+        if(bio != null)
+            user.setBio(bio);
 
         return userRepository.save(user);
     }

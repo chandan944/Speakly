@@ -1,4 +1,4 @@
 package com.Backend.dto;
 
-public class Response {
+public record Response(String message) {
 }

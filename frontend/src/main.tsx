@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
-import App from "./App";
+
 import theme from "./chakra/theme";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import Login from "./features/authentication/pages/login/Login";
 import Signin from "./features/authentication/pages/signin/Signin";
 import ResetPassword from "./features/authentication/pages/resetPassword/ResetPassword";
@@ -15,30 +15,88 @@ import { AuthenticationContextProvider } from "./features/authentication/context
 import { AuthenticationLayout } from "./features/authentication/AuthLayout/AuthLayout";
 import { ApplicationLayout } from "./Layout/ApplicationLayout";
 
+
+
+// import Profile from "./features/profile/pages/Profile";
+import { Posts } from "./features/profile/pages/Posts";
+import { Connections } from "./features/network/pages/Connection";
+import { Invitations } from "./features/network/pages/Invitation";
+import { PostPage } from "./features/feed/pages/Postpage";
+import { Feed } from "./features/feed/pages/Feed";
+import { Network } from "./features/network/pages/Network";
+import { Profile } from "./features/profile/pages/Profile";
+import { Notifications } from "./features/feed/pages/Notification";
+import { CountProvider } from "./components/Notify/CountContext";
+import { Conversation } from "./features/messaging/pages/Conversation";
+import Messaging from "./features/messaging/pages/Messaging";
+// import Conversation from "./features/messaging/pages/Conversation";
+
+
 const router = createBrowserRouter([
   {
     element: <AuthenticationContextProvider />,
     children: [
       {
-      path:"/",
-      element:<ApplicationLayout/>,
-      children:[
-        {
-          index:true,
-          element:<div>feed</div>
-        },
-        {
-           path:"post/:id",
-           element:<div>post</div>
-        },
-        {
-        path : "network",
-        element:<div>network</div>
-        },
-        {
-
-        }
-      ]
+        path: "/",
+        element: <ApplicationLayout />,
+         children: [
+          {
+            path: "/", // 🏠 If someone visits just `/`, show the Feed page!
+            element: <Feed />,
+          },
+          {
+            path: "posts/:id",
+            element: <PostPage />,
+          },
+          {
+            path: "network", // 👥 LinkedIn's Network tab
+             element: <Network />,
+            children: [
+              {
+                index: true,
+                element: <Navigate to="invitations" />,
+              },
+              {
+                path: "invitations",
+                element: <Invitations />,
+              },
+              {
+                path: "connections",
+                element: <Connections />,
+              },
+            ],
+          },
+          {
+            path: "jobs", // 💼 Jobs tab
+            element: <div>Jobs</div>,
+          },
+            {
+            path: "messaging", // 💬 Messaging tab
+            element: <Messaging/>,
+            children: [
+              {
+                path: "conversations/:id",
+                element: <Conversation/>,
+              },
+            ],
+          },
+          {
+            path: "notification", // 🔔 Notification tab
+            element: <Notifications />,
+          },
+         {
+            path: "profile/:id",
+            element: <Profile/>,
+          },
+          {
+            path: "profile/:id/posts",
+            element: <Posts />,
+          },
+          {
+            path: "settings", // ⚙️ Settings page
+            element: <div>Settings & Privacy</div>,
+          },
+        ],
       },
 
       {
@@ -78,8 +136,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider resetCSS theme={theme}>
-      <RouterProvider router={router} />
-      <App />
+      <CountProvider>
+        <RouterProvider router={router} />
+      </CountProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

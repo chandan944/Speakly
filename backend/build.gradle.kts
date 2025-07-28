@@ -18,7 +18,23 @@ configurations {
 		extendsFrom(configurations.annotationProcessor.get())
 	}
 	runtimeClasspath {
-		extendsFrom(configurations.developmentOnly.get()) // ✅ Already provided by Spring Boot
+		extendsFrom(configurations.developmentOnly.get())
+	}
+	// ADD THIS: Force resolution strategy for SnakeYAML
+	all {
+		resolutionStrategy {
+			eachDependency {
+				if (requested.group == "org.yaml" && requested.name == "snakeyaml") {
+					useTarget("org.yaml:snakeyaml:2.4")
+					because("Force standard JAR instead of Android variant")
+				}
+			}
+			// Force specific versions to avoid conflicts
+			force(
+				"org.yaml:snakeyaml:2.4",
+				"org.jboss.logging:jboss-logging:3.6.1.Final"
+			)
+		}
 	}
 }
 
@@ -35,9 +51,24 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.springframework.boot:spring-boot-starter-websocket:3.5.0")
 
-//	Authentication , Gmail And Validator dependencies
+	// FIXED: Remove version from starter dependencies - let Spring Boot manage versions
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
+
+	// Fake user - FIXED: Exclude problematic transitive dependencies
+	implementation("com.github.javafaker:javafaker:1.0.1") {
+		exclude(group = "org.yaml", module = "snakeyaml")
+	}
+
+	// Explicitly add SnakeYAML with correct version
+	implementation("org.yaml:snakeyaml:2.4")
+
+	// Search dependencies
+	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.2.2.Final")
+	implementation("org.hibernate.search:hibernate-search-backend-lucene:7.2.2.Final")
+	implementation("org.jboss.logging:jboss-logging:3.6.1.Final")
+
+	// Authentication, Gmail And Validator dependencies
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")

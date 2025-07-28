@@ -1,17 +1,24 @@
 package com.Backend.features.authentication.model;
 
 
+import com.Backend.features.feed.model.Post;
+import com.Backend.features.messages.model.Conversation;
+import com.Backend.features.network.model.Connection;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.NoArgsConstructor;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity(name="users")
+@Indexed(index = "users")
 public class User {
 
     @Id
@@ -20,12 +27,17 @@ public class User {
 
     public User() {
     }
-
+    @FullTextField(analyzer = "standard")
     private String firstName=null ;
+    @FullTextField(analyzer = "standard")
     private String lastName=null;
     private String ProfilePicture=null;
     private Boolean profileComplete=false;
+    @FullTextField(analyzer = "standard")
     private String profession=null;
+    @FullTextField(analyzer = "standard")
+    private String location=null;
+    private String bio = "Hey there lets fun together";
 
 
     @NotNull(message = "Email is required.")
@@ -42,6 +54,43 @@ public class User {
     private String password;
     private String passwordResetToken=null;
     private LocalDateTime passwordResetTokenExpiryDate = null;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsAuthor;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Conversation> conversationsAsRecipient;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "author" ,cascade = CascadeType.ALL ,orphanRemoval = true)
+    private List<Post> posts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> initiatedConnections;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Connection> receivedConnections;
+
+    public List<Connection> getInitiatedConnections() {
+        return initiatedConnections;
+    }
+
+    public void setInitiatedConnections(List<Connection> initiatedConnections) {
+        this.initiatedConnections = initiatedConnections;
+    }
+
+    public List<Connection> getReceivedConnections() {
+        return receivedConnections;
+    }
+
+    public void setReceivedConnections(List<Connection> receivedConnections) {
+        this.receivedConnections = receivedConnections;
+    }
 
     public User(String mail, String user123) {
         this.email = mail;
@@ -157,5 +206,24 @@ public class User {
 
     public void setPasswordResetTokenExpiryDate(LocalDateTime passwordResetTokenExpiryDate) {
         this.passwordResetTokenExpiryDate = passwordResetTokenExpiryDate;
+    }
+
+    public String getBio() {
+        return bio;
+
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+        updateProfileComplete();
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+        updateProfileComplete();
     }
 }

@@ -77,12 +77,14 @@ public class AuthController {
             @RequestAttribute("authenticatedUser") User user,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String profession
+            @RequestParam(required = false) String profession,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String bio
    ){
         if(!user.getId().equals(id)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN , "User don't have permission");
         }
-        return authService.updateUserProfile(user,firstName,lastName,profession);
+        return authService.updateUserProfile(user,firstName,lastName,profession ,location, bio);
    }
    @PutMapping("/profile/{id}/profile-picture")
    public User updateProfilePicture(@RequestAttribute("authenticatedUser") User user,

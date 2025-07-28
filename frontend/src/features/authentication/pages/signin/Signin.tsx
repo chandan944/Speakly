@@ -53,6 +53,7 @@ const toast = useToast();
      title:" Signup Successfuly!"
     });
       navigate("/"); // 🚀 Success
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const raw = error?.message || "Unknown error";
       const friendly = extractSpringErrorMessage(raw);
@@ -128,7 +129,7 @@ const toast = useToast();
               <Input
                 name="password"
                 type="password"
-                placeholder="*********"
+                
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}
               />
