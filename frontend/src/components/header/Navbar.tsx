@@ -19,12 +19,16 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { FaHome, FaEnvelope, FaBell, FaUsers } from "react-icons/fa";
+import { FaHome, FaBell, FaUsers } from "react-icons/fa";
 import { Search } from "./components/search/Search";
 import { MyProfile } from "./components/myProfile/MyProfile";
 import logo from "../../assets/apple-touch-icon.png";
-
+import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
+import { LuHeartHandshake } from "react-icons/lu";
+import Meaning from "../../ai/feature/word/Meaning";
+import { BookAIcon, SpeakerIcon, Trophy } from "lucide-react";
+import { BiSpeaker, BiUserVoice } from "react-icons/bi";
 
 const Navbar = () => {
   const { colorMode } = useColorMode();
@@ -32,7 +36,11 @@ const Navbar = () => {
   // const location = useLocation();
 
   // 🎯 Notification count from context
-  const { count: notificationCount , RecievedConnection ,messageCount} = useCount();
+  const {
+    count: notificationCount,
+    RecievedConnection,
+    messageCount,
+  } = useCount();
 
   // 🚀 Connection count local state
   // const [, setConnectionCount] = useState(0);
@@ -82,7 +90,14 @@ const Navbar = () => {
   const navItems = [
     { icon: <FaHome />, label: "Home", link: "/", showCount: false, count: 0 },
     {
-      icon: <FaEnvelope />,
+      icon: <LuHeartHandshake />,
+      label: "AI",
+      link: "/ai",
+      showCount: false,
+      count: 0, // Use messageCount from context
+    },
+    {
+      icon: <TbMessageChatbot fill="black" />,
       label: "Messages",
       link: "/messaging",
       showCount: true,
@@ -101,6 +116,27 @@ const Navbar = () => {
       link: "/notification",
       showCount: true,
       count: notificationCount,
+    },
+        {
+      icon: <Trophy size={"14px"}/>,
+      label: "Leaderboard",
+      link: "/leader",
+      showCount: false,
+      count: 0,
+    },
+          {
+      icon: <BookAIcon size={"14px"}/>,
+      label: "Story",
+      link: "/stories",
+      showCount: false,
+      count: 0,
+    },
+              {
+      icon: <BiUserVoice size={"14px"}/>,
+      label: "Speak",
+      link: "/speak",
+      showCount: false,
+      count: 0,
     },
   ];
 
@@ -133,7 +169,7 @@ const Navbar = () => {
     <>
       <Flex
         as="nav"
-        px={4}
+        px={1}
         py={2}
         align="center"
         justify="space-between"
@@ -150,7 +186,6 @@ const Navbar = () => {
           <Heading
             size="md"
             fontFamily="'Pacifico', cursive"
-            
             fontWeight="bold"
             display={{ base: "none", sm: "block" }}
           >
@@ -162,11 +197,12 @@ const Navbar = () => {
           <Search />
         </Box>
 
-        <HStack spacing={6} display={{ base: "none", md: "flex" }}>
+        <HStack  display={{ base: "none", md: "flex" }} flexShrink={0}>
           {navItems.map((item, i) => (
             <Box key={i} position="relative">
               {item.showCount && <CountBadge count={item.count} />}
               <Button
+              size={"sm"}
                 as={RouterLink}
                 to={item.link}
                 leftIcon={item.icon}
@@ -196,14 +232,14 @@ const Navbar = () => {
       <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent
-          mt="4.6rem"
+          mt="3.6rem"
           mr={1}
           borderRadius={5}
-          maxW="10rem"
-          maxH={"20rem"}
+          maxW="11rem"
+          maxH={"30rem"}
         >
           <DrawerCloseButton />
-          <DrawerBody mt={12}>
+          <DrawerBody mt={5}>
             <VStack align="start" spacing={4}>
               {navItems.map((item, i) => (
                 <Box key={i} position="relative" w="full">
@@ -226,6 +262,21 @@ const Navbar = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+      <Box
+        position="absolute"
+        top="9.4rem"
+        left="-2"
+        bg={colorMode === "light" ? "white" : "gray.800"}
+        borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+        borderWidth="1px"
+        borderStyle="solid"
+        padding={"1px"}
+        borderTopRightRadius="md"
+        borderBottomRightRadius="md"
+        zIndex={99}
+      >
+        <Meaning />
+      </Box>
     </>
   );
 };

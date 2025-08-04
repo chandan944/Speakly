@@ -24,7 +24,7 @@ public class SearchService {
 
         return searchSession.search(User.class)
                 .where(f -> f.match()
-                        .fields("firstName", "lastName", "profession", "location")
+                        .fields("firstName", "lastName", "hobbies", "nativeLanguage")
                         .matching(query)
                         .fuzzy(2)
                 )

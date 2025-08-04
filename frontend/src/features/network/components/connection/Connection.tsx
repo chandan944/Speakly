@@ -7,6 +7,7 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
@@ -72,6 +73,7 @@ console.log("Rendering Connection component for connection ID:", connection.id);
       align="center"
       gap={4}
       p={4}
+      maxW={"15rem"}
       borderWidth="1px"
       borderRadius="lg"
       boxShadow="md"
@@ -105,9 +107,17 @@ console.log("Rendering Connection component for connection ID:", connection.id);
           <Heading fontSize="0.8rem">
             {userToDisplay.firstName} {userToDisplay.lastName}
           </Heading>
+           <Box>
+            
+            
+            <Heading fontSize="0.9rem" fontWeight={1}>`Native Language ${userToDisplay.nativeLanguage}`</Heading>
+            <Heading fontSize="0.9rem" fontWeight={1}>{userToDisplay.bio}</Heading>
+            <Heading fontSize="0.9rem" fontWeight={1}>`Points ${userToDisplay.points}`</Heading>
+           </Box>
         </Box>
+      
       </Flex>
-
+      
       <Flex gap={2}>
         {/* --- Log the status check and rendering decision --- */}
         {(() => {

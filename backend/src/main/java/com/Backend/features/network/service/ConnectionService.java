@@ -224,8 +224,8 @@ public class ConnectionService {
         double score = 0.0;
 
         // ✅ Add null checks to prevent NullPointerException
-        if (user1.getProfession() != null && user2.getProfession() != null &&
-                user1.getProfession().equalsIgnoreCase(user2.getProfession())) {
+        if (user1.getHobbies() != null && user2.getHobbies() != null &&
+                user1.getHobbies().equals(user2.getHobbies())) {
             score += 3.0;
         }
 
@@ -234,8 +234,8 @@ public class ConnectionService {
             score += 5.0;
         }
 
-        if (user1.getLocation() != null && user2.getLocation() != null &&
-                user1.getLocation().equalsIgnoreCase(user2.getLocation())) {
+        if (user1.getNativeLanguage() != null && user2.getNativeLanguage() != null &&
+                user1.getNativeLanguage().equals(user2.getNativeLanguage())) {
             score += 1.5;
         }
 

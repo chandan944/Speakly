@@ -25,11 +25,14 @@ export interface User {
   emailVerified: boolean;
   firstName?: string;
   lastName?: string;
-  profession?: string;
-  location?:string;
-  bio:string
+  hobbies?: string[];           // 🛠️ FIXED: hobbies should be an array of strings
+  nativeLanguage?: string;      // ✅ renamed from location to nativeLanguage
+  bio: string;
+  points: number;
   profileComplete: boolean;
   profilePicture?: string;
+
+
 }
 
 interface AuthenticationContextType {

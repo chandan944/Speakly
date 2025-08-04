@@ -124,12 +124,12 @@ function LeftSidebar({ user }: ILeftSidebarProps) {
       <VStack align="start" spacing={3} px={2}>
         {/* <InfoItem label="Name" value={`${user?.firstName?.toUpperCase()} ${user?.lastName}`} /> */}
         <InfoItem
-          label="Profession"
+          label="Native Language"
           value={
-            user?.profession
-              ? `${user.profession
+            user?.nativeLanguage
+              ? `${user.nativeLanguage
                   .charAt(0)
-                  .toUpperCase()}${user.profession.slice(1)}`
+                  .toUpperCase()}${user.nativeLanguage.slice(1)}`
               : "Not provided"
           }
         />
@@ -142,14 +142,22 @@ function LeftSidebar({ user }: ILeftSidebarProps) {
           }
         />
         <InfoItem
-          label="Location"
+          label="Hobbies"
           value={
-            user?.location
-              ? `${user.location.charAt(0).toUpperCase()}${user.location.slice(
-                  1
-                )}`
+            user?.hobbies && user.hobbies.length > 0  
+              ? `${user.hobbies.map((hobby) => hobby.charAt(0).toUpperCase() + hobby.slice(1)).join(", ")}`
               : "Not provided"
           }
+        />
+
+         <InfoItem
+          label="Points"
+          value={
+            user?.points
+              ? `${user.points}`
+              : "0"
+          }
+          
         />
       </VStack>
 

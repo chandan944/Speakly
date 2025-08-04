@@ -29,6 +29,8 @@ import type { User } from "../../authentication/context/AuthenticationContextPro
 import { useState, useEffect } from "react";
 import { FcOk } from "react-icons/fc";
 import { useParams } from "react-router-dom";
+import { TbPoint } from "react-icons/tb";
+import { Coins } from "lucide-react";
 
 // Connection interfaces and enums
 export enum Status {
@@ -58,79 +60,72 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
   const [allConnections, setAllConnections] = useState<IConnection[]>([]);
   const toast = useToast();
   const params = useParams();
-  
+
   // Get current user ID from path
   const currentUserId = params.userId || params.id;
 
+  // Initialize profileData
   const [profileData, setProfileData] = useState({
     firstName: authUser?.firstName || "",
     lastName: authUser?.lastName || "",
-    profession: authUser?.profession || "",
-    location: authUser?.location || "",
+    hobbies: authUser?.hobbies ? authUser.hobbies.join(", ") : "", // array → string
+    nativeLanguage: authUser?.nativeLanguage || "",
     bio: authUser?.bio || "",
   });
 
-  // Fetch all connections for authenticated user (same as Invitation component)
+  // Sync profileData when authUser changes
+  useEffect(() => {
+    if (authUser) {
+      setProfileData({
+        firstName: authUser.firstName || "",
+        lastName: authUser.lastName || "",
+        hobbies: authUser.hobbies ? authUser.hobbies.join(", ") : "",
+        nativeLanguage: authUser.nativeLanguage || "",
+        bio: authUser.bio || "",
+      });
+    }
+  }, [authUser]);
+
+  // Fetch all connections
   useEffect(() => {
     if (authUser?.id) {
-      console.log("🔄 Fetching connections for authUser:", authUser.id);
+      console.log("🔄 [About] Fetching connections for authUser:", authUser.id);
       request<IConnection[]>({
         endpoint: "/api/v1/networking/connectionss",
         method: "GET",
         onSuccess: (data) => {
-          console.log("✅ Fetched connections:", data.length);
+          console.log("✅ [About] Fetched connections:", data.length);
           setAllConnections(data);
-          console.log("🔍 All connections of loged user:", data.map(conn => conn.id).join(", "));
         },
         onFailure: (error) => {
-          console.error("❌ Failed to fetch connections:", error);
+          console.error("❌ [About] Failed to fetch connections:", error);
           setAllConnections([]);
         },
       });
     }
   }, [authUser?.id]);
 
-  // Find connection between authUser and currentUser
+  // Find connection status
   const getConnectionStatus = () => {
-    if (!authUser?.id || !currentUserId) {
-      return { status: 'none', connection: null };
-    }
+    if (!authUser?.id || !currentUserId) return { status: 'none', connection: null };
+    if (Number(authUser.id) === Number(currentUserId)) return { status: 'own_profile', connection: null };
 
-    // If viewing own profile
-    if (Number(authUser.id) === Number(currentUserId)) {
-      return { status: 'own_profile', connection: null };
-    }
-
-    // Find connection between authUser and currentUser
     const connection = allConnections.find(conn => {
-      const authUserIdNum = Number(authUser.id);
-      const currentUserIdNum = Number(currentUserId);
-      const authorId = Number(conn.author.id);
-      const recipientId = Number(conn.recipient.id);
-
+      const authId = Number(authUser.id);
+      const currId = Number(currentUserId);
       return (
-        (authorId === authUserIdNum && recipientId === currentUserIdNum) ||
-        (authorId === currentUserIdNum && recipientId === authUserIdNum)
+        (Number(conn.author.id) === authId && Number(conn.recipient.id) === currId) ||
+        (Number(conn.author.id) === currId && Number(conn.recipient.id) === authId)
       );
     });
 
-    if (!connection) {
-      return { status: 'none', connection: null };
-    }
+    if (!connection) return { status: 'none', connection: null };
 
-    console.log("🔍 Found connection:", connection.id, "Status:", connection.status);
-
-    if (connection.status === Status.ACCEPTED) {
-      return { status: 'accepted', connection };
-    }
-
+    if (connection.status === Status.ACCEPTED) return { status: 'accepted', connection };
     if (connection.status === Status.PENDING) {
-      // Check who sent the request
-      if (Number(connection.author.id) === Number(authUser.id)) {
-        return { status: 'pending_sent', connection };
-      } else {
-        return { status: 'pending_received', connection };
-      }
+      return Number(connection.author.id) === Number(authUser.id)
+        ? { status: 'pending_sent', connection }
+        : { status: 'pending_received', connection };
     }
 
     return { status: 'none', connection: null };
@@ -138,37 +133,35 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
 
   const { status: connectionStatus, connection: currentConnection } = getConnectionStatus();
 
-  // Mark connection as seen if it's a received pending request
+  // Mark received pending request as seen
   useEffect(() => {
-    if (currentConnection && 
-        currentConnection.status === Status.PENDING &&
-        Number(currentConnection.recipient.id) === Number(authUser?.id) &&
-        !currentConnection.seen) {
-      
-      console.log("📝 Marking connection as seen:", currentConnection.id);
+    if (
+      currentConnection &&
+      currentConnection.status === Status.PENDING &&
+      Number(currentConnection.recipient.id) === Number(authUser?.id) &&
+      !currentConnection.seen
+    ) {
+      console.log("📝 [About] Marking connection as seen:", currentConnection.id);
       request<void>({
         endpoint: `/api/v1/networking/connections/${currentConnection.id}/seen`,
         method: "PUT",
         onSuccess: () => {
-          console.log("✅ Marked connection as seen");
-          // Update local state
+          console.log("✅ [About] Marked as seen");
           setAllConnections(prev =>
-            prev.map(conn =>
-              conn.id === currentConnection.id ? { ...conn, seen: true } : conn
-            )
+            prev.map(conn => (conn.id === currentConnection.id ? { ...conn, seen: true } : conn))
           );
         },
-        onFailure: (error) => console.error("❌ Error marking as seen:", error),
+        onFailure: (err) => console.error("❌ [About] Failed to mark seen:", err),
       });
     }
   }, [currentConnection, authUser?.id]);
 
-  // Handle file preview
+  // File preview
   useEffect(() => {
     if (selectedFile) {
-      const objectUrl = URL.createObjectURL(selectedFile);
-      setPreviewUrl(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
+      const url = URL.createObjectURL(selectedFile);
+      setPreviewUrl(url);
+      return () => URL.revokeObjectURL(url);
     } else {
       setPreviewUrl(null);
     }
@@ -183,15 +176,14 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
     setProfileData({
       firstName: authUser?.firstName || "",
       lastName: authUser?.lastName || "",
-      profession: authUser?.profession || "",
-      location: authUser?.location || "",
+      hobbies: authUser?.hobbies ? authUser.hobbies.join(", ") : "",
+      nativeLanguage: authUser?.nativeLanguage || "",
       bio: authUser?.bio || "",
     });
   };
 
   const updateProfile = async () => {
     if (!user?.id) return;
-    
     if (!profileData.firstName || !profileData.lastName) {
       toast({
         title: "Missing Info ❗",
@@ -203,55 +195,72 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
       return;
     }
 
+    // Convert hobbies string → array, then join with comma
+    const hobbiesList = profileData.hobbies
+      ? profileData.hobbies
+          .split(",")
+          .map(h => h.trim())
+          .filter(h => h)
+          .join(", ")
+      : "";
+
+    // Build query params using URLSearchParams (clean & safe)
+    const params = new URLSearchParams();
+    params.append("firstName", profileData.firstName);
+    params.append("lastName", profileData.lastName);
+    if (hobbiesList) params.append("hobbies", hobbiesList);
+    if (profileData.nativeLanguage) params.append("nativeLanguage", profileData.nativeLanguage);
+    if (profileData.bio) params.append("bio", profileData.bio);
+
+    const endpoint = `/api/v1/authentication/profile/${user.id}/info?${params.toString()}`;
+
+    console.log("📤 [About] Sending update:", Object.fromEntries(params));
+    console.log("🔗 Request URL:", endpoint);
+
     try {
       await request<User>({
-        endpoint: `/api/v1/authentication/profile/${user.id}/info?firstName=${encodeURIComponent(
-          profileData.firstName
-        )}&lastName=${encodeURIComponent(
-          profileData.lastName
-        )}&profession=${encodeURIComponent(
-          profileData.profession
-        )}&location=${encodeURIComponent(
-          profileData.location
-        )}&bio=${encodeURIComponent(profileData.bio)}`,
+        endpoint,
         method: "PUT",
+        // No body, no contentType — backend reads query params
         onSuccess: (data) => {
+          console.log("✅ [About] Update successful:", data);
           onUpdate(data);
           setEditingProfile(false);
           toast({
             title: "Profile Updated 🎉",
+            description: "Your profile was successfully updated.",
             status: "success",
             duration: 3000,
             isClosable: true,
           });
         },
-        onFailure: () => {
+        onFailure: (error) => {
+          console.error("❌ [About] Update failed:", error);
           toast({
             title: "Update Failed 😢",
+            description: error?.message || "Check console for details",
             status: "error",
-            duration: 3000,
+            duration: 5000,
             isClosable: true,
           });
         },
       });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch (err: any) {
+      console.error("🚨 [About] Unexpected error:", err);
       toast({
         title: "Unexpected Error 😵",
-        description: "Please try again later.",
+        description: err.message || "See console",
         status: "error",
-        duration: 3000,
+        duration: 5000,
         isClosable: true,
       });
     }
   };
-  console.log(allConnections, "all connections from about component");
+
   const uploadProfilePicture = async () => {
     if (!user?.id || !selectedFile) return;
-    
     const formData = new FormData();
     formData.append("profilePicture", selectedFile);
-    
     await request<User>({
       endpoint: `/api/v1/authentication/profile/${user.id}/profile-picture`,
       method: "PUT",
@@ -268,11 +277,10 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
           isClosable: true,
         });
       },
-     
       onFailure: () => {
         toast({
           title: "Upload failed 😢",
-          description:"An error occurred",
+          description: "An error occurred",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -283,93 +291,52 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
 
   const sendConnectionRequest = () => {
     if (!currentUserId) return;
-    
-    console.log("📤 Sending connection request to:", currentUserId);
     request<IConnection>({
       endpoint: "/api/v1/networking/connections?recipientId=" + currentUserId,
       method: "POST",
-      onSuccess: (newConnection) => {
-        console.log("✅ Connection request sent:", newConnection.id);
-        setAllConnections(prev => [...prev, newConnection]);
-        toast({
-          title: "Connection request sent!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+      onSuccess: (newConn) => {
+        setAllConnections(prev => [...prev, newConn]);
+        toast({ title: "Connection request sent!", status: "success", duration: 3000 });
       },
-      onFailure: (error) => {
-        console.error("❌ Failed to send request:", error);
-        toast({
-          title: "Failed to send connection request",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+      onFailure: () => {
+        toast({ title: "Failed to send request", status: "error", duration: 3000 });
       },
     });
   };
 
   const acceptConnectionRequest = () => {
     if (!currentConnection) return;
-    
-    console.log("✅ Accepting connection:", currentConnection.id);
     request<IConnection>({
       endpoint: `/api/v1/networking/connections/${currentConnection.id}`,
       method: "PUT",
-      onSuccess: (updatedConnection) => {
-        console.log("✅ Connection accepted:", updatedConnection.id);
+      onSuccess: (updatedConn) => {
         setAllConnections(prev =>
-          prev.map(conn =>
-            conn.id === updatedConnection.id ? updatedConnection : conn
-          )
+          prev.map(c => (c.id === updatedConn.id ? updatedConn : c))
         );
-        toast({
-          title: "Connection request accepted!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+        toast({ title: "Connection accepted!", status: "success", duration: 3000 });
       },
-      onFailure: (error) => {
-        console.error("❌ Failed to accept:", error);
-        toast({
-          title: "Failed to accept connection request",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+      onFailure: () => {
+        toast({ title: "Failed to accept", status: "error", duration: 3000 });
       },
     });
   };
 
   const handlePendingRequestAction = () => {
     if (!currentConnection) return;
-    
-    console.log("🗑️ Handling pending request:", currentConnection.id);
     request<void>({
       endpoint: `/api/v1/networking/connections/${currentConnection.id}`,
       method: "DELETE",
       onSuccess: () => {
-        console.log("✅ Connection removed:", currentConnection.id);
-        setAllConnections(prev => prev.filter(conn => conn.id !== currentConnection.id));
-        
+        setAllConnections(prev => prev.filter(c => c.id !== currentConnection.id));
         const isAuthor = Number(currentConnection.author.id) === Number(authUser?.id);
         toast({
           title: isAuthor ? "Request Cancelled" : "Request Declined",
           status: "info",
           duration: 3000,
-          isClosable: true,
         });
       },
-      onFailure: (error) => {
-        console.error("❌ Failed to handle request:", error);
-        toast({
-          title: "Failed to process request",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+      onFailure: () => {
+        toast({ title: "Action failed", status: "error", duration: 3000 });
       },
     });
   };
@@ -377,69 +344,38 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
   const getAvatarUrl = () => {
     if (previewUrl) return previewUrl;
     if (user?.profilePicture) {
-      if (user.profilePicture.startsWith('http')) {
-        return user.profilePicture;
-      }
-      return `${import.meta.env.VITE_API_URL}/api/v1/storage/${user.profilePicture}`;
+      return user.profilePicture.startsWith('http')
+        ? user.profilePicture
+        : `${import.meta.env.VITE_API_URL}/api/v1/storage/${user.profilePicture}`;
     }
     return "/avatar.svg";
   };
 
   const renderConnectionButton = () => {
-    console.log("🎨 Rendering button for status:", connectionStatus);
-    
     switch (connectionStatus) {
-      case 'own_profile':
-        return null;
+      case 'own_profile': return null;
       case 'none':
         return (
-          <Button
-            size="sm"
-            colorScheme="green"
-            leftIcon={<FaUserFriends />}
-            onClick={sendConnectionRequest}
-          >
+          <Button size="sm" colorScheme="green" leftIcon={<FaUserFriends />} onClick={sendConnectionRequest}>
             Connect
           </Button>
         );
       case 'pending_sent':
         return (
-          <Button
-            size="sm"
-            colorScheme="orange"
-            onClick={handlePendingRequestAction}
-          >
+          <Button size="sm" colorScheme="orange" onClick={handlePendingRequestAction}>
             Cancel Request
           </Button>
         );
       case 'pending_received':
         return (
-          <VStack marginTop={6} >
-            <Button
-              size="sm"
-              colorScheme="green"
-              onClick={acceptConnectionRequest}
-            >
-              Accept
-            </Button>
-            <Button
-              size="sm"
-              colorScheme="red"
-              variant="outline"
-              onClick={handlePendingRequestAction}
-            >
-              Decline
-            </Button>
+          <VStack mt={6}>
+            <Button size="sm" colorScheme="green" onClick={acceptConnectionRequest}>Accept</Button>
+            <Button size="sm" colorScheme="red" variant="outline" onClick={handlePendingRequestAction}>Decline</Button>
           </VStack>
         );
       case 'accepted':
-        return (
-          <Text size="sm" color="green.500"  fontWeight="medium">
-            <FaUserFriends/> 
-          </Text>
-        );
-      default:
-        return null;
+        return <Text color="green.500" fontWeight="medium"><FaUserFriends /></Text>;
+      default: return null;
     }
   };
 
@@ -455,8 +391,8 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
       <Flex justify="space-between" align="center" mb={6}>
         <Box w="full">
           <VStack spacing={6} align="start">
-            {/* Avatar & Upload */}
-            <Box textAlign="center" w="full" position="relative">
+            {/* Avatar */}
+            <Box textAlign="center" w="full">
               <Box position="relative" display="inline-block">
                 <Avatar
                   objectFit="cover"
@@ -480,7 +416,6 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
                   </Tooltip>
                 )}
               </Box>
-              
               {authUser?.id === user?.id && (
                 <VStack spacing={2} mt={4}>
                   <Input
@@ -492,22 +427,13 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
                   />
                   {selectedFile && (
                     <HStack>
-                      <Button
-                        leftIcon={<FcOk />}
-                        size="sm"
-                        colorScheme="blue"
-                        onClick={uploadProfilePicture}
-                      >
+                      <Button leftIcon={<FcOk />} size="sm" colorScheme="blue" onClick={uploadProfilePicture}>
                         Upload Picture
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedFile(null);
-                          setPreviewUrl(null);
-                        }}
-                      >
+                      <Button size="sm" variant="outline" onClick={() => {
+                        setSelectedFile(null);
+                        setPreviewUrl(null);
+                      }}>
                         Cancel
                       </Button>
                     </HStack>
@@ -515,53 +441,50 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
                 </VStack>
               )}
             </Box>
-            
             <Divider />
-            
             {/* Profile Info */}
             {!editingProfile ? (
               <VStack align="start" spacing={4} w="full">
-                <Flex justifyContent="space-between" alignItems="center" w="full">
+                <Flex justify="space-between" align="center" w="full">
                   <InfoItem
                     icon={<AtSignIcon />}
                     label="Name"
-                    value={`${user?.firstName?.charAt(0).toUpperCase()}${user?.firstName?.slice(1) || ''} ${user?.lastName?.charAt(0).toUpperCase()}${user?.lastName?.slice(1) || ''}`}
+                    value={`${user?.firstName || ''} ${user?.lastName || ''}`}
                   />
                   {renderConnectionButton()}
                 </Flex>
-                
                 <InfoItem
                   icon={<FaBriefcase />}
-                  label="Profession"
-                  value={user?.profession ? `${user.profession.charAt(0).toUpperCase()}${user.profession.slice(1)}` : "Not provided"}
+                  label="Hobbies"
+                  value={user?.hobbies?.length ? user.hobbies.join(", ") : "Not provided"}
                 />
                 <InfoItem
                   icon={<MdInfo />}
                   label="Bio"
-                  value={user?.bio ? `${user.bio.charAt(0).toUpperCase()}${user.bio.slice(1)}` : "Not provided"}
+                  value={user?.bio || "Not provided"}
                 />
                 <InfoItem
                   icon={<FaMapMarkerAlt />}
-                  label="Location"
-                  value={user?.location ? `${user.location.charAt(0).toUpperCase()}${user.location.slice(1)}` : "Not provided"}
+                  label="Native Language"
+                  value={user?.nativeLanguage || "Not provided"}
+                />
+                <InfoItem
+                  icon={<Coins />}
+                  label="Points"
+                  value={user?.points || 0}
                 />
               </VStack>
             ) : (
               <VStack spacing={4} w="full">
-                {["firstName", "lastName", "profession", "bio", "location"].map((field) => (
-                  <FormControl
-                    key={field}
-                    isRequired={field === "firstName" || field === "lastName"}
-                  >
+                {["firstName", "lastName", "hobbies", "bio", "nativeLanguage"].map((field) => (
+                  <FormControl key={field} isRequired={["firstName", "lastName"].includes(field)}>
                     <FormLabel fontSize="sm" textTransform="capitalize">
-                      {field}
+                      {field === "nativeLanguage" ? "Native Language" : field}
                     </FormLabel>
                     <Input
                       value={profileData[field as keyof typeof profileData]}
-                      onChange={(e) =>
-                        handleInputChange(field as keyof typeof profileData, e.target.value)
-                      }
-                      placeholder={`Enter ${field}`}
+                      onChange={(e) => handleInputChange(field as keyof typeof profileData, e.target.value)}
+                      placeholder={`Enter ${field === "nativeLanguage" ? "Native Language" : field}`}
                       variant="filled"
                     />
                   </FormControl>
@@ -570,62 +493,37 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
             )}
           </VStack>
         </Box>
-        
-        {authUser?.id === user?.id && (
-          editingProfile ? (
-            <HStack>
-              <Tooltip label="Cancel">
-                <IconButton
-                  aria-label="Cancel"
-                  icon={<CloseIcon />}
-                  size="sm"
-                  onClick={cancelEdit}
-                />
-              </Tooltip>
-              <Tooltip label="Save Changes">
-                <IconButton
-                  aria-label="Save"
-                  icon={<CheckIcon />}
-                  size="sm"
-                  colorScheme="teal"
-                  onClick={updateProfile}
-                />
-              </Tooltip>
-            </HStack>
-          ) : (
-            <Tooltip label="Edit Profile">
-              <IconButton
-                aria-label="Edit"
-                icon={<FaUserEdit />}
-                size="sm"
-                onClick={() => setEditingProfile(true)}
-              />
+        {authUser?.id === user?.id && !editingProfile && (
+          <Tooltip label="Edit Profile">
+            <IconButton
+              aria-label="Edit"
+              icon={<FaUserEdit />}
+              size="sm"
+              onClick={() => setEditingProfile(true)}
+            />
+          </Tooltip>
+        )}
+        {authUser?.id === user?.id && editingProfile && (
+          <HStack>
+            <Tooltip label="Cancel">
+              <IconButton aria-label="Cancel" icon={<CloseIcon />} size="sm" onClick={cancelEdit} />
             </Tooltip>
-          )
+            <Tooltip label="Save Changes">
+              <IconButton aria-label="Save" icon={<CheckIcon />} size="sm" colorScheme="teal" onClick={updateProfile} />
+            </Tooltip>
+          </HStack>
         )}
       </Flex>
     </Box>
   );
 }
 
-function InfoItem({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: string;
-  icon: React.ReactNode;
-}) {
+function InfoItem({ label, value, icon }: { label: string; value: string | number; icon: React.ReactNode }) {
   return (
     <HStack align="center">
-      <Box fontSize="lg" color="gray.500">
-        {icon}
-      </Box>
+      <Box fontSize="lg" color="gray.500">{icon}</Box>
       <Box>
-        <Text fontSize="sm" color="gray.500">
-          {label}
-        </Text>
+        <Text fontSize="sm" color="gray.500">{label}</Text>
         <Text fontWeight="medium">{value}</Text>
       </Box>
     </HStack>

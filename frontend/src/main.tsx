@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "./chakra/theme";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Login from "./features/authentication/pages/login/Login";
 import Signin from "./features/authentication/pages/signin/Signin";
 import ResetPassword from "./features/authentication/pages/resetPassword/ResetPassword";
@@ -14,8 +18,6 @@ import NotFound from "./components/notfound/NotFound";
 import { AuthenticationContextProvider } from "./features/authentication/context/AuthenticationContextProvider";
 import { AuthenticationLayout } from "./features/authentication/AuthLayout/AuthLayout";
 import { ApplicationLayout } from "./Layout/ApplicationLayout";
-
-
 
 // import Profile from "./features/profile/pages/Profile";
 import { Posts } from "./features/profile/pages/Posts";
@@ -29,8 +31,11 @@ import { Notifications } from "./features/feed/pages/Notification";
 import { CountProvider } from "./components/Notify/CountContext";
 import { Conversation } from "./features/messaging/pages/Conversation";
 import Messaging from "./features/messaging/pages/Messaging";
+import { Leaderboard } from "./ai/feature/LeaderBoard";
+import Sentences from "./ai/feature/sentense/Sentences";
+import StoryPage from "./ai/feature/story/StoryPage";
+import VoiceAssistant from "./ai/feature/speak/VoiceAssistant";
 // import Conversation from "./features/messaging/pages/Conversation";
-
 
 const router = createBrowserRouter([
   {
@@ -39,10 +44,18 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <ApplicationLayout />,
-         children: [
+        children: [
           {
             path: "/", // 🏠 If someone visits just `/`, show the Feed page!
             element: <Feed />,
+          },
+          {
+            path: "/leader",
+            element: <Leaderboard />,
+          },
+          {
+            path: "ai", // 🏠 If someone visits just `/`, show the Feed page!
+            element: <Sentences />,
           },
           {
             path: "posts/:id",
@@ -50,7 +63,7 @@ const router = createBrowserRouter([
           },
           {
             path: "network", // 👥 LinkedIn's Network tab
-             element: <Network />,
+            element: <Network />,
             children: [
               {
                 index: true,
@@ -67,16 +80,16 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: "jobs", // 💼 Jobs tab
-            element: <div>Jobs</div>,
+            path: "speak", // 💼 Jobs tab
+            element: <VoiceAssistant/>,
           },
-            {
+          {
             path: "messaging", // 💬 Messaging tab
-            element: <Messaging/>,
+            element: <Messaging />,
             children: [
               {
                 path: "conversations/:id",
-                element: <Conversation/>,
+                element: <Conversation />,
               },
             ],
           },
@@ -84,17 +97,17 @@ const router = createBrowserRouter([
             path: "notification", // 🔔 Notification tab
             element: <Notifications />,
           },
-         {
+          {
             path: "profile/:id",
-            element: <Profile/>,
+            element: <Profile />,
           },
           {
             path: "profile/:id/posts",
             element: <Posts />,
           },
           {
-            path: "settings", // ⚙️ Settings page
-            element: <div>Settings & Privacy</div>,
+            path: "stories", // ⚙️ Settings page
+            element: <StoryPage />,
           },
         ],
       },

@@ -30,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -284,15 +286,15 @@ public class AuthService {
     }
     }
 
-    public User updateUserProfile(User user, String firstName, String lastName, String profession,String location, String bio) {
+    public User updateUserProfile(User user, String firstName, String lastName, String hobbies,String nativeLanguage, String bio) {
         if(firstName !=null)
             user.setFirstName(firstName);
         if (lastName != null)
             user.setLastName(lastName);
-        if(profession != null)
-            user.setProfession(profession);
-        if(location != null)
-            user.setLocation(location);
+        if(hobbies != null)
+            user.setHobbies(Collections.singletonList(hobbies));
+        if(nativeLanguage != null)
+            user.setNativeLanguage(nativeLanguage);
         if(bio != null)
             user.setBio(bio);
 
@@ -321,4 +323,7 @@ public class AuthService {
     }
 
 
+    public List<User> findTopUsersByPoints() {
+        return userRepository.findAllByOrderByPointsDesc();
+    }
 }

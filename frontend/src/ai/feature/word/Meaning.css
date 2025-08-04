@@ -1,0 +1,114 @@
+.word-meaning-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.open-btn {
+  background: #121212;
+  color: #00ffcc;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 0 10px #00ffcc;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.open-btn:hover {
+  background: #0d0d0d;
+  transform: scale(1.05);
+}
+
+.meaning-panel.glass {
+  background: rgba(10, 10, 20, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 204, 0.2);
+  border-radius: 16px;
+  padding: 20px;
+  width: 340px;
+  max-height: 450px;
+  overflow-y: auto;
+  color: #e0ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+}
+
+.meaning-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+.meaning-form input {
+  flex: 1;
+  padding: 10px;
+  background: #1a1a2e;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Fira Code', monospace;
+}
+.meaning-form button {
+  padding: 10px;
+  background: #00ffcc;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.meaning-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.spinner {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.chatbox__messages {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.chatbox__messages::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+.chat-msg.bot {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.chat-avatar {
+  font-size: 24px;
+}
+.chat-bubble {
+  background: #0d0d0d;
+  padding: 12px;
+  border-radius: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.4;
+  color: #00ffee;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+.highlight {
+  color: #ff7b00;
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Orbitron', sans-serif;
+}
+.heading {
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffee;
+  text-align: center;
+  font-size: 18px;
+}
+.animation-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}

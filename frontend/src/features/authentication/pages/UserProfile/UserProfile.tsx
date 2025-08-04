@@ -10,12 +10,29 @@ import {
   FormLabel,
   FormErrorMessage,
   useToast,
-  Icon,
   useColorModeValue,
+  Select,
+  Checkbox,
+  CheckboxGroup,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../context/AuthenticationContextProvider";
 import { ArrowBackIcon, ArrowForwardIcon, CheckCircleIcon } from "@chakra-ui/icons";
+
+// 🎯 Common Hobbies
+const HOBBY_OPTIONS = [
+  "Reading 📚", "Music 🎵", "Traveling 🌍", "Photography 📸", "Cooking 🍳",
+  "Gardening 🌱", "Gaming 🎮", "Drawing 🎨", "Writing ✍️", "Dancing 💃",
+  "Fitness 🏋️", "Cycling 🚴", "Hiking 🥾", "Swimming 🏊", "Running 🏃",
+  "Yoga 🧘", "Movies 🎬", "Crafting ✂️", "Fishing 🎣", "Coding 💻",
+];
+
+// 🌐 Indian Languages
+const LANGUAGE_OPTIONS = [
+  "Hindi", "Marathi", "Telugu", "Tamil", "Kannada", "Gujarati", "Punjabi",
+  "Bengali", "Malayalam", "Odia", "Urdu", "Assamese", "Konkani", "Sanskrit",
+];
 
 function UserProfile() {
   const toast = useToast();
@@ -27,20 +44,27 @@ function UserProfile() {
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
-    profession: "",
-    location: "",
+    hobbies: [] as string[], // ✅ now array
+    nativeLanguage: "",
     bio: "",
   });
 
   const onSubmit = async () => {
-    if (!data.firstName || !data.lastName || !data.profession || !data.location || !data.bio) {
+    if (!data.firstName || !data.lastName || !data.hobbies.length || !data.nativeLanguage || !data.bio) {
       setError("Please fill in all required fields.");
       return;
     }
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/authentication/profile/${user?.id}/info?firstName=${data.firstName}&lastName=${data.lastName}&profession=${data.profession}&location=${data.location}&bio=${data.bio}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/authentication/profile/${user?.id}/info?` +
+        new URLSearchParams({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          hobbies: data.hobbies.join(", "), // ✅ convert to comma-separated
+          nativeLanguage: data.nativeLanguage,
+          bio: data.bio,
+        }),
         {
           method: "PUT",
           headers: {
@@ -62,7 +86,7 @@ function UserProfile() {
           });
           navigate("/");
         } else {
-          navigate(`/authentication/profile/${user.id}`);
+          navigate(`/authentication/profile/${user?.id}`);
           setError("Something went wrong. Please try again.");
         }
       } else {
@@ -123,15 +147,24 @@ function UserProfile() {
         )}
 
         {step === 1 && (
-          <FormControl isRequired isInvalid={!!error && !data.profession}>
-            <FormLabel>Profession</FormLabel>
-            <Input
-              placeholder="Web Developer"
-              value={data.profession}
-              onFocus={() => setError("")}
-              onChange={(e) => setData((prev) => ({ ...prev, profession: e.target.value }))}
-            />
-            {!!error && !data.profession && (
+          <FormControl isRequired isInvalid={!!error && !data.hobbies.length}>
+            <FormLabel>Select Your Hobbies 🎯</FormLabel>
+            <CheckboxGroup
+              value={data.hobbies}
+              onChange={(values) => {
+                setData((prev) => ({ ...prev, hobbies: values as string[] }));
+                setError("");
+              }}
+            >
+              <SimpleGrid columns={2} spacing={2}>
+                {HOBBY_OPTIONS.map((hobby) => (
+                  <Checkbox key={hobby} value={hobby}>
+                    {hobby}
+                  </Checkbox>
+                ))}
+              </SimpleGrid>
+            </CheckboxGroup>
+            {!!error && !data.hobbies.length && (
               <FormErrorMessage>{error}</FormErrorMessage>
             )}
           </FormControl>
@@ -139,25 +172,31 @@ function UserProfile() {
 
         {step === 2 && (
           <>
-            <FormControl isRequired isInvalid={!!error && !data.location}>
-              <FormLabel>Location</FormLabel>
-              <Input
-                placeholder="India"
-                value={data.location}
+            <FormControl isRequired isInvalid={!!error && !data.nativeLanguage}>
+              <FormLabel>Native Language 🗣️</FormLabel>
+              <Select
+                placeholder="Select your language"
+                value={data.nativeLanguage}
+                onChange={(e) => setData((prev) => ({ ...prev, nativeLanguage: e.target.value }))}
                 onFocus={() => setError("")}
-                onChange={(e) => setData((prev) => ({ ...prev, location: e.target.value }))}
-              />
+              >
+                {LANGUAGE_OPTIONS.map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl isRequired isInvalid={!!error && !data.bio}>
-              <FormLabel>About You</FormLabel>
+              <FormLabel>About You 💬</FormLabel>
               <Input
                 placeholder="I'm passionate about tech and love coffee ☕"
                 value={data.bio}
                 onFocus={() => setError("")}
                 onChange={(e) => setData((prev) => ({ ...prev, bio: e.target.value }))}
               />
-              {!!error && (!data.location || !data.bio) && (
+              {!!error && (!data.nativeLanguage || !data.bio) && (
                 <FormErrorMessage>{error}</FormErrorMessage>
               )}
             </FormControl>
@@ -184,7 +223,7 @@ function UserProfile() {
               colorScheme="blue"
               isDisabled={
                 (step === 0 && (!data.firstName || !data.lastName)) ||
-                (step === 1 && !data.profession)
+                (step === 1 && !data.hobbies.length)
               }
             >
               Next
@@ -196,7 +235,7 @@ function UserProfile() {
               colorScheme="green"
               rightIcon={<CheckCircleIcon />}
               onClick={onSubmit}
-              isDisabled={!data.location || !data.bio}
+              isDisabled={!data.nativeLanguage || !data.bio}
             >
               Submit
             </Button>

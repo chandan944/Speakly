@@ -34,9 +34,13 @@ public class User {
     private String ProfilePicture=null;
     private Boolean profileComplete=false;
     @FullTextField(analyzer = "standard")
-    private String profession=null;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_hobbies", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "hobby")
+    private List<String> hobbies;
     @FullTextField(analyzer = "standard")
-    private String location=null;
+    private String nativeLanguage = null; // replaced location
+    private int points = 0; // added for leaderboard
     private String bio = "Hey there lets fun together";
 
 
@@ -99,10 +103,19 @@ public class User {
 
 
     public void updateProfileComplete(){
-        this.profileComplete = (this.firstName != null && this.lastName != null && this.profession !=null);
+        this.profileComplete = (this.firstName != null && this.lastName != null && this.hobbies !=null);
     }
     public Long getId() {
         return id;
+    }
+
+    public List<String> getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(List<String> hobbies) {
+        this.hobbies = hobbies;
+        updateProfileComplete();
     }
 
     public void setId(Long id) {
@@ -115,6 +128,7 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+
     }
 
     public String getEmail() {
@@ -173,14 +187,7 @@ public class User {
         this.profileComplete = profileComplete;
     }
 
-    public String getProfession() {
-        return profession;
-    }
 
-    public void setProfession(String profession) {
-        this.profession = profession;
-        updateProfileComplete();
-    }
 
     public String getFirstName() {
         return firstName;
@@ -218,12 +225,22 @@ public class User {
         updateProfileComplete();
     }
 
-    public String getLocation() {
-        return location;
+
+
+    public int getPoints() {
+        return points;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-        updateProfileComplete();
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public String getNativeLanguage() {
+        return nativeLanguage;
+    }
+
+    public void setNativeLanguage(String nativeLanguage) {
+        this.nativeLanguage = nativeLanguage;
+
     }
 }

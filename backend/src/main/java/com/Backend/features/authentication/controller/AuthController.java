@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/authentication")
@@ -77,14 +78,14 @@ public class AuthController {
             @RequestAttribute("authenticatedUser") User user,
             @RequestParam(required = false) String firstName,
             @RequestParam(required = false) String lastName,
-            @RequestParam(required = false) String profession,
-            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String hobbies,
+            @RequestParam(required = false) String nativeLanguage,
             @RequestParam(required = false) String bio
    ){
         if(!user.getId().equals(id)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN , "User don't have permission");
         }
-        return authService.updateUserProfile(user,firstName,lastName,profession ,location, bio);
+        return authService.updateUserProfile(user,firstName,lastName,hobbies ,nativeLanguage, bio);
    }
    @PutMapping("/profile/{id}/profile-picture")
    public User updateProfilePicture(@RequestAttribute("authenticatedUser") User user,
@@ -107,5 +108,10 @@ public class AuthController {
     @GetMapping("/users/{id}")
     public User getUserById(@PathVariable Long id) {
         return authService.getUserById(id);
+    }
+
+    @GetMapping("/leaders")
+    public List<User> LeaderBoard(){
+        return authService.findTopUsersByPoints();
     }
 }

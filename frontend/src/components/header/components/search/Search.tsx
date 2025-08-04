@@ -162,7 +162,7 @@ export function Search() {
                         {user.firstName} {user.lastName}
                       </Text>
                       <Text fontSize="xs" color={textSecondary} noOfLines={1}>
-                        {user.profession || "No profession listed"}
+                        {user.nativeLanguage || "No Native Language listed"}
                       </Text>
                     </VStack>
                   </HStack>
