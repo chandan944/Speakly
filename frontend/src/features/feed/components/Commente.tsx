@@ -79,7 +79,7 @@ export function Comment({ comment, deleteComment, editComment }: CommentProps) {
               />
               <Box>
                 <Text fontWeight="semibold" color={textColor} fontSize="sm">
-                  {user?.firstName?.charAt(0).toUpperCase()}{user?.firstName?.slice(1)} {user?.lastName?.charAt(0).toUpperCase()}{user?.lastName?.slice(1)}
+                  {commentState?.author?.firstName} {commentState?.author.lastName}
                 </Text>
                 <TimeAgo date={commentState.creationDate} edited={!!commentState.updatedDate} />
               </Box>

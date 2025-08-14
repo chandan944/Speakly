@@ -35,6 +35,7 @@ import { Leaderboard } from "./ai/feature/LeaderBoard";
 import Sentences from "./ai/feature/sentense/Sentences";
 import StoryPage from "./ai/feature/story/StoryPage";
 import VoiceAssistant from "./ai/feature/speak/VoiceAssistant";
+import QuizApp from "./ai/feature/quizes/QuizManager";
 // import Conversation from "./features/messaging/pages/Conversation";
 
 const router = createBrowserRouter([
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
           {
             path: "/leader",
             element: <Leaderboard />,
+          },
+          {
+            path: "/quizes",
+            element: <QuizApp/>,
           },
           {
             path: "ai", // 🏠 If someone visits just `/`, show the Feed page!

@@ -21,6 +21,7 @@ import {
 import {
   useRef,
   useState,
+  useEffect,
   type ChangeEvent,
   type Dispatch,
   type FormEvent,
@@ -47,11 +48,27 @@ export function Madal({
 }: IPostingMadalProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [preview, setPreview] = useState<string | undefined>(picture);
+  const [preview, setPreview] = useState<string | undefined>();
   const [file, setFile] = useState<File | undefined>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const bg = useColorModeValue("white", "gray.800");
+
+  // Reset state when modal opens/closes or when it's a new post
+  useEffect(() => {
+    if (showModal) {
+      // Only set preview to picture if we're editing (picture exists)
+      // For new posts, start with no preview
+      setPreview(picture);
+      setFile(undefined);
+      setError("");
+    } else {
+      // Clear everything when modal closes
+      setPreview(undefined);
+      setFile(undefined);
+      setError("");
+    }
+  }, [showModal, picture]);
 
   function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
     setError("");
@@ -71,6 +88,16 @@ export function Madal({
     };
     reader.readAsDataURL(file);
   }
+
+  const removeImage = () => {
+    setPreview(undefined);
+    setFile(undefined);
+    // Clear the file input
+    const fileInput = document.getElementById("file-upload") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,8 +119,14 @@ export function Madal({
 
     try {
       await onSubmit(formData);
+      // Reset form after successful submission
       setPreview(undefined);
+      setFile(undefined);
       setShowModal(false);
+      // Clear the textarea
+      if (textareaRef.current) {
+        textareaRef.current.value = "";
+      }
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -155,14 +188,17 @@ export function Madal({
                 </label>
               ) : (
                 <Box position="relative" mb={3}>
-                  <CloseIcon
-                    as={MdPhotoCamera}
+                  <IconButton
+                    icon={<CloseIcon />}
                     aria-label="Remove image"
                     position="absolute"
                     top={1}
                     right={1}
-                    onClick={() => setPreview(undefined)}
+                    onClick={removeImage}
                     zIndex={1}
+                    size="sm"
+                    colorScheme="red"
+                    variant="solid"
                   />
                   <Image
                     src={preview}

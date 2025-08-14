@@ -495,12 +495,16 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
         </Box>
         {authUser?.id === user?.id && !editingProfile && (
           <Tooltip label="Edit Profile">
-            <IconButton
+           <Box m={5}>
+             <IconButton
+            
+            
               aria-label="Edit"
               icon={<FaUserEdit />}
-              size="sm"
+              size="md"
               onClick={() => setEditingProfile(true)}
             />
+           </Box>
           </Tooltip>
         )}
         {authUser?.id === user?.id && editingProfile && (

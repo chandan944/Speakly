@@ -49,12 +49,13 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public Story createStory(MultipartFile picture, String content, Long userId) throws Exception {
+    public Story createStory(MultipartFile picture,String title, String content, Long userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found"));
 
         Story story = new Story();
         story.setContent(content);
+        story.setTitle(title);
         story.setUser(user);
 
         if (picture != null && !picture.isEmpty()) {

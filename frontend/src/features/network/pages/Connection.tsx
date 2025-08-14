@@ -67,7 +67,7 @@ console.log(" from conected  :",+ connexions );
   bg={useColorModeValue("white", "gray.800")}
     >
       <Heading size="lg" mb={4}>
-        Connections ({connexions.length})
+        Friends ({connexions.length})
       </Heading>
 
       <VStack spacing={4} align="stretch">

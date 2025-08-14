@@ -17,6 +17,8 @@ interface AuthenticationResponse {
 }
 
 export interface User {
+  charAt(arg0: number): unknown;
+  charAt(arg0: number): unknown;
   Status: import("c:/Users/lenovo/Desktop/Speakly/frontend/src/features/network/components/connection/Connection").Status;
   filter(arg0: (s: any) => boolean): SetStateAction<User[]>;
   

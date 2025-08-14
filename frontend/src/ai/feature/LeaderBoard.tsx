@@ -10,18 +10,22 @@ import {
   Badge,
   IconButton,
   useColorModeValue,
- 
+  Button,
 } from "@chakra-ui/react";
 import {
-  MdEmojiEvents,  // 1st
-  MdOutlineFlag,  // 2nd
+  MdEmojiEvents, // 1st
+  MdOutlineFlag, // 2nd
   MdPeopleOutline, // 3rd
 } from "react-icons/md";
-import { useAuthentication, type User } from "../../features/authentication/context/AuthenticationContextProvider";
+import {
+  useAuthentication,
+  type User,
+} from "../../features/authentication/context/AuthenticationContextProvider";
 import { usePageTitle } from "../../hook/usePageTitle";
 import { request } from "../../utils/api";
-import RightSidebar from "../../features/feed/components/rightBar/RightBar";
+
 import { TrophyIcon, CoinsIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Medal Icon
 const MedalIcon = ({ rank }: { rank: number }) => {
@@ -44,7 +48,7 @@ export function Leaderboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const navigate = useNavigate();
   usePageTitle("🏆 Leaderboard");
 
   useEffect(() => {
@@ -65,7 +69,9 @@ export function Leaderboard() {
     return (
       <Flex justify="center" align="center" h="80vh" p={4}>
         <Spinner size="lg" color="teal.500" />
-        <Text ml={3} fontSize="md">Loading...</Text>
+        <Text ml={3} fontSize="md">
+          Loading...
+        </Text>
       </Flex>
     );
   }
@@ -73,9 +79,15 @@ export function Leaderboard() {
   return (
     <Box maxW="1200px" mx="auto" px={4} py={2}>
       {/* Header */}
-      <Flex align="center" justify="center" gap={2} mb={4} textAlign="center" wrap="wrap">
+      <Flex
+        align="center"
+        justify="center"
+        gap={2}
+        mb={4}
+        textAlign="center"
+        wrap="wrap"
+      >
         <TrophyIcon size={28} className="text-yellow-500" />
-      
       </Flex>
 
       {/* Mobile: Sidebar Toggle */}
@@ -103,7 +115,9 @@ export function Leaderboard() {
             const avatarUrl = user.profilePicture
               ? user.profilePicture.startsWith("http")
                 ? user.profilePicture
-                : `${import.meta.env.VITE_API_URL}/api/v1/storage/${user.profilePicture}`
+                : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                    user.profilePicture
+                  }`
               : "/avatar.svg";
 
             return (
@@ -122,7 +136,12 @@ export function Leaderboard() {
                 transition="all 0.15s ease"
                 fontSize="sm"
               >
-                <HStack spacing={3} justify="start" align="center" wrap="nowrap">
+                <HStack
+                  spacing={3}
+                  justify="start"
+                  align="center"
+                  wrap="nowrap"
+                >
                   {/* Rank & Medal */}
                   <Box flexShrink={0} w="40px">
                     {isTop3 ? (
@@ -146,34 +165,51 @@ export function Leaderboard() {
                       </Text>
                     )}
                   </Box>
+                
+                    {/* Avatar & Name */}
+                    <HStack flex="1" spacing={3} minW="0" 
+                    onClick={() => navigate("/profile/" + user.id)}
+                    cursor={"pointer"}
+                    >
+                      <Avatar
+                        size="sm"
+                        src={avatarUrl}
+                        name={`${user.firstName} ${user.lastName}`}
+                      />
+                      <VStack align="start" spacing={0} flex="1" minW="0">
+                        <Text fontWeight="bold" fontSize="sm" noOfLines={1}>
+                          {user.firstName} {user.lastName}
+                        </Text>
+                        <Text fontSize="xs" color="gray.500" noOfLines={1}>
+                          {user.nativeLanguage || "No language"}
+                        </Text>
+                      </VStack>
+                    </HStack>
 
-                  {/* Avatar & Name */}
-                  <HStack flex="1" spacing={3} minW="0">
-                    <Avatar size="sm" src={avatarUrl} name={`${user.firstName} ${user.lastName}`} />
-                    <VStack align="start" spacing={0} flex="1" minW="0">
-                      <Text fontWeight="bold" fontSize="sm" noOfLines={1}>
-                        {user.firstName} {user.lastName}
+                    {/* Points */}
+                    <HStack
+                      spacing={1}
+                      flexShrink={0}
+                      justify="flex-end"
+                      w="70px"
+                    >
+                      <CoinsIcon size={14} className="text-teal-500" />
+                      <Text fontWeight="bold" color="teal.500" fontSize="sm">
+                        {user.points}
                       </Text>
-                      <Text fontSize="xs" color="gray.500" noOfLines={1}>
-                        {user.nativeLanguage || "No language"}
-                      </Text>
-                    </VStack>
-                  </HStack>
-
-                  {/* Points */}
-                  <HStack spacing={1} flexShrink={0} justify="flex-end" w="70px">
-                    <CoinsIcon size={14} className="text-teal-500" />
-                    <Text fontWeight="bold" color="teal.500" fontSize="sm">
-                      {user.points}
-                    </Text>
-                  </HStack>
+                    </HStack>
+                
                 </HStack>
 
                 {/* Achievement Label (Mobile) */}
                 {isTop3 && (
                   <Box mt={1} textAlign="center">
                     <Text fontSize="xs" color="gray.500">
-                      {rank === 1 ? "👑 Champion!" : rank === 2 ? "🥈 Great!" : "🥉 Well done!"}
+                      {rank === 1
+                        ? "👑 Champion!"
+                        : rank === 2
+                        ? "🥈 Great!"
+                        : "🥉 Well done!"}
                     </Text>
                   </Box>
                 )}
@@ -183,7 +219,6 @@ export function Leaderboard() {
         </VStack>
 
         {/* Sidebar */}
-    
       </Flex>
     </Box>
   );

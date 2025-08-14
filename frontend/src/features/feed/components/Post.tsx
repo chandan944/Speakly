@@ -314,12 +314,12 @@ export function Post({ post, setPosts }: PostProps) {
             </Button>
 
             <Box>
-              <Text fontWeight="bold" fontSize="md">
+              <Text fontWeight="bold" fontSize="12px">
                 {post.author.firstName?.charAt(0).toUpperCase()}
                 {post.author.firstName?.slice(1)}{" "}
-                {post.author.lastName?.charAt(0).toUpperCase()}.
+                {post.author.lastName}.
               </Text>
-              <TimeAgo date={post.creationDate} edited={!!post.updatedDate} />
+              <Box fontSize="5px"> <TimeAgo date={post.creationDate} edited={!!post.updatedDate} /></Box>
             </Box>
           </Flex>
 

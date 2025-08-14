@@ -15,6 +15,10 @@ import {
   Checkbox,
   CheckboxGroup,
   SimpleGrid,
+  Flex,
+  HStack,
+  ScaleFade,
+  Icon,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../context/AuthenticationContextProvider";
@@ -44,7 +48,7 @@ function UserProfile() {
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
-    hobbies: [] as string[], // ✅ now array
+    hobbies: [] as string[],
     nativeLanguage: "",
     bio: "",
   });
@@ -61,7 +65,7 @@ function UserProfile() {
         new URLSearchParams({
           firstName: data.firstName,
           lastName: data.lastName,
-          hobbies: data.hobbies.join(", "), // ✅ convert to comma-separated
+          hobbies: data.hobbies.join(", "),
           nativeLanguage: data.nativeLanguage,
           bio: data.bio,
         }),
@@ -99,148 +103,226 @@ function UserProfile() {
   };
 
   const formBoxBg = useColorModeValue("white", "gray.800");
-  const formShadow = useColorModeValue("lg", "dark-lg");
+  const formShadow = useColorModeValue("md", "dark-lg");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const activeColor = "blue.500";
+  const inactiveColor = useColorModeValue("gray.300", "gray.600");
 
   return (
     <Box
-      p={6}
-      maxW="lg"
+      p={8}
+      maxW="xl"
       mx="auto"
-      mt={10}
-      borderRadius="xl"
+      mt={12}
+      borderRadius="2xl"
       boxShadow={formShadow}
       bg={formBoxBg}
+      borderWidth="1px"
+      borderColor={borderColor}
+      transition="all 0.2s ease"
     >
-      <Heading mb={2} size="lg" textAlign="center">
-        Just One Last Step! 🥳
-      </Heading>
-      <Text mb={6} textAlign="center" fontSize="sm" color="gray.500">
-        Help us personalize your experience by completing your profile.
-      </Text>
+      {/* Header */}
+      <VStack spacing={2} mb={8} align="center">
+        <Heading size="lg" fontWeight="semibold" textAlign="center" color="gray.700" _dark={{ color: "whiteAlpha.900" }}>
+          Complete Your Profile
+        </Heading>
+        <Text fontSize="sm" color="gray.500" textAlign="center" maxW="sm">
+          Just a few details to personalize your experience.
+        </Text>
 
-      <VStack spacing={5} align="stretch">
-        {step === 0 && (
-          <>
-            <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
-              <FormLabel>First Name</FormLabel>
-              <Input
-                placeholder="John"
-                value={data.firstName}
-                onFocus={() => setError("")}
-                onChange={(e) => setData((prev) => ({ ...prev, firstName: e.target.value }))}
-              />
-            </FormControl>
+        {/* Progress Dots */}
+        <HStack spacing={2} mt={4}>
+          {[0, 1, 2].map((index) => (
+            <Box
+              key={index}
+              w="8px"
+              h="8px"
+              borderRadius="full"
+              bg={step >= index ? activeColor : inactiveColor}
+              transition="background-color 0.3s ease"
+            />
+          ))}
+        </HStack>
+      </VStack>
 
-            <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
-              <FormLabel>Last Name</FormLabel>
-              <Input
-                placeholder="Doe"
-                value={data.lastName}
-                onFocus={() => setError("")}
-                onChange={(e) => setData((prev) => ({ ...prev, lastName: e.target.value }))}
-              />
-              {!!error && (!data.firstName || !data.lastName) && (
-                <FormErrorMessage>{error}</FormErrorMessage>
-              )}
-            </FormControl>
-          </>
-        )}
+      {/* Form */}
+      <VStack spacing={6} align="stretch">
+        {/* Step 0: Name */}
+        <ScaleFade initialScale={0.95} in={step === 0}>
+          {step === 0 && (
+            <>
+              <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
+                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  First Name
+                </FormLabel>
+                <Input
+                  placeholder="e.g. John"
+                  value={data.firstName}
+                  onFocus={() => setError("")}
+                  onChange={(e) => setData((prev) => ({ ...prev, firstName: e.target.value }))}
+                  borderRadius="lg"
+                  focusBorderColor="blue.400"
+                  _focus={{ shadow: "sm" }}
+                  bg="white"
+                  _dark={{ bg: "gray.700" }}
+                />
+              </FormControl>
 
-        {step === 1 && (
-          <FormControl isRequired isInvalid={!!error && !data.hobbies.length}>
-            <FormLabel>Select Your Hobbies 🎯</FormLabel>
-            <CheckboxGroup
-              value={data.hobbies}
-              onChange={(values) => {
-                setData((prev) => ({ ...prev, hobbies: values as string[] }));
-                setError("");
-              }}
-            >
-              <SimpleGrid columns={2} spacing={2}>
-                {HOBBY_OPTIONS.map((hobby) => (
-                  <Checkbox key={hobby} value={hobby}>
-                    {hobby}
-                  </Checkbox>
-                ))}
-              </SimpleGrid>
-            </CheckboxGroup>
-            {!!error && !data.hobbies.length && (
-              <FormErrorMessage>{error}</FormErrorMessage>
-            )}
-          </FormControl>
-        )}
+              <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
+                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  Last Name
+                </FormLabel>
+                <Input
+                  placeholder="e.g. Doe"
+                  value={data.lastName}
+                  onFocus={() => setError("")}
+                  onChange={(e) => setData((prev) => ({ ...prev, lastName: e.target.value }))}
+                  borderRadius="lg"
+                  focusBorderColor="blue.400"
+                  _focus={{ shadow: "sm" }}
+                  bg="white"
+                  _dark={{ bg: "gray.700" }}
+                />
+                {!!error && (!data.firstName || !data.lastName) && (
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                )}
+              </FormControl>
+            </>
+          )}
+        </ScaleFade>
 
-        {step === 2 && (
-          <>
-            <FormControl isRequired isInvalid={!!error && !data.nativeLanguage}>
-              <FormLabel>Native Language 🗣️</FormLabel>
-              <Select
-                placeholder="Select your language"
-                value={data.nativeLanguage}
-                onChange={(e) => setData((prev) => ({ ...prev, nativeLanguage: e.target.value }))}
-                onFocus={() => setError("")}
+        {/* Step 1: Hobbies */}
+        <ScaleFade initialScale={0.95} in={step === 1}>
+          {step === 1 && (
+            <FormControl isRequired isInvalid={!!error && !data.hobbies.length}>
+              <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                Select Your Hobbies 🎯
+              </FormLabel>
+              <CheckboxGroup
+                value={data.hobbies}
+                onChange={(values) => {
+                  setData((prev) => ({ ...prev, hobbies: values as string[] }));
+                  setError("");
+                }}
               >
-                {LANGUAGE_OPTIONS.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {lang}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl isRequired isInvalid={!!error && !data.bio}>
-              <FormLabel>About You 💬</FormLabel>
-              <Input
-                placeholder="I'm passionate about tech and love coffee ☕"
-                value={data.bio}
-                onFocus={() => setError("")}
-                onChange={(e) => setData((prev) => ({ ...prev, bio: e.target.value }))}
-              />
-              {!!error && (!data.nativeLanguage || !data.bio) && (
+                <SimpleGrid columns={{ base: 2, sm: 3 }} spacing={3}>
+                  {HOBBY_OPTIONS.map((hobby) => (
+                    <Checkbox
+                      key={hobby}
+                      value={hobby}
+                      size="md"
+                      colorScheme="blue"
+                      px={3}
+                      py={2}
+                      borderRadius="md"
+                      _hover={{ bg: "blue.50" }}
+                      _dark={{ _hover: { bg: "blue.900" } }}
+                    >
+                      <Text fontSize="sm">{hobby}</Text>
+                    </Checkbox>
+                  ))}
+                </SimpleGrid>
+              </CheckboxGroup>
+              {!!error && !data.hobbies.length && (
                 <FormErrorMessage>{error}</FormErrorMessage>
               )}
             </FormControl>
-          </>
-        )}
+          )}
+        </ScaleFade>
 
-        {/* Navigation buttons */}
-        <Box display="flex" justifyContent="space-between" pt={4}>
-          {step > 0 && (
+        {/* Step 2: Language & Bio */}
+        <ScaleFade initialScale={0.95} in={step === 2}>
+          {step === 2 && (
+            <>
+              <FormControl isRequired isInvalid={!!error && !data.nativeLanguage}>
+                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  Native Language 🗣️
+                </FormLabel>
+                <Select
+                  placeholder="Select your language"
+                  value={data.nativeLanguage}
+                  onChange={(e) => setData((prev) => ({ ...prev, nativeLanguage: e.target.value }))}
+                  onFocus={() => setError("")}
+                  borderRadius="lg"
+                  focusBorderColor="blue.400"
+                  _focus={{ shadow: "sm" }}
+                  bg="white"
+                  _dark={{ bg: "gray.700" }}
+                >
+                  {LANGUAGE_OPTIONS.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl isRequired isInvalid={!!error && !data.bio}>
+                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  About You 💬
+                </FormLabel>
+                <Input
+                  placeholder="I love learning new things and exploring cultures 🌍"
+                  value={data.bio}
+                  onFocus={() => setError("")}
+                  onChange={(e) => setData((prev) => ({ ...prev, bio: e.target.value }))}
+                  borderRadius="lg"
+                  focusBorderColor="blue.400"
+                  _focus={{ shadow: "sm" }}
+                  bg="white"
+                  _dark={{ bg: "gray.700" }}
+                />
+                {!!error && (!data.nativeLanguage || !data.bio) && (
+                  <FormErrorMessage>{error}</FormErrorMessage>
+                )}
+              </FormControl>
+            </>
+          )}
+        </ScaleFade>
+
+        {/* Navigation */}
+        <Flex mt={6} justify="space-between" align="center">
+          {step > 0 ? (
             <Button
-              onClick={() => setStep((prev) => prev - 1)}
               leftIcon={<ArrowBackIcon />}
-              colorScheme="gray"
-              variant="outline"
+              variant="ghost"
+              colorScheme="blue"
+              onClick={() => setStep((prev) => prev - 1)}
+              fontWeight="medium"
             >
               Back
             </Button>
+          ) : (
+            <Box></Box> // Spacer for alignment
           )}
 
-          {step < 2 && (
+          {step < 2 ? (
             <Button
-              onClick={() => setStep((prev) => prev + 1)}
               rightIcon={<ArrowForwardIcon />}
               colorScheme="blue"
+              onClick={() => setStep((prev) => prev + 1)}
               isDisabled={
                 (step === 0 && (!data.firstName || !data.lastName)) ||
                 (step === 1 && !data.hobbies.length)
               }
+              px={6}
+              fontWeight="semibold"
             >
               Next
             </Button>
-          )}
-
-          {step === 2 && (
+          ) : (
             <Button
-              colorScheme="green"
               rightIcon={<CheckCircleIcon />}
+              colorScheme="green"
               onClick={onSubmit}
               isDisabled={!data.nativeLanguage || !data.bio}
+              px={6}
+              fontWeight="semibold"
             >
-              Submit
+              Complete Profile
             </Button>
           )}
-        </Box>
+        </Flex>
       </VStack>
     </Box>
   );

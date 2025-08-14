@@ -40,9 +40,10 @@ public class StoryController {
     @PostMapping
     public ResponseEntity<Story> createStory(
             @RequestParam(value = "picture", required = false) MultipartFile picture,
+            @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestAttribute("authenticatedUser") User user) throws Exception {
-        Story story = storyService.createStory(picture, content, user.getId());
+        Story story = storyService.createStory(picture,title, content, user.getId());
         return ResponseEntity.ok(story);
     }
 

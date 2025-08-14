@@ -12,7 +12,7 @@ import {
   Loader2,
   MessageSquare,
   Lock,
-  Star
+  Star,
 } from "lucide-react";
 import {
   Box,
@@ -41,13 +41,16 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Spinner
+  Spinner,
 } from "@chakra-ui/react";
-import { useAuthentication, type User } from "../../../features/authentication/context/AuthenticationContextProvider";
-import { TimeAgo } from "../../../features/feed/TimeAgo";
+import {
+  useAuthentication,
+  type User,
+} from "../../../features/authentication/context/AuthenticationContextProvider";
+import Meaning from "../word/Meaning";
+import { usePageTitle } from "../../../hook/usePageTitle";
 
 // === INTERFACES ===
-
 
 export interface StoryReaction {
   id: number;
@@ -60,6 +63,7 @@ export interface StoryReaction {
 
 export interface Story {
   id: number;
+  title: string;
   content: string;
   imageUrl?: string;
   user: User;
@@ -70,33 +74,35 @@ export interface Story {
 // === STORY FORMATTER - ONLY CHANGES HERE ===
 const StoryFormatter = ({ content }: { content: string }) => {
   const formatStory = (text: string) => {
-    return text
-      // 🔶 Yellow highlight for emphasis
-      .replace(/\*\*(.*?)\*\*/g, '<span class="highlight-yellow">$1</span>')
-      
-      // 💬 Italic for thoughts/whispers
-      .replace(/,,(.*?),,/g, '<span class="italic-thought">$1</span>')
-      
-      // 🎭 Quotes with special styling
-      .replace(/""(.*?)""/g, '<span class="styled-quote">$1</span>')
-      
-      // 🧠 Brain header
-      .replace(/🧠 (.*?)(?=\n|$)/g, '<div class="header-brain">🧠 $1</div>')
-      
-      // 🌈 Rainbow tone header
-      .replace(/🌈 (.*?)(?=\n|$)/g, '<div class="header-rainbow">🌈 $1</div>')
-      
-      // 📢 Announcement styling
-      .replace(/📢 (.*?)(?=\n|$)/g, '<div class="announcement">$1</div>')
-      
-      // ❤️ Moral lesson with special box
-      .replace(/❤️ (.*?)(?=\n|$)/g, '<div class="moral-lesson">❤️ $1</div>')
-      
-      // /// Wisdom blocks
-      .replace(/\/\/\/(.*?)\/\//g, '<div class="wisdom-block">$1</div>')
-      
-      // Line breaks
-      .replace(/\n/g, '<br/>');
+    return (
+      text
+        // 🔶 Yellow highlight for emphasis
+        .replace(/\*\*(.*?)\*\*/g, '<span class="highlight-yellow">$1</span>')
+.replace(/\*([\s\S]+?)\*/g, '<span class="highlight-blue">$1</span>')
+
+        // 💬 Italic for thoughts/whispers
+        .replace(/,,(.*?),,/g, '<span class="italic-thought">$1</span>')
+
+        // 🎭 Quotes with special styling
+        .replace(/""(.*?)""/g, '<span class="styled-quote">$1</span>')
+
+        // 🧠 Brain header
+        .replace(/🧠 (.*?)(?=\n|$)/g, '<div class="header-brain">🧠 $1</div>')
+
+        // 🌈 Rainbow tone header
+        .replace(/🌈 (.*?)(?=\n|$)/g, '<div class="header-rainbow">🌈 $1</div>')
+
+        // 📢 Announcement styling
+        .replace(/📢 (.*?)(?=\n|$)/g, '<div class="announcement">$1</div>')
+
+        // ❤️ Moral lesson with special box
+        .replace(/❤️ (.*?)(?=\n|$)/g, '<div class="moral-lesson">❤️ $1</div>')
+
+        .replace(/\/\/\/(.*?)\/\//g, '<div class="wisdom-block">$1</div>')
+
+        // Line breaks
+        .replace(/\n/g, "<br/>")
+    );
   };
 
   return (
@@ -119,29 +125,43 @@ const StoryPage = () => {
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
-  const {user} = useAuthentication();
-  const { isOpen: isCreateOpen, onOpen: onCreateOpen, onClose: onCreateClose } = useDisclosure();
-  const { isOpen: isViewOpen, onOpen: onViewOpen, onClose: onViewClose } = useDisclosure();
+  const { user } = useAuthentication();
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onClose: onCreateClose,
+  } = useDisclosure();
+  const {
+    isOpen: isViewOpen,
+    onOpen: onViewOpen,
+    onClose: onViewClose,
+  } = useDisclosure();
+  const [title, setTitle] = useState("");
 
   // Get token and user from localStorage (replace with context in real app)
   const token = localStorage.getItem("token");
-  
+
   // Mock user - in real app, get from authentication context
-  const currentUser: User = JSON.parse(localStorage.getItem("user") || "{}") || {
+  const currentUser: User = JSON.parse(
+    localStorage.getItem("user") || "{}"
+  ) || {
     id: 1,
     firstName: "Guest",
     lastName: "",
-    email: "guest@example.com"
+    email: "guest@example.com",
   };
-  
+
+  usePageTitle("Stories");
   // Admin email restriction
   const isAdmin = user?.email === "chandanprajapati6307@gmail.com";
-  
+
   const API_BASE = "http://localhost:8080/api/v1/story";
 
   // Get safe reactions (handles null/undefined)
   const getReactions = (story: Story): StoryReaction[] => {
-    return story.reactions && Array.isArray(story.reactions) ? story.reactions : [];
+    return story.reactions && Array.isArray(story.reactions)
+      ? story.reactions
+      : [];
   };
 
   // Check if current user is story owner
@@ -181,7 +201,7 @@ const StoryPage = () => {
     try {
       const res = await fetch(API_BASE, {
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
@@ -191,7 +211,7 @@ const StoryPage = () => {
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         console.error("❌ Fetch stories failed:", res.status, errorData);
-        
+
         if (res.status === 401) {
           toast({
             title: "Session expired",
@@ -201,7 +221,9 @@ const StoryPage = () => {
           });
           setError("Session expired. Please log in again.");
         } else {
-          setError(`Failed to load stories: ${errorData.message || 'Server error'}`);
+          setError(
+            `Failed to load stories: ${errorData.message || "Server error"}`
+          );
           toast({
             title: "Failed to load stories",
             description: errorData.message || "Server returned an error",
@@ -215,13 +237,13 @@ const StoryPage = () => {
 
       const data: Story[] = await res.json();
       console.log("✅ Successfully fetched stories:", data.length);
-      
+
       // Ensure reactions are initialized
-      const safeStories = data.map(story => ({
+      const safeStories = data.map((story) => ({
         ...story,
-        reactions: getReactions(story)
+        reactions: getReactions(story),
       }));
-      
+
       setStories(safeStories);
     } catch (err) {
       console.error("💥 Failed to fetch stories:", err);
@@ -243,62 +265,60 @@ const StoryPage = () => {
   }, []); // Run once
 
   // Create story
+  // State for title
+
+  // Create Story Function
   const createStory = async () => {
     if (!isAdmin) {
       showAdminRestriction();
       return;
     }
-    
+
+    if (!title.trim()) {
+      toast({ title: "Title required", status: "warning" });
+      return;
+    }
+
     if (!content.trim()) {
       toast({ title: "Content required", status: "warning" });
       return;
     }
+
     if (!token) {
       toast({ title: "Auth token missing", status: "error" });
       return;
     }
 
     setLoading(true);
-    console.log("📤 Creating new story:", { content, hasImage: !!selectedImage });
 
     const formData = new FormData();
     if (selectedImage) formData.append("picture", selectedImage);
+    formData.append("title", title); // ✅ Added title
     formData.append("content", content);
 
     try {
       const res = await fetch(API_BASE, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
       if (!res.ok) {
         const errorText = await res.text();
-        console.error("❌ Create story failed:", res.status, errorText);
         throw new Error(`HTTP ${res.status}: ${errorText}`);
       }
 
       const newStory: Story = await res.json();
-      console.log("✅ Story created:", newStory.id);
-      
-      // Ensure reactions are initialized
-      const safeStory = {
-        ...newStory,
-        reactions: getReactions(newStory)
-      };
-      
-      // Add to stories array (this fixes the "no stories after creation" issue)
-      setStories(prev => [safeStory, ...prev]);
+      const safeStory = { ...newStory, reactions: getReactions(newStory) };
+      setStories((prev) => [safeStory, ...prev]);
       onCreateClose();
       resetForm();
       toast({ title: "Story created!", status: "success" });
     } catch (err) {
-      console.error("❌ Create story failed:", err);
       toast({
         title: "Create failed",
-        description: err instanceof Error ? err.message : "Check console for details",
+        description:
+          err instanceof Error ? err.message : "Check console for details",
         status: "error",
       });
     } finally {
@@ -312,7 +332,7 @@ const StoryPage = () => {
       showAdminRestriction();
       return;
     }
-    
+
     if (!editingStory || !editingStory.content.trim()) return;
     if (!token) {
       toast({ title: "Authentication required", status: "error" });
@@ -330,7 +350,7 @@ const StoryPage = () => {
       const res = await fetch(`${API_BASE}/${editingStory.id}`, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -343,23 +363,23 @@ const StoryPage = () => {
 
       const updatedStory: Story = await res.json();
       console.log("✅ Story updated:", updatedStory.id);
-      
+
       // Ensure reactions are initialized
       const safeStory = {
         ...updatedStory,
-        reactions: getReactions(updatedStory)
+        reactions: getReactions(updatedStory),
       };
-      
-      setStories(stories.map(s => s.id === safeStory.id ? safeStory : s));
+
+      setStories(stories.map((s) => (s.id === safeStory.id ? safeStory : s)));
       setEditingStory(null);
       resetForm();
       toast({ title: "Story updated!", status: "success" });
     } catch (err) {
       console.error("❌ Update failed:", err);
-      toast({ 
-        title: "Update failed", 
+      toast({
+        title: "Update failed",
         description: err instanceof Error ? err.message : "Network error",
-        status: "error" 
+        status: "error",
       });
     } finally {
       setLoading(false);
@@ -372,11 +392,15 @@ const StoryPage = () => {
       showAdminRestriction();
       return;
     }
-    
-    if (!window.confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
+
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this story? This action cannot be undone."
+      )
+    ) {
       return;
     }
-    
+
     if (!token) {
       toast({ title: "Authentication required", status: "error" });
       return;
@@ -388,7 +412,7 @@ const StoryPage = () => {
       const res = await fetch(`${API_BASE}/${storyId}`, {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -399,12 +423,12 @@ const StoryPage = () => {
       }
 
       console.log("✅ Story deleted successfully");
-      setStories(stories.filter(s => s.id !== storyId));
-      
-      toast({ 
-        title: "Story deleted", 
+      setStories(stories.filter((s) => s.id !== storyId));
+
+      toast({
+        title: "Story deleted",
         status: "success",
-        duration: 2000
+        duration: 2000,
       });
     } catch (err) {
       console.error("💥 Delete error details:", err);
@@ -427,32 +451,38 @@ const StoryPage = () => {
     console.log("💬 Attempting to react to story:", storyId, "with", emoji);
 
     try {
-      const res = await fetch(`${API_BASE}/${storyId}/react?emoji=${encodeURIComponent(emoji)}`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${API_BASE}/${storyId}/react?emoji=${encodeURIComponent(emoji)}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
         console.error("❌ Reaction failed:", res.status, errorData);
-        throw new Error(`HTTP ${res.status}: ${errorData.message || 'Unknown error'}`);
+        throw new Error(
+          `HTTP ${res.status}: ${errorData.message || "Unknown error"}`
+        );
       }
 
       console.log("✅ Reaction successful");
       // Refresh to get updated reactions
       await fetchStories();
-      toast({ 
-        title: "Reaction added!", 
+      toast({
+        title: "Reaction added!",
         status: "success",
-        duration: 2000
+        duration: 2000,
       });
     } catch (err) {
       console.error("💥 Full reaction error:", err);
       toast({
         title: "Reaction failed",
-        description: err instanceof Error ? err.message : "Check console for details",
+        description:
+          err instanceof Error ? err.message : "Check console for details",
         status: "error",
         isClosable: true,
       });
@@ -482,7 +512,9 @@ const StoryPage = () => {
     if (user.profilePicture) {
       return user.profilePicture.startsWith("http")
         ? user.profilePicture
-        : `${import.meta.env.VITE_API_URL}/api/v1/storage/${user.profilePicture}`;
+        : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+            user.profilePicture
+          }`;
     }
     return "/avatar.svg";
   };
@@ -526,7 +558,7 @@ const StoryPage = () => {
   );
 
   return (
-    <Box bg="gray.50" minH="100vh" p={6}>
+    <Box minH="100vh" p={6}>
       {/* Header */}
       <Flex justify="space-between" align="center" mb={6}>
         <HStack>
@@ -540,16 +572,22 @@ const StoryPage = () => {
             Stories
           </Text>
         </HStack>
-        
+
         {/* Only show create button for admin */}
         {isAdmin ? (
-          <Button leftIcon={<Plus />} colorScheme="purple" onClick={onCreateOpen}>
+          <Button
+            leftIcon={<Plus />}
+            colorScheme="purple"
+            onClick={onCreateOpen}
+          >
             New Story
           </Button>
         ) : (
           <HStack>
             <Lock size={16} color="gray" />
-            <Text fontSize="sm" color="gray.500">Read-only mode</Text>
+            <Text fontSize="sm" color="gray.500">
+              Read-only mode
+            </Text>
           </HStack>
         )}
       </Flex>
@@ -559,7 +597,9 @@ const StoryPage = () => {
         <Alert status="info" mb={4} borderRadius="md">
           <AlertIcon />
           <AlertTitle>Admin Mode</AlertTitle>
-          <AlertDescription>You can create, edit, and delete stories</AlertDescription>
+          <AlertDescription>
+            You can create, edit, and delete stories
+          </AlertDescription>
         </Alert>
       )}
 
@@ -598,9 +638,9 @@ const StoryPage = () => {
             No stories yet
           </Text>
           {isAdmin && (
-            <Button 
+            <Button
               mt={4}
-              leftIcon={<Plus />} 
+              leftIcon={<Plus />}
               colorScheme="purple"
               onClick={onCreateOpen}
             >
@@ -613,7 +653,6 @@ const StoryPage = () => {
           {stories.map((story) => (
             <WrapItem key={story.id}>
               <Box
-                bg="white"
                 borderRadius="2xl"
                 overflow="hidden"
                 shadow="xl"
@@ -670,39 +709,33 @@ const StoryPage = () => {
 
                 {/* Content */}
                 <Box p={4}>
-                  <HStack justify="space-between" mb={2}>
-                    <HStack>
-                      <Avatar
-                        size="sm"
-                        name={`${story.user.firstName} ${story.user.lastName}`}
-                        src={getAvatarUrl(story.user)}
-                      />
-                      <Text fontWeight="bold" fontSize="sm">
-                        {story.user.firstName} {story.user.lastName}
-                      </Text>
-                    </HStack>
-                  </HStack>
+                
 
-                  <Text fontSize="sm" color="gray.700" noOfLines={2} mb={3}>
-                    {story.content}
+                  <Text fontSize="sm" noOfLines={2} mb={3}>
+                    {story.title || "Untitled Story"}
                   </Text>
 
                   {/* Reactions */}
                   <HStack spacing={1} mb={2}>
-                    {getReactions(story).slice(0, 5).map((r, i) => (
-                      <Tooltip key={i} label={`${r.user.firstName}: ${r.emoji}`}>
-                        <Text 
-                          fontSize="lg" 
-                          cursor="pointer"
-                          _hover={{ transform: "scale(1.2)" }}
-                          transition="all 0.2s"
+                    {getReactions(story)
+                      .slice(0, 5)
+                      .map((r, i) => (
+                        <Tooltip
+                          key={i}
+                          label={`${r.user.firstName}: ${r.emoji}`}
                         >
-                          {r.emoji}
-                        </Text>
-                      </Tooltip>
-                    ))}
+                          <Text
+                            fontSize="lg"
+                            cursor="pointer"
+                            _hover={{ transform: "scale(1.2)" }}
+                            transition="all 0.2s"
+                          >
+                            {r.emoji}
+                          </Text>
+                        </Tooltip>
+                      ))}
                     {getReactions(story).length > 5 && (
-                      <Text fontSize="sm" color="gray.500">
+                      <Text fontSize="sm">
                         +{getReactions(story).length - 5}
                       </Text>
                     )}
@@ -736,6 +769,15 @@ const StoryPage = () => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing={4}>
+              <input
+                type="text"
+                placeholder="Enter story title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                
+              />
+
               <Textarea
                 placeholder="What's on your mind?"
                 value={content}
@@ -773,7 +815,13 @@ const StoryPage = () => {
                 </Box>
               )}
               <Button
-                leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
+                leftIcon={
+                  loading ? (
+                    <Loader2 className="animate-spin" size={16} />
+                  ) : (
+                    <Send size={16} />
+                  )
+                }
                 colorScheme="purple"
                 width="full"
                 isLoading={loading}
@@ -792,7 +840,7 @@ const StoryPage = () => {
       <Modal isOpen={isViewOpen} onClose={onViewClose} size="lg">
         <ModalOverlay />
         <ModalContent borderRadius="2xl">
-          <ModalHeader>View Story</ModalHeader>
+          <ModalHeader color={"green.500"}>View Story</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {activeStory && (
@@ -807,56 +855,67 @@ const StoryPage = () => {
                     width="100%"
                   />
                 )}
-                
+                <Box
+                  zIndex={1}
+                  position="sticky"
+                  top="20"
+                  alignSelf="flex-start"
+                  ml="-23px" // adjust until flush with edge
+                >
+                  <Meaning />
+                </Box>
+
                 {/* ✅ ONLY CHANGE: Replaced Text with StoryFormatter */}
                 <StoryFormatter content={activeStory.content} />
-                
-                <Text fontSize="sm" color="gray.500">
+
+                <Text fontSize="sm">
                   By {activeStory.user.firstName} {activeStory.user.lastName}
                 </Text>
 
                 {/* Emoji Reactions */}
                 <HStack spacing={3} justify="center" width="100%" mt={4}>
-                  <EmojiButton 
-                    emoji="❤️" 
-                    icon={Heart} 
-                    label="Like" 
-                    onClick={() => reactToStory(activeStory.id, "❤️")} 
+                  <EmojiButton
+                    emoji="❤️"
+                    icon={Heart}
+                    label="Like"
+                    onClick={() => reactToStory(activeStory.id, "❤️")}
                   />
-                  <EmojiButton 
-                    emoji="😂" 
-                    icon={Laugh} 
-                    label="Laugh" 
-                    onClick={() => reactToStory(activeStory.id, "😂")} 
+                  <EmojiButton
+                    emoji="😂"
+                    icon={Laugh}
+                    label="Laugh"
+                    onClick={() => reactToStory(activeStory.id, "😂")}
                   />
-                  <EmojiButton 
-                    emoji="😮" 
-                    icon={Camera} 
-                    label="Surprise" 
-                    onClick={() => reactToStory(activeStory.id, "😮")} 
+                  <EmojiButton
+                    emoji="😮"
+                    icon={Camera}
+                    label="Surprise"
+                    onClick={() => reactToStory(activeStory.id, "😮")}
                   />
-                  <EmojiButton 
-                    emoji="🔥" 
-                    icon={Star} 
-                    label="Fire" 
-                    onClick={() => reactToStory(activeStory.id, "🔥")} 
+                  <EmojiButton
+                    emoji="🔥"
+                    icon={Star}
+                    label="Fire"
+                    onClick={() => reactToStory(activeStory.id, "🔥")}
                   />
                 </HStack>
-                
+
                 {/* Reaction List */}
                 {getReactions(activeStory).length > 0 && (
                   <Box width="100%" mt={4}>
-                    <Text fontWeight="bold" mb={2}>Reactions:</Text>
+                    <Text fontWeight="bold" mb={2}>
+                      Reactions:
+                    </Text>
                     <Wrap spacing={2}>
                       {getReactions(activeStory).map((reaction, index) => (
-                        <Tooltip 
-                          key={index} 
+                        <Tooltip
+                          key={index}
                           label={`${reaction.user.firstName} reacted with ${reaction.emoji}`}
                         >
-                          <Badge 
-                            variant="outline" 
-                            px={2} 
-                            py={1} 
+                          <Badge
+                            variant="outline"
+                            px={2}
+                            py={1}
                             borderRadius="full"
                             display="flex"
                             alignItems="center"
@@ -878,7 +937,11 @@ const StoryPage = () => {
 
       {/* Edit Story Modal */}
       {editingStory && (
-        <Modal isOpen={!!editingStory} onClose={() => setEditingStory(null)} size="lg">
+        <Modal
+          isOpen={!!editingStory}
+          onClose={() => setEditingStory(null)}
+          size="lg"
+        >
           <ModalOverlay />
           <ModalContent borderRadius="2xl">
             <ModalHeader>Edit Story</ModalHeader>
@@ -887,7 +950,12 @@ const StoryPage = () => {
               <VStack spacing={4}>
                 <Textarea
                   value={editingStory.content}
-                  onChange={(e) => setEditingStory({ ...editingStory, content: e.target.value })}
+                  onChange={(e) =>
+                    setEditingStory({
+                      ...editingStory,
+                      content: e.target.value,
+                    })
+                  }
                   rows={3}
                   borderRadius="xl"
                   minH="100px"
@@ -915,7 +983,13 @@ const StoryPage = () => {
                   />
                 )}
                 <Button
-                  leftIcon={loading ? <Loader2 className="animate-spin" size={16} /> : <Send size={16} />}
+                  leftIcon={
+                    loading ? (
+                      <Loader2 className="animate-spin" size={16} />
+                    ) : (
+                      <Send size={16} />
+                    )
+                  }
                   colorScheme="purple"
                   width="full"
                   isLoading={loading}
@@ -934,80 +1008,102 @@ const StoryPage = () => {
       {/* Styles */}
       <style jsx>{`
         @keyframes spin-slow {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
         .animate-spin-slow {
           animation: spin-slow 3s linear infinite;
         }
-        
+
         /* Story formatting styles */
         .formatted-story-content {
           line-height: 1.8;
           font-size: 16px;
-          color: #1a202c;
           width: 100%;
+          font-family: "Inter", sans-serif;
         }
-        
-        /* Yellow highlight for key moments */
+
         .highlight-yellow {
-          background: linear-gradient(120deg, rgba(255, 238, 0, 0.3), rgba(255, 238, 0, 0.3));
+          font-family: italicsans, sans-serif;
+          background: #ffff8a;
+          color: black;
           padding: 0.1em 0.3em;
           border-radius: 4px;
           font-weight: 600;
+          font-size: 1em;
+          animation: pulse-gentle 3s ease-in-out infinite;
         }
-        
+        .highlight-blue {
+          color: orange;
+        }
         /* Thoughts in italic with subtle color */
         .italic-thought {
-          font-style: italic;
-          color: #64748b;
-          font-size: 0.95em;
+          font-family: "Raleway", sans-serif;
+          background: #bceffa;
+          font-size: 1.2em;
+          color: black;
         }
-        
+
         /* Styled quotes */
         .styled-quote {
           font-style: italic;
-          color: #0f172a;
-          background: #f8fafc;
+          color: black;
+          font-family: "Raleway", sans-serif;
+          background: #98fb98;
           padding: 0.5em 1em;
-          border-left: 4px solid #805ad5;
+          border-left: 4px solid #008200;
           border-radius: 4px;
           display: inline-block;
           margin: 1em 0;
         }
-        
+
         /* Brain header */
         .header-brain {
           font-weight: 700;
           font-size: 1.2em;
-          color: #4c1d95;
+          color: black;
           margin: 1.5em 0 0.8em 0;
           padding: 0.8em 1.2em;
           background: linear-gradient(135deg, #f5f3ff, #ede9fe);
           border-radius: 12px;
           border-left: 5px solid #a78bfa;
         }
-        
+
         /* Rainbow header */
         .header-rainbow {
           font-weight: 600;
           font-size: 1.2em;
-          background: linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6, #ec4899);
+          color: black;
+          background: linear-gradient(
+            90deg,
+            #ef4444,
+            #f97316,
+            #eab308,
+            #22c55e,
+            #3b82f6,
+            #8b5cf6,
+            #ec4899
+          );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          text-fill-color: transparent;
           margin: 1.5em 0 0.8em 0;
           padding: 0.8em 1.2em;
           border-radius: 12px;
           text-align: center;
         }
-        
+
         /* Announcement */
         .announcement {
           text-align: center;
           font-weight: 700;
           font-size: 1.1em;
-          color: #dc2626;
+          color: black;
           text-transform: uppercase;
           letter-spacing: 1px;
           margin: 2em 0;
@@ -1015,8 +1111,9 @@ const StoryPage = () => {
           background: #fef2f2;
           border-radius: 12px;
           border: 2px dashed #fecaca;
+          animation: float 4s ease-in-out infinite;
         }
-        
+
         /* Wisdom block */
         .wisdom-block {
           background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -1026,10 +1123,12 @@ const StoryPage = () => {
           margin: 1.5em 0;
           font-weight: 500;
           color: #0369a1;
+          color: black;
         }
-        
+
         /* Moral lesson */
         .moral-lesson {
+          font-family: "DM Serif Display", serif;
           text-align: center;
           font-size: 1.1em;
           font-weight: 600;
@@ -1037,28 +1136,33 @@ const StoryPage = () => {
           margin: 2.5em 0 1.5em 0;
           padding: 1.2em;
           background: linear-gradient(135deg, #fff7ed, #ffedd5);
+          color: black;
           border-radius: 16px;
           border: 2px solid #fed7aa;
+          animation: float 4s ease-in-out infinite;
         }
-        
+
         /* Subtle animations for engagement */
         @keyframes pulse-gentle {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.9; }
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.9;
+          }
         }
-        
-        .highlight-yellow {
-          animation: pulse-gentle 3s ease-in-out infinite;
-        }
-        
+
         @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-2px); }
-          100% { transform: translateY(0px); }
-        }
-        
-        .moral-lesson, .announcement {
-          animation: float 4s ease-in-out infinite;
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-2px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
         }
       `}</style>
     </Box>

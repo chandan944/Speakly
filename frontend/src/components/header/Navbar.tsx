@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { FaHome, FaBell, FaUsers } from "react-icons/fa";
+
 import { Search } from "./components/search/Search";
 import { MyProfile } from "./components/myProfile/MyProfile";
 import logo from "../../assets/apple-touch-icon.png";
@@ -27,8 +27,9 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
 import { LuHeartHandshake } from "react-icons/lu";
 import Meaning from "../../ai/feature/word/Meaning";
-import { BookAIcon, SpeakerIcon, Trophy } from "lucide-react";
-import { BiSpeaker, BiUserVoice } from "react-icons/bi";
+import { BellRing, BookAIcon, Home, Trophy, Users } from "lucide-react";
+import { BiUserVoice } from "react-icons/bi";
+import { MdOutlineQuiz } from "react-icons/md";
 
 const Navbar = () => {
   const { colorMode } = useColorMode();
@@ -88,53 +89,60 @@ const Navbar = () => {
   // 📦 Sidebar links + badges
   console.log("from navebar", messageCount);
   const navItems = [
-    { icon: <FaHome />, label: "Home", link: "/", showCount: false, count: 0 },
+    { icon: <Home size={"17px"}/>, label: "Home", link: "/", showCount: false, count: 0 },
     {
-      icon: <LuHeartHandshake />,
-      label: "AI",
+      icon: <LuHeartHandshake size={"17px"} />,
+      label: "Sentences",
       link: "/ai",
       showCount: false,
       count: 0, // Use messageCount from context
     },
     {
-      icon: <TbMessageChatbot fill="black" />,
+      icon: <TbMessageChatbot size={"17px"} />,
       label: "Messages",
       link: "/messaging",
       showCount: true,
       count: messageCount, // Use messageCount from context
     },
     {
-      icon: <FaUsers />,
+      icon: <Users size={"17px"}/>,
       label: "Learners",
       link: "/network",
       showCount: true,
       count: RecievedConnection,
     },
     {
-      icon: <FaBell />,
+      icon: <BellRing size={"17px"}/>,
       label: "Notification",
       link: "/notification",
       showCount: true,
       count: notificationCount,
     },
         {
-      icon: <Trophy size={"14px"}/>,
+      icon: <Trophy size={"17px"}/>,
       label: "Leaderboard",
       link: "/leader",
       showCount: false,
       count: 0,
     },
           {
-      icon: <BookAIcon size={"14px"}/>,
+      icon: <BookAIcon size={"17px"}/>,
       label: "Story",
       link: "/stories",
       showCount: false,
       count: 0,
     },
               {
-      icon: <BiUserVoice size={"14px"}/>,
+      icon: <BiUserVoice size={"19px"}/>,
       label: "Speak",
       link: "/speak",
+      showCount: false,
+      count: 0,
+    },
+                {
+      icon: <MdOutlineQuiz size={"19px"}/>,
+      label: "Quiz",
+      link: "/quizes",
       showCount: false,
       count: 0,
     },
@@ -202,7 +210,7 @@ const Navbar = () => {
             <Box key={i} position="relative">
               {item.showCount && <CountBadge count={item.count} />}
               <Button
-              size={"sm"}
+              size={"xs"}
                 as={RouterLink}
                 to={item.link}
                 leftIcon={item.icon}

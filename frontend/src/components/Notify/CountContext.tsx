@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { request } from "../../utils/api";
 import type { IConnection } from "../../features/network/components/connection/Connection";
-import { useAuthentication } from "../../features/authentication/context/AuthenticationContextProvider";
+import { useAuthentication, type User } from "../../features/authentication/context/AuthenticationContextProvider";
 import type { IConversation } from "../../features/messaging/components/conversations/Conversations";
 
 interface CountContextType {
@@ -60,6 +60,41 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
     const interval = setInterval(fetchUnread, 90000);
     return () => clearInterval(interval);
   }, []);
+
+
+  
+    const setPointsAsks = async (points: number, asks: number) => {
+    if (!user) {
+      console.error("User not loaded ❌");
+      return;
+    }
+
+    try {
+      
+
+      const response = await fetch(
+        `http://localhost:8080/points/${user.id}?points=${points}&asks=${asks}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // JWT token
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const updatedUser: User = await response.json();
+      setUser(updatedUser);
+    } catch (err: any) {
+      setError(err.message || "Failed to update points and asks");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 🤝 Fetch pending connection requests
   useEffect(() => {
@@ -150,3 +185,6 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
     </CountContext.Provider>
   );
 };
+
+
+

@@ -1,719 +1,798 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
-  Box,
-  VStack,
-  HStack,
-  Text,
-  Button,
-  Card,
-  CardBody,
-  useToast,
-  IconButton,
-  Avatar,
-  Divider,
-  Badge,
-  Spinner,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-} from "@chakra-ui/react";
-import { Mic, StopCircle, RefreshCw, Volume2, VolumeX, MessageSquare } from "lucide-react";
-import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
+  Mic,
+  StopCircle,
+  RefreshCw,
+  Volume2,
+  VolumeX,
+  MessageSquare,
+  Send,
+  Play,
+  Pause,
+  VolumeOff,
+} from "lucide-react";
+import { usePageTitle } from "../../../hook/usePageTitle";
 
-// === VOICE FEEDBACK ASSISTANT ===
+// Mock authentication context for demo
+const useAuthentication = () => ({
+  user: { nativeLanguage: "Hindi" }
+});
+
+// Text formatter component for better display
+const FeedbackFormatter = ({ content }: { content: string }) => {
+  const formatFeedback = (text: string) => {
+    return (
+      text
+        // Fix bold formatting (e.g. **Fix** → styled bold)
+        .replace(/\*\*(.*?)\*\*/g, "<span class='highlight-yellow'>$1</span>")
+        .replace(/,,(.*?),,/g, '<span class="italic-thought">$1</span>')
+        // Format quotes
+        .replace(/"(.*?)"/g, '<span class="styled-quote">"$1"</span>')
+        // Format corrections (✅)
+        .replace(/✅(.*?)(?=\n|$)/g, '<div class="success-text">✅ $1</div>')
+        // Format suggestions (💡)
+        .replace(/💡(.*?)(?=\n|$)/g, '<div class="suggestion-text">💡 $1</div>')
+        // Format questions (?) — inline
+        .replace(/\?(.*?)(?=\n|$)/g, '<span class="question-text">? $1</span>')
+        // Numbered points
+        .replace(
+          /(\d+\.)\s*(.*?)(?=\n|$)/g,
+          '<div class="numbered-point"><span class="point-number">$1</span> $2</div>'
+        )
+        // Bullet points
+        .replace(/•\s*(.*?)(?=\n|$)/g, '<div class="bullet-point">• $1</div>')
+        // Wisdom block
+        .replace(/\/\/\/(.*?)\/\//g, '<div class="wisdom-block">$1</div>')
+    );
+  };
+
+  return (
+    <div
+      className="formatted-feedback-content"
+      dangerouslySetInnerHTML={{ __html: formatFeedback(content) }}
+    />
+  );
+};
+
+// Custom Toast component
+const Toast = ({
+  message,
+  type,
+  isVisible,
+  onClose,
+}: {
+  message: string;
+  type: "success" | "error" | "info" | "warning";
+  isVisible: boolean;
+  onClose: () => void;
+}) => {
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(onClose, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  const bgColor = {
+    success: "bg-green-500",
+    error: "bg-red-500",
+    info: "bg-blue-500",
+    warning: "bg-yellow-500",
+  }[type];
+
+  return (
+    <div
+      className={`fixed top-20 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300`}
+    >
+      <div className="flex items-center justify-between">
+        <span>{message}</span>
+        <button
+          onClick={onClose}
+          className="ml-4 text-white hover:text-gray-200"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Volume Control Component
+const VolumeControl = ({ volume, onChange, isMuted, onMuteToggle }: {
+  volume: number;
+  onChange: (volume: number) => void;
+  isMuted: boolean;
+  onMuteToggle: () => void;
+}) => {
+  return (
+    <div className="flex items-center space-x-3 bg-gray-50 rounded-lg p-3">
+      <button
+        onClick={onMuteToggle}
+        className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+      >
+        {isMuted ? <VolumeOff size={20} /> : <Volume2 size={20} />}
+      </button>
+      <div className="flex items-center space-x-2 flex-1">
+        <span className="text-sm text-gray-600 min-w-[30px]">Vol:</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={isMuted ? 0 : volume}
+          onChange={(e) => onChange(parseInt(e.target.value))}
+          className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+          disabled={isMuted}
+        />
+        <span className="text-sm text-gray-600 min-w-[35px]">
+          {isMuted ? "0%" : `${volume}%`}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// Real-time Speech Display Component
+const RealTimeSpeech = ({ 
+  interimTranscript, 
+  finalTranscript, 
+  isListening 
+}: {
+  interimTranscript: string;
+  finalTranscript: string;
+  isListening: boolean;
+}) => {
+  if (!isListening && !finalTranscript && !interimTranscript) return null;
+
+  return (
+    <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 min-h-[100px]">
+      <h3 className="font-semibold text-blue-800 mb-3 flex items-center">
+        <div className={`w-3 h-3 rounded-full mr-2 ${isListening ? 'bg-red-500 animate-pulse' : 'bg-gray-400'}`}></div>
+        Real-time Speech Recognition
+      </h3>
+      <div className="space-y-2">
+        {finalTranscript && (
+          <div className="text-gray-800 bg-white p-3 rounded-lg border">
+            <span className="text-xs text-green-600 font-semibold">FINAL: </span>
+            {finalTranscript}
+          </div>
+        )}
+        {interimTranscript && (
+          <div className="text-gray-600 bg-gray-100 p-3 rounded-lg border-dashed border-2">
+            <span className="text-xs text-blue-600 font-semibold">INTERIM: </span>
+            <span className="italic">{interimTranscript}</span>
+            <span className="animate-pulse">|</span>
+          </div>
+        )}
+        {isListening && !interimTranscript && !finalTranscript && (
+          <div className="text-gray-500 italic text-center py-4">
+            🎤 Listening for your voice...
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// === ENHANCED VOICE FEEDBACK ASSISTANT ===
 const VoiceAssistant = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const [finalTranscript, setFinalTranscript] = useState("");
   const [feedback, setFeedback] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const toast = useToast();
-  const {user} = useAuthentication(); // Assuming you have a user context
-  const recognitionRef = useRef<any>(null);
-  const synthRef = useRef<any>(null);
+  const [volume, setVolume] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+  const { user } = useAuthentication();
 
-  // Gemini API Configuration (Replace with your actual API key)
+  // Toast state
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info" | "warning";
+    isVisible: boolean;
+  }>({ message: "", type: "info", isVisible: false });
+
+  const recognitionRef = useRef<any>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+usePageTitle("Speak English");
+  // Show toast function
+  const showToast = (
+    message: string,
+    type: "success" | "error" | "info" | "warning"
+  ) => {
+    setToast({ message, type, isVisible: true });
+  };
+
+  const hideToast = () => {
+    setToast((prev) => ({ ...prev, isVisible: false }));
+  };
+
+  // Gemini API Configuration
   const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
-  const MODEL = "gemini-1.5-flash";
+  const MODEL = "gemini-2.5-flash-lite";
   const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
+  // Enhanced text cleaning for speech synthesis
+  const cleanTextForSpeech = (text: string): string => {
+    return (
+      text
+        .replace(/\*([\s\S]+?)\*/g, '<span class="highlight-blue">$1</span>')
+        .replace(/\*\*(.*?)\*\*/g, "$1")
+        .replace(/\*(.*?)\*/g, "$1")
+        .replace(/__(.*?)__/g, "$1")
+        .replace(/~~(.*?)~~/g, "$1")
+        .replace(/`(.*?)`/g, "$1")
+        .replace(/[•\-+*]/g, "")
+        .replace(/#{1,6}\s*/g, "")
+        .replace(/\[.*?\]/g, "")
+        .replace(/\(.*?\)/g, "")
+        .replace(/[!]{2,}/g, "!")
+        .replace(/[?]{2,}/g, "?")
+        .replace(/👉|👈|▶️|⚠️|❌|✅|💡|🔥|💬/g, "")
+        .trim()
+        .replace(/^[.,:;!?]+|[.,:;!?]+$/g, "")
+    );
+  };
+
   // Get feedback from Gemini
-  const getFeedbackFromGemini = useCallback(async (text: string) => {
-    if (!text.trim() || isProcessing) return;
-    
-    console.log("🔄 Processing speech:", text);
-    setIsProcessing(true);
-    setHasError(false);
-    
-    const prompt = `Act like my funny, friendly English buddy 😎. I’ll say something in English — just reply like a casual friend correcting me. No tips, no points, no scoring. Just tell what’s off, what sounds weird, and how to say it better — with some jokes, light roasting, and a little ${user?.nativeLanguage} if needed. Keep it short and chatty. End with a fun question.
+  const getFeedbackFromGemini = useCallback(
+    async (text: string) => {
+      if (!text.trim() || isProcessing) return;
 
-Text: "${text}"
+      setIsProcessing(true);
+      setHasError(false);
 
-`;
-    
-    try {
-      const response = await fetch(GEMINI_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: prompt }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-          }
-        }),
-      });
+      const prompt = `Please reply in a fun and simple way using in ${user?.nativeLanguage} and bit english:
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("❌ Gemini API error:", response.status, errorText);
-        throw new Error(`API Error: ${response.status}`);
+1. ✏️ **Answer** – First, reply to what I said. If I asked a question, answer it briefly.  
+2. ✅ **Fix** – If my sentence had mistakes, show the better way to say it.  
+3. 💡 **Tip** – Explain what was wrong and how to fix it next time (use easy words) and also use ${user?.nativeLanguage} language so learner can undersatand better.  
+4. ❓ **Question** – Ask something fun or simple about what I said, like a real friend.
+
+Use simple words. Don't mention grammar names like "past perfect."  
+Just help like I'm new to English and want to improve 😊  
+Here's what I said: "${text}"`;
+
+      try {
+        const response = await fetch(GEMINI_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 512,
+            },
+          }),
+        });
+
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+        const data = await response.json();
+        const feedbackText =
+          data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+        if (!feedbackText) throw new Error("No feedback received");
+
+        setFeedback(feedbackText);
+
+        // Stop listening to prevent AI voice pickup
+        if (recognitionRef.current && isListening) {
+          recognitionRef.current.stop();
+          setIsListening(false);
+        }
+
+        showToast("✅ Feedback received", "success");
+      } catch (err) {
+        console.error("❌ Error:", err);
+        setHasError(true);
+        setFeedback(
+          "Sorry, I couldn't analyze your English. Please try again."
+        );
+        showToast("❌ Failed to get feedback", "error");
+      } finally {
+        setIsProcessing(false);
       }
-
-      const data = await response.json();
-      const feedbackText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-      
-      if (!feedbackText) {
-        throw new Error("No feedback received from API");
-      }
-      
-      console.log("✅ Feedback received from Gemini");
-      setFeedback(feedbackText);
-      
-      // Read the feedback aloud after a short delay
-      setTimeout(() => {
-        readAloud(feedbackText);
-      }, 500);
-      
-      toast({
-        title: "✅ Feedback received",
-        status: "success",
-        duration: 2000,
-      });
-      
-    } catch (err) {
-      console.error("❌ Error calling Gemini API:", err);
-      setHasError(true);
-      const errorMessage = "Sorry, I couldn't analyze your English. Please check your API key and try again.";
-      setFeedback(errorMessage);
-      
-      toast({
-        title: "❌ Analysis Error",
-        description: "Failed to get feedback from AI",
-        status: "error",
-        duration: 4000,
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [isProcessing, GEMINI_URL, toast]);
+    },
+    [isProcessing, GEMINI_URL, user?.nativeLanguage, isListening]
+  );
 
   // Initialize Speech Recognition
   useEffect(() => {
-    console.log("🎤 Initializing Speech Recognition...");
-    
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      console.error("❌ Speech Recognition not supported");
-      toast({
-        title: "⚠️ Browser not supported",
-        description: "Please use Chrome, Edge, or Safari",
-        status: "warning",
-        duration: 5000,
-      });
+      showToast("⚠️ Please use Chrome, Edge, or Safari", "warning");
       return;
     }
 
     const recognition = new SpeechRecognition();
-    recognition.continuous = true; // Keep listening continuously
-    recognition.interimResults = true; // Show results as you speak
-    recognition.maxAlternatives = 1;
-    recognition.lang = 'en-US';
-
-    recognition.onstart = () => {
-      console.log("🎤 Speech recognition started");
-    };
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
 
     recognition.onresult = (event: any) => {
-      let finalTranscript = '';
-      let interimTranscript = '';
-
-      // Process all results
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      let interim = "";
+      let final = "";
+      
+      for (let i = 0; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
-        
         if (event.results[i].isFinal) {
-          finalTranscript += transcript;
+          final += transcript;
         } else {
-          interimTranscript += transcript;
+          interim += transcript;
         }
       }
-
-      // Update transcript with both final and interim results
-      const currentTranscript = finalTranscript + interimTranscript;
-      console.log("📝 Transcript updated:", currentTranscript);
-      setTranscript(currentTranscript.trim());
+      
+      setInterimTranscript(interim);
+      if (final) {
+        setFinalTranscript(prev => prev + final);
+        setTranscript(prev => prev + final);
+      }
     };
 
     recognition.onend = () => {
-      console.log("🛑 Speech recognition ended");
-      
-      // Only restart if we're still supposed to be listening
       if (isListening) {
-        console.log("🔄 Restarting recognition...");
         try {
           recognition.start();
-        } catch (error) {
-          console.error("❌ Failed to restart recognition:", error);
-          setIsListening(false);
+        } catch (e) {
+          console.error("Restart failed");
         }
       }
     };
 
     recognition.onerror = (event: any) => {
-      console.error("❌ Speech recognition error:", event.error);
-      
-      // Handle different types of errors
-      if (event.error === 'no-speech') {
-        console.log("⚠️ No speech detected, continuing to listen...");
-        // Don't stop listening for no-speech errors
-        return;
-      }
-      
-      if (event.error === 'audio-capture') {
+      if (event.error === "no-speech") return;
+      if (event.error === "audio-capture") {
         setIsListening(false);
-        setHasError(true);
-        toast({
-          title: "🎤 Microphone Error",
-          description: "Please check microphone permissions",
-          status: "error",
-          duration: 4000,
-        });
-        return;
-      }
-      
-      if (event.error === 'not-allowed') {
+        showToast("🎤 Mic access issue", "error");
+      } else if (event.error === "not-allowed") {
         setIsListening(false);
-        setHasError(true);
-        toast({
-          title: "🚫 Permission Denied",
-          description: "Please allow microphone access",
-          status: "error",
-          duration: 4000,
-        });
-        return;
+        showToast("🚫 Mic permission denied", "error");
       }
-      
-      // For other errors, try to restart
-      console.log("🔄 Attempting to restart after error...");
-      setTimeout(() => {
-        if (isListening) {
-          try {
-            recognition.start();
-          } catch (error) {
-            console.error("❌ Failed to restart after error:", error);
-            setIsListening(false);
-          }
-        }
-      }, 1000);
     };
 
     recognitionRef.current = recognition;
-    console.log("✅ Speech Recognition initialized");
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
-  }, [isListening, toast]);
+    return () => recognition.stop();
+  }, [isListening]);
 
   // Start listening
   const startListening = () => {
     if (isProcessing || isListening) return;
-    
-    console.log("▶️ Starting to listen...");
     setTranscript("");
+    setInterimTranscript("");
+    setFinalTranscript("");
     setFeedback("");
     setHasError(false);
-    
     try {
       recognitionRef.current?.start();
       setIsListening(true);
-      
-      toast({
-        title: "🎤 Listening...",
-        description: "Speak your English clearly",
-        status: "info",
-        duration: 2000,
-      });
+      showToast("🎤 Listening...", "info");
     } catch (error) {
-      console.error("❌ Could not start listening:", error);
-      toast({
-        title: "❌ Could not start",
-        description: "Check microphone permissions",
-        status: "error",
-        duration: 3000,
-      });
+      showToast("❌ Mic error", "error");
     }
   };
 
   // Stop listening
   const stopListening = () => {
     if (recognitionRef.current && isListening) {
-      console.log("⏹️ Stopping listening...");
       recognitionRef.current.stop();
       setIsListening(false);
-      
-      // Process the final transcript
-      if (transcript.trim()) {
-        console.log("🔄 Processing final transcript:", transcript);
-        getFeedbackFromGemini(transcript);
-      }
-      
-      toast({
-        title: "⏹️ Stopped listening",
-        description: "Processing your speech...",
-        status: "info",
-        duration: 2000,
-      });
+      setInterimTranscript("");
+      showToast("⏹️ Stopped listening", "info");
     }
   };
 
-  // Read feedback aloud
+  // Read aloud function
   const readAloud = (text: string) => {
-    if (!text || !window.speechSynthesis) {
-      console.warn("⚠️ Speech synthesis not available");
+    if (!text || !window.speechSynthesis || isMuted) {
+      if (isMuted) showToast("🔇 Speech is muted", "warning");
       return;
     }
-    
-    console.log("🔊 Reading feedback aloud...");
+
     setIsSpeaking(true);
     window.speechSynthesis.cancel();
-    
-    // Clean the text for better speech
-    const cleanText = text
-      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove markdown bold
-      .replace(/^\s*[-•]\s*/gm, '') // Remove bullet points
-      .replace(/\n+/g, '. ') // Replace newlines with periods
-      .trim();
-    
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.8;
-    utterance.pitch = 1;
-    utterance.volume = 0.8;
-    
-    utterance.onstart = () => {
-      console.log("🔊 Speech started");
-    };
-    
-    utterance.onend = () => {
-      console.log("🔇 Speech ended");
+
+    const cleanText = cleanTextForSpeech(text);
+    if (!cleanText.trim()) {
       setIsSpeaking(false);
+      return;
+    }
+
+    const speakWithBestVoice = () => {
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utteranceRef.current = utterance;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoices = [
+        voices.find(v => v.name.includes("Microsoft") && v.name.includes("Natural") && v.lang.startsWith("en")),
+        voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")),
+        voices.find(v => v.name.includes("Alex") && v.lang.startsWith("en")),
+        voices.find(v => v.lang.startsWith("en-US")),
+        voices.find(v => v.lang.startsWith("en")),
+      ].filter(Boolean);
+
+      if (preferredVoices.length > 0) {
+        utterance.voice = preferredVoices[0];
+      }
+
+      utterance.lang = "en-US";
+      utterance.rate = 0.75;
+      utterance.pitch = 1.1;
+      utterance.volume = volume / 100;
+
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+      };
+
+      utterance.onerror = (event) => {
+        console.error("❌ Speech synthesis error:", event);
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+        showToast("Speech Error: Could not read aloud", "error");
+      };
+
+      window.speechSynthesis.speak(utterance);
     };
-    
-    utterance.onerror = (event) => {
-      console.error("❌ Speech error:", event.error);
-      setIsSpeaking(false);
-      toast({
-        title: "🔊 Speech Error",
-        description: "Failed to read feedback aloud",
-        status: "error",
-        duration: 3000,
-      });
-    };
-    
-    window.speechSynthesis.speak(utterance);
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = speakWithBestVoice;
+    } else {
+      speakWithBestVoice();
+    }
   };
 
   // Stop speaking
   const stopSpeaking = () => {
     if (window.speechSynthesis) {
-      console.log("🔇 Stopping speech...");
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
+      utteranceRef.current = null;
+      showToast("🔇 Speech stopped", "info");
+    }
+  };
+
+  // Volume control handlers
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+    if (newVolume > 0 && isMuted) {
+      setIsMuted(false);
+    }
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    if (isSpeaking && !isMuted) {
+      stopSpeaking();
     }
   };
 
   // Clear everything
   const clearAll = () => {
-    console.log("🧹 Clearing all data...");
-    
     setTranscript("");
+    setInterimTranscript("");
+    setFinalTranscript("");
     setFeedback("");
     setIsListening(false);
     setIsProcessing(false);
     setIsSpeaking(false);
     setHasError(false);
-    
+
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
     }
-    
+
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
-    
-    toast({
-      title: "🧹 Cleared",
-      description: "Ready for new speech",
-      status: "info",
-      duration: 2000,
-    });
-  };
 
-  // Format feedback for better display
-  const formatFeedback = (text: string) => {
-    if (!text) return [];
-    
-    const lines = text.split('\n').filter(line => line.trim());
-    const sections: { type: string; content: string; color: string }[] = [];
-    
-    lines.forEach(line => {
-      const trimmed = line.trim();
-      
-      if (trimmed.includes('**Score:**')) {
-        sections.push({
-          type: 'score',
-          content: trimmed.replace(/\*\*/g, ''),
-          color: 'green'
-        });
-      } else if (trimmed.includes('**Issues Found:**')) {
-        sections.push({
-          type: 'header',
-          content: 'Issues Found:',
-          color: 'orange'
-        });
-      } else if (trimmed.includes('**Improved Version:**')) {
-        sections.push({
-          type: 'header',
-          content: 'Improved Version:',
-          color: 'blue'
-        });
-      } else if (trimmed.includes('**Tips:**')) {
-        sections.push({
-          type: 'header',
-          content: 'Tips:',
-          color: 'purple'
-        });
-      } else if (trimmed.includes('**Encouragement:**')) {
-        sections.push({
-          type: 'header',
-          content: 'Encouragement:',
-          color: 'green'
-        });
-      } else if (trimmed.startsWith('-') || trimmed.startsWith('•')) {
-        sections.push({
-          type: 'bullet',
-          content: trimmed.replace(/^[-•]\s*/, ''),
-          color: 'gray'
-        });
-      } else if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
-        sections.push({
-          type: 'quote',
-          content: trimmed,
-          color: 'blue'
-        });
-      } else if (trimmed.length > 0) {
-        sections.push({
-          type: 'text',
-          content: trimmed,
-          color: 'gray'
-        });
-      }
-    });
-    
-    return sections;
+    showToast("🧹 Cleared - Ready for new speech", "info");
   };
-
-  const feedbackSections = formatFeedback(feedback);
 
   return (
-    <Box 
-      bg="gray.50" 
-      minH="100vh" 
-      p={4}
-      maxW="2xl"
-      mx="auto"
-    >
-      <VStack spacing={6} align="stretch" mt={8}>
-        
-        {/* Header */}
-        <VStack spacing={3}>
-          <Avatar
-            size="xl"
-            name="AI Assistant"
-            bg="gradient"
-            bgGradient="linear(to-r, blue.500, purple.500, pink.500)"
-            icon={<MessageSquare size={32} color="white" />}
-          />
-          <Text fontSize="3xl" fontWeight="bold" textAlign="center">
-            🎤 English Feedback Assistant
-          </Text>
-          <Text textAlign="center" color="gray.600" fontSize="lg">
-            Speak English → Get AI feedback → Listen to suggestions
-          </Text>
-        </VStack>
+    <div className="min-h-screen p-4 ">
+      <Toast {...toast} onClose={hideToast} />
 
-        {/* API Key Warning */}
-        {API_KEY === "YOUR_API_KEY_HERE" && (
-          <Alert status="warning" borderRadius="lg">
-            <AlertIcon />
-            <Box>
-              <AlertTitle>API Key Required!</AlertTitle>
-              <AlertDescription>
-                Please set your Gemini API key in environment variables or replace the placeholder.
-              </AlertDescription>
-            </Box>
-          </Alert>
-        )}
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col space-y-6 mt-8">
+          {/* Header */}
+          <div className="flex flex-col items-center space-y-3">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-lime-500 flex items-center justify-center">
+              <MessageSquare size={32} color="white" />
+            </div>
+            <h1 className="text-3xl font-bold text-center ">
+              🎤 Enhanced English Feedback Assistant
+            </h1>
+            <p className="text-center text-lg ">
+              Real-time Speech → Edit → Get Feedback → Improve
+            </p>
+          </div>
 
-        {/* Main Card */}
-        <Card variant="elevated" shadow="xl">
-          <CardBody>
-            <VStack spacing={6}>
-              
+          {/* Main Card */}
+          <div className=" rounded-2xl shadow-xl p-8">
+            <div className="flex flex-col space-y-6">
               {/* Mic Control */}
-              <VStack spacing={4}>
-                <HStack justify="center" spacing={4}>
+              <div className="flex flex-col items-center space-y-4">
+                <div className="flex justify-center space-x-4">
                   {isListening ? (
-                    <IconButton
-                      icon={<StopCircle size={32} />}
-                      aria-label="Stop listening"
-                      colorScheme="red"
-                      size="lg"
+                    <button
                       onClick={stopListening}
-                      borderRadius="full"
-                      boxShadow="lg"
-                      isLoading={false}
-                      height="80px"
-                      width="80px"
-                    />
+                      className="w-20 h-20 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                    >
+                      <StopCircle size={32} />
+                    </button>
                   ) : (
-                    <IconButton
-                      icon={<Mic size={32} />}
-                      aria-label="Start listening"
-                      colorScheme="blue"
-                      size="lg"
+                    <button
                       onClick={startListening}
-                      borderRadius="full"
-                      boxShadow="lg"
-                      isDisabled={isProcessing}
-                      height="80px"
-                      width="80px"
-                    />
+                      className="w-20 h-20 bg-lime-500 hover:bg-lime-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
+                      disabled={isProcessing}
+                    >
+                      <Mic size={32} />
+                    </button>
                   )}
-                </HStack>
+                </div>
 
                 {/* Status Indicators */}
-                <VStack spacing={2}>
+                <div className="flex flex-col items-center space-y-2">
                   {isListening && (
-                    <HStack spacing={2} align="center">
-                      <Box
-                        w={3}
-                        h={3}
-                        bg="red.500"
-                        borderRadius="full"
-                        animation="pulse 1.5s infinite"
-                      />
-                      <Badge colorScheme="red" fontSize="sm" px={3} py={1}>
-                        🎤 Listening...
-                      </Badge>
-                    </HStack>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                      <span className="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
+                        Listening...
+                      </span>
+                    </div>
                   )}
-                  
                   {isProcessing && (
-                    <HStack spacing={2} align="center">
-                      <Spinner size="sm" color="blue.500" />
-                      <Badge colorScheme="blue" fontSize="sm" px={3} py={1}>
-                        🤖 AI Analyzing...
-                      </Badge>
-                    </HStack>
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-500"></div>
+                      <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                        Analyzing...
+                      </span>
+                    </div>
                   )}
-                  
                   {isSpeaking && (
-                    <HStack spacing={2} align="center">
-                      <Box
-                        w={3}
-                        h={3}
-                        bg="green.500"
-                        borderRadius="full"
-                        animation="pulse 1.5s infinite"
-                      />
-                      <Badge colorScheme="green" fontSize="sm" px={3} py={1}>
-                        🔊 Speaking...
-                      </Badge>
-                    </HStack>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">
+                        Speaking...
+                      </span>
+                    </div>
                   )}
-                </VStack>
-              </VStack>
+                </div>
+              </div>
 
-              {/* Your Speech */}
+              {/* Real-time Speech Recognition */}
+              <RealTimeSpeech 
+                interimTranscript={interimTranscript}
+                finalTranscript={finalTranscript}
+                isListening={isListening}
+              />
+
+              {/* Volume Control
+              <VolumeControl 
+                volume={volume}
+                onChange={handleVolumeChange}
+                isMuted={isMuted}
+                onMuteToggle={toggleMute}
+              /> */}
+
+              {/* Editable Transcript */}
               {transcript && (
-                <Box
-                  p={5}
-                  bg="blue.50"
-                  borderRadius="xl"
-                  width="100%"
-                  borderLeft="4px solid"
-                  borderLeftColor="blue.400"
-                >
-                  <Text fontWeight="bold" color="blue.700" mb={3} fontSize="lg">
-                    📝 Your Speech:
-                  </Text>
-                  <Text color="blue.800" fontSize="md" lineHeight="1.6">
-                    "{transcript}"
-                  </Text>
-                  {isListening && (
-                    <Text fontSize="sm" color="blue.600" mt={2} fontStyle="italic">
-                      Keep speaking... Click stop when finished.
-                    </Text>
-                  )}
-                </Box>
+                <div className="p-5 rounded-xl border-l-4 border-blue-400">
+                  <h3 className="font-bold text-blue-700 mb-3 text-lg">
+                    ✏️ Your Speech (Editable):
+                  </h3>
+                  <textarea
+                    value={transcript}
+                    onChange={(e) => setTranscript(e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500"
+                    rows={4}
+                    placeholder="Your speech will appear here. You can edit it before analyzing."
+                  />
+                  <button
+                    onClick={() => getFeedbackFromGemini(transcript)}
+                    disabled={!transcript.trim() || isProcessing}
+                    className="mt-3 w-full py-3 px-4 flex justify-center items-center gap-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                  >
+                    {isProcessing ? "Analyzing..." : "Analyze My English"} <Send size={16} />
+                  </button>
+                </div>
               )}
 
               {/* Feedback Display */}
               {feedback && (
-                <Box
-                  p={5}
-                  bg={hasError ? "red.50" : "green.50"}
-                  borderRadius="xl"
-                  width="100%"
-                  borderLeft="4px solid"
-                  borderLeftColor={hasError ? "red.400" : "green.400"}
-                >
-                  <HStack justify="space-between" mb={4}>
-                    <Text fontWeight="bold" color={hasError ? "red.700" : "green.700"} fontSize="lg">
+                <div className={`p-5 rounded-xl border-l-4 ${hasError ? 'bg-red-50 border-red-400' : 'bg-green-50 border-green-400'}`}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className={`font-bold text-lg ${hasError ? "text-red-700" : "text-green-700"}`}>
                       🤖 AI Feedback:
-                    </Text>
+                    </h3>
                     {!hasError && (
-                      <HStack spacing={2}>
-                        <IconButton
-                          icon={isSpeaking ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                          aria-label={isSpeaking ? "Stop speaking" : "Read aloud"}
-                          size="sm"
-                          colorScheme="green"
-                          onClick={isSpeaking ? stopSpeaking : () => readAloud(feedback)}
-                          borderRadius="lg"
-                        />
-                      </HStack>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => readAloud(feedback)}
+                          disabled={isSpeaking || isMuted}
+                          className="p-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                          title="Play feedback"
+                        >
+                          <Play size={18} />
+                        </button>
+                        <button
+                          onClick={stopSpeaking}
+                          disabled={!isSpeaking}
+                          className="p-2 bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white rounded-lg transition-colors"
+                          title="Stop speaking"
+                        >
+                          <Pause size={18} />
+                        </button>
+                      </div>
                     )}
-                  </HStack>
-                  
+                  </div>
                   {hasError ? (
-                    <Text color="red.800" fontSize="md">
-                      {feedback}
-                    </Text>
+                    <p className="text-red-800">{feedback}</p>
                   ) : (
-                    <VStack spacing={3} align="stretch">
-                      {feedbackSections.map((section, index) => (
-                        <Box key={index}>
-                          {section.type === 'score' && (
-                            <Badge colorScheme="green" fontSize="md" px={3} py={1} borderRadius="full">
-                              {section.content}
-                            </Badge>
-                          )}
-                          {section.type === 'header' && (
-                            <Text fontWeight="bold" color={`${section.color}.700`} fontSize="md" mt={3}>
-                              {section.content}
-                            </Text>
-                          )}
-                          {section.type === 'bullet' && (
-                            <Text color="gray.700" fontSize="sm" ml={4}>
-                              • {section.content}
-                            </Text>
-                          )}
-                          {section.type === 'quote' && (
-                            <Box
-                              p={3}
-                              bg="blue.100"
-                              borderRadius="md"
-                              borderLeft="3px solid"
-                              borderLeftColor="blue.400"
-                              fontStyle="italic"
-                            >
-                              <Text color="blue.800" fontSize="md">
-                                {section.content}
-                              </Text>
-                            </Box>
-                          )}
-                          {section.type === 'text' && (
-                            <Text color="gray.700" fontSize="sm" lineHeight="1.6">
-                              {section.content}
-                            </Text>
-                          )}
-                        </Box>
-                      ))}
-                    </VStack>
+                    <FeedbackFormatter content={feedback} />
                   )}
-                </Box>
+                </div>
               )}
 
               {/* Clear Button */}
-              {(transcript || feedback) && (
-                <Button
-                  leftIcon={<RefreshCw size={18} />}
-                  variant="outline"
-                  colorScheme="gray"
-                  size="lg"
+              {(transcript || feedback || isListening) && (
+                <button
                   onClick={clearAll}
-                  width="full"
-                  borderRadius="xl"
+                  className="w-full flex items-center justify-center space-x-2 py-3 px-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                 >
-                  🔄 Start Over
-                </Button>
+                  <RefreshCw size={18} />
+                  <span>Start Over</span>
+                </button>
               )}
-            </VStack>
-          </CardBody>
-        </Card>
-
-        {/* Instructions */}
-        <Box
-          p={5}
-          bg="white"
-          borderRadius="xl"
-          shadow="sm"
-          border="1px solid"
-          borderColor="gray.200"
-        >
-          <Text fontSize="lg" fontWeight="bold" mb={3} textAlign="center">
-            💡 How to Use:
-          </Text>
-          <VStack spacing={2} align="start">
-            <Text fontSize="sm" color="gray.600">
-              1. 🎤 Click the microphone button to start listening
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              2. 🗣️ Speak clearly in English about any topic
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              3. 🤖 AI will analyze your speech and provide feedback
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              4. 🔊 Listen to the feedback or read it on screen
-            </Text>
-          </VStack>
-        </Box>
-      </VStack>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Custom Styles */}
       <style jsx>{`
-        @keyframes pulse {
+        .italic-thought {
+          font-style: italic;
+          // color: #7c3aed;
+          color:black;
+          background: #f3e8ff;
+          padding: 2px 6px;
+          border-radius: 4px;
+        }
+        .styled-quote {
+          font-style: italic;
+          color: #1e40af;
+          background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+          padding: 4px 12px;
+          border-radius: 8px;
+          border-left: 4px solid #0ea5e9;
+          display: inline-block;
+          margin: 4px 0;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .success-text {
+          color: #16a34a;
+          background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+          padding: 8px 12px;
+          border-radius: 8px;
+          border-left: 4px solid #22c55e;
+          margin: 6px 0;
+          font-weight: 500;
+        }
+        .suggestion-text {
+          color: #d97706;
+          background: linear-gradient(135deg, #fffbeb, #fef3c7);
+          padding: 8px 12px;
+          border-radius: 8px;
+          border-left: 4px solid #f59e0b;
+          margin: 6px 0;
+          font-weight: 500;
+        }
+        .question-text {
+          color: #9333ea;
+          background: #f3e8ff;
+          padding: 2px 8px;
+          border-radius: 6px;
+          font-weight: 600;
+        }
+        .numbered-point {
+          margin: 8px 0;
+          padding: 6px 0;
+        }
+        .point-number {
+          font-weight: bold;
+          color: #3b82f6;
+          margin-right: 8px;
+        }
+        .bullet-point {
+          color: #374151;
+          margin: 4px 0;
+          padding: 2px 0;
+          padding-left: 12px;
+        }
+        .wisdom-block {
+          background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+          color: #0c4a6e;
+          padding: 12px 16px;
+          border-radius: 12px;
+          border: 2px solid #0ea5e9;
+          margin: 12px 0;
+          font-style: italic;
+          font-weight: 500;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .formatted-feedback-content {
+         color:black;
+          line-height: 1.7;
+          font-size: 16px;
+        }
+        .highlight-yellow {
+          background: linear-gradient(135deg, #fef3c7, #fde047);
+          color: #92400e;
+          padding: 0.1em 0.3em;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 1em;
+          animation: pulse-gentle 3s ease-in-out infinite;
+        }
+        @keyframes pulse-gentle {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
+          50% { opacity: 0.8; }
+        }
+        
+        /* Volume slider styling */
+        input[type="range"] {
+          -webkit-appearance: none;
+          appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+          .highlight-blue {
+          color: orange;
+        }
+        input[type="range"]::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-webkit-slider-track {
+          height: 8px;
+          border-radius: 4px;
+          background: #e5e7eb;
+        }
+        input[type="range"]::-moz-range-track {
+          height: 8px;
+          border-radius: 4px;
+          background: #e5e7eb;
+          border: none;
+        }
+        input[type="range"]:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
       `}</style>
-    </Box>
+    </div>
   );
 };
 

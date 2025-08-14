@@ -25,7 +25,13 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import { useEffect, useState, useCallback, type Dispatch, type SetStateAction } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useAuthentication,
@@ -68,7 +74,7 @@ export function Notifications() {
   const { user } = useAuthentication();
   const toast = useToast();
   const { setCount } = useCount();
-  
+
   // Responsive values
   const isMobile = useBreakpointValue({ base: true, md: false });
   const containerPadding = useBreakpointValue({ base: 2, md: 6 });
@@ -80,7 +86,7 @@ export function Notifications() {
   // Function to fetch notifications
   const fetchNotifications = useCallback(async () => {
     console.log("📡 Fetching notifications...");
-    
+
     return new Promise<Notification[]>((resolve, reject) => {
       request<Notification[]>({
         endpoint: "/api/v1/notifications",
@@ -132,10 +138,10 @@ export function Notifications() {
   //     if (document.hidden) return;
 
   //     console.log("🔄 Polling for new notifications...");
-      
+
   //     try {
   //       const fetchedNotifications = await fetchNotifications();
-        
+
   //       // Check for new notifications
   //       const newNotifications = fetchedNotifications.filter(
   //         (newNotif) =>
@@ -174,7 +180,7 @@ export function Notifications() {
 
   // Update count whenever notifications change
   useEffect(() => {
-    const unreadCount = notifications.filter(n => !n.read).length;
+    const unreadCount = notifications.filter((n) => !n.read).length;
     console.log("📊 Updating notification count:", unreadCount);
     setCount(unreadCount);
   }, [notifications, setCount]);
@@ -189,21 +195,28 @@ export function Notifications() {
     try {
       // Mark all as read in parallel
       await Promise.all(
-        unreadNotifications.map((notification) =>
-          new Promise<void>((resolve, reject) => {
-            request({
-              endpoint: `/api/v1/notifications/${notification.id}`,
-              method: "PUT",
-              onSuccess: () => {
-                console.log("✅ Notification marked as read:", notification.id);
-                resolve();
-              },
-              onFailure: (error) => {
-                console.error("❌ Failed to mark notification as read:", error);
-                reject(error);
-              },
-            });
-          })
+        unreadNotifications.map(
+          (notification) =>
+            new Promise<void>((resolve, reject) => {
+              request({
+                endpoint: `/api/v1/notifications/${notification.id}`,
+                method: "PUT",
+                onSuccess: () => {
+                  console.log(
+                    "✅ Notification marked as read:",
+                    notification.id
+                  );
+                  resolve();
+                },
+                onFailure: (error) => {
+                  console.error(
+                    "❌ Failed to mark notification as read:",
+                    error
+                  );
+                  reject(error);
+                },
+              });
+            })
         )
       );
 
@@ -216,7 +229,7 @@ export function Notifications() {
         duration: 2000,
         isClosable: true,
       });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         title: "Error marking notifications as read",
@@ -252,16 +265,17 @@ export function Notifications() {
   );
 
   const DesktopFilters = () => (
-    <HStack spacing={2}
+    <HStack
+      spacing={2}
       sx={{
-    // Hide scrollbar but keep functionality
-    '&::-webkit-scrollbar': {
-      display: 'none', // Safari and Chrome
-    },
-    '-ms-overflow-style': 'none',  // IE and Edge
-    'scrollbar-width': 'none',  // Firefox
-  }}
-     >
+        // Hide scrollbar but keep functionality
+        "&::-webkit-scrollbar": {
+          display: "none", // Safari and Chrome
+        },
+        "-ms-overflow-style": "none", // IE and Edge
+        "scrollbar-width": "none", // Firefox
+      }}
+    >
       <Button
         size={buttonSize}
         variant={filter === "all" ? "solid" : "outline"}
@@ -286,7 +300,6 @@ export function Notifications() {
     return (
       <Container maxW="100%" p={containerPadding} minH="100vh">
         <Box
-        
           // eslint-disable-next-line react-hooks/rules-of-hooks
           bg={useColorModeValue("white", "gray.800")}
           borderRadius="xl"
@@ -445,8 +458,8 @@ export function Notifications() {
           <Box
             p={headerPadding}
             bgGradient={useColorModeValue(
-              "linear(to-r, blue.500, purple.500)",
-              "linear(to-r, blue.600, purple.600)"
+              "linear(to-r, #38A169, #68D391)", // light mode: green to light green
+              "linear(to-r, #2F855A, #48BB78)" // dark mode: deep green to mint green
             )}
             color="white"
           >
@@ -709,9 +722,7 @@ function NotificationItem({
             borderColor={useColorModeValue("white", "gray.700")}
             shadow="md"
           >
-            <Box fontSize="12px">
-              {getNotificationIcon()}
-            </Box>
+            <Box fontSize="12px">{getNotificationIcon()}</Box>
           </Box>
         </Box>
 

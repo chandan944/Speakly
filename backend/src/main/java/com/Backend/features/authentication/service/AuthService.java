@@ -326,4 +326,12 @@ public class AuthService {
     public List<User> findTopUsersByPoints() {
         return userRepository.findAllByOrderByPointsDesc();
     }
+
+    public User updatePoints(User user, int points, int asks) {
+
+        user.setPoints(points);
+        user.setAsks(asks);                           // ✅ set points properly
+        return userRepository.save(user);             // ✅ return updated user
+    }
+
 }

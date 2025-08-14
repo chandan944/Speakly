@@ -40,7 +40,8 @@ public class User {
     private List<String> hobbies;
     @FullTextField(analyzer = "standard")
     private String nativeLanguage = null; // replaced location
-    private int points = 0; // added for leaderboard
+    private int points = 0;
+    private int asks = 0;// added for leaderboard
     private String bio = "Hey there lets fun together";
 
 
@@ -242,5 +243,13 @@ public class User {
     public void setNativeLanguage(String nativeLanguage) {
         this.nativeLanguage = nativeLanguage;
 
+    }
+
+    public int getAsks() {
+        return asks;
+    }
+
+    public void setAsks(int asks) {
+        this.asks = asks;
     }
 }

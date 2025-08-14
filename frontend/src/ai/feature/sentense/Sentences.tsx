@@ -20,6 +20,7 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
+import { usePageTitle } from "../../../hook/usePageTitle";
 
 const Sentence = () => {
   const { user } = useAuthentication();
@@ -41,7 +42,7 @@ const Sentence = () => {
   const { isOpen,  onClose } = useDisclosure();
 
   const feedbackRef = useRef(null);
-
+usePageTitle("Sentences");
 
   // Generate Sentence
   const generateSentence = async () => {
@@ -52,12 +53,18 @@ const Sentence = () => {
     setFeedback("");
 
     const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
-    const MODEL = "gemini-1.5-flash";
+    const MODEL = "gemini-2.5-flash-lite";
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
-    const prompt = `Generate one natural ${nativeLang} sentence for ${difficulty} level about ${topic}.
-- Respond ONLY with the sentence.
-- Keep it conversational.`;
+
+
+    const prompt = `Create one unique and natural sentence in ${nativeLang} for a ${difficulty} learner about "${topic}".
+
+- Make it sound like real conversation, not from a textbook.  
+- Use different styles each time: casual, curious, emotional, funny, or thoughtful.  
+- Keep it short and clear — one sentence only.  
+- Do NOT explain or translate. Only reply with the sentence.`;
+
 
     try {
       const res = await fetch(URL, {
@@ -92,16 +99,21 @@ const Sentence = () => {
     const MODEL = "gemini-2.5-flash-lite";
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
-    const prompt = `
-Compare the user's translation with the original ${generatedSentence} sentence.Very Consice, clear, and encouraging feedback in English and bit ${nativeLang}. in this format:
-🌟 **Score:** [percent]%  
-🛠️ **Fixes:** [what needs improvement, explain properly]  
-💡 **Better Version:** [improved translation]  
-📘 **Tip:** [1 helpful tip]  
+const prompt = `
+Compare the user's translation with the original sentence: "${generatedSentence}". 
+Give very concise, clear, and **encouraging feedback** in English, with a small touch of ${nativeLang}. 
+Respond **strictly in the following format** (no extra text, no missing sections):
+
+**Score:** [percent]%  
+🛠️ **Fixes:** [Clearly explain what is wrong or could be improved in the user's translation — short but specific]  
+💡 **Better Version:** [Provide a polished, natural-sounding translation]  
+📘 **Tip:** [1 short, practical language-learning tip related to the mistake]  
+💖 **Encouragement:** [1 sentence motivating the user, friendly tone]  
+
 Original:  
-${generatedSentence}
+${generatedSentence}  
 User's Attempt:  
-${userTranslation}
+${userTranslation}  
 `;
 
     try {
@@ -130,12 +142,12 @@ ${userTranslation}
   const formatFeedback = (text:string) => {
     return text
       .replace(
-        /(🌟 \*\*Score:\*\*.*?%)/g,
+        /(\*\*Score:\*\*.*?%)/g,
         '<span class="inline-block bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-md animate-pulse-slow">$1</span>'
       )
       .replace(
         /(🛠️ \*\*Fixes:\*\*.*)/g,
-        '<div class="bg-orange-50 border-l-4 border-orange-400 text-orange-800 p-3 my-2 rounded-r-lg animate-slide-in"><strong></strong> $1</div>'
+        '<div class="bg-orange-50 border-l-4 border-green-400 text-green-800 font-mono  p-3 my-2 rounded-r-lg animate-slide-in"><strong></strong> $1</div>'
       )
       .replace(
         /(💡 \*\*Better Version:\*\*.*)/g,
@@ -147,16 +159,15 @@ ${userTranslation}
       )
       .replace(
         /(💖 \*\*Encouragement:\*\*.*)/g,
-        '<div class="bg-pink-50 border-l-4 border-pink-400 text-pink-800 p-3 my-2 rounded-r-lg font-medium animate-bounce-in"><strong>💖 You’re doing great!</strong> $1</div>'
+        '<div class="bg-pink-50 border-l-4 border-pink-400 text-pink-600 p-3 my-2 rounded-r-lg font-medium animate-bounce-in"><strong>💖 You’re doing great!</strong> $1</div>'
       )
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-gray-800">$1</strong>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\n/g, "<br/>")
       .replace(/- /g, '• ');
   };
 
   return (
     <Box
-      bgGradient="linear(to-br, purple.50, pink.50, blue.50)"
       minH="100vh"
       p={6}
       position="relative"
@@ -201,12 +212,12 @@ ${userTranslation}
               onChange={(e) => setTopic(e.target.value)}
               size="lg"
               borderRadius="xl"
-              focusBorderColor="purple.400"
+              focusBorderColor="green.300"
               _focus={{ boxShadow: "0 0 0 3px rgba(147, 51, 234, 0.2)" }}
             />
             <Button
               leftIcon={<RefreshCw size={16} />}
-              colorScheme="blue"
+              bgColor="green.300"
               size="lg"
               onClick={generateSentence}
               isLoading={loading}
@@ -254,7 +265,7 @@ ${userTranslation}
               shadow="md"
             >
               <HStack justify="space-between" mb={2}>
-                <Badge colorScheme="blue" variant="solid" px={3} py={1}>
+                <Badge bgColor={"green.300"} variant="solid" px={3} py={1}>
                   <HStack spacing={1}>
                     <CheckCircle2 size={14} />
                     <Text fontSize="sm">Your {nativeLang} Sentence</Text>
@@ -275,7 +286,7 @@ ${userTranslation}
         {generatedSentence && (
           <Box
             p={6}
-            bg={bgColor}
+            // bg={bgColor}
             borderRadius="2xl"
             boxShadow="lg"
             border="1px"
@@ -292,7 +303,7 @@ ${userTranslation}
               />
               <Button
                 leftIcon={<SendIcon size={16} />}
-                colorScheme="purple"
+                bgColor={"green.300"}
                 size="lg"
                 onClick={getFeedback}
                 isLoading={feedbackLoading}
@@ -311,7 +322,7 @@ ${userTranslation}
             <Box
               ref={feedbackRef}
               p={6}
-              bg="green.50"
+              // bg="green.50"
               borderRadius="2xl"
               borderLeft="8px solid"
               borderColor="green.400"

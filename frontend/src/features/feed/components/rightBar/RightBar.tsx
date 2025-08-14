@@ -98,9 +98,9 @@ export default function RightSidebar() {
                 </Text>
               </Button>
               {/* Optional position/company */}
-              {/* <Text fontSize="sm" color="gray.500">
-                {suggestion.position} at {suggestion.company}
-              </Text> */}
+              <Text fontSize="sm" color="gray.500">
+                {suggestion.nativeLanguage}
+              </Text>
             </Box>
 
             {/* Connect Button */}

@@ -24,9 +24,8 @@ import { request } from "../../../utils/api";
 import { FaUserFriends } from "react-icons/fa";
 import { MdMobileFriendly, MdSendToMobile } from "react-icons/md";
 
-
 export function Network() {
-  usePageTitle("Network");
+  usePageTitle("Friendship");
 
   const [connections, setConnections] = useState<IConnection[]>([]);
   const [invitations, setInvitations] = useState<IConnection[]>([]);
@@ -101,7 +100,7 @@ export function Network() {
     );
     return () => sub?.unsubscribe();
   }, [user?.id, ws]);
-console.log(" from network :",+ connections );
+  console.log(" from network :", +connections);
   return (
     <Flex
       direction={{ base: "column", md: "row" }}
@@ -110,12 +109,13 @@ console.log(" from network :",+ connections );
       maxW="1200px"
       mx="auto"
       gap={8}
-       
     >
       {/* Sidebar */}
-      <Box minW={{ base: "full", md: "250px" }}
-      borderColor={useColorModeValue("gray.200", "gray.700")}
-        bg={useColorModeValue("white", "gray.800")}>
+      <Box
+        minW={{ base: "full", md: "250px" }}
+        borderColor={useColorModeValue("gray.200", "gray.700")}
+        bg={useColorModeValue("white", "gray.800")}
+      >
         <Heading size="md" mb={4}>
           Manage my network
         </Heading>
@@ -131,7 +131,7 @@ console.log(" from network :",+ connections );
                 justify="space-between"
               >
                 <Flex justifyItems={"center"} alignItems={"center"} gap={2}>
-                  <MdSendToMobile/>
+                  <MdSendToMobile />
                   <Text fontWeight="medium">Invitations</Text>
                 </Flex>
                 <Text
@@ -150,7 +150,6 @@ console.log(" from network :",+ connections );
           <NavLink to="connections">
             {({ isActive }) => (
               <Flex
-                
                 align="center"
                 p={3}
                 borderRadius="md"
@@ -158,8 +157,8 @@ console.log(" from network :",+ connections );
                 _hover={{ bg: "" }}
                 justify="space-between"
               >
-                <Flex justifyItems={"center"} alignItems={"center"} gap={2} >
-                  <MdMobileFriendly/>
+                <Flex justifyItems={"center"} alignItems={"center"} gap={2}>
+                  <MdMobileFriendly />
                   <Text fontWeight="medium"> Connections</Text>
                 </Flex>
                 <Text
@@ -195,29 +194,29 @@ console.log(" from network :",+ connections );
                   borderRadius="md"
                   justify={"space-between"}
                 >
-                  
                   <Flex align="center" gap={3}>
-                   <Avatar
-                    size="sm"
-               src={
-  s?.profilePicture  // Check suggestion's profile picture
-    ? s.profilePicture.startsWith("http")
-      ? s.profilePicture
-      : `${import.meta.env.VITE_API_URL}/api/v1/storage/${s.profilePicture}`
-    : "/avatar.svg"
-}
-                    name={`${s.firstName} ${s.lastName}`}
-                    cursor="pointer"
+                    <Avatar
+                      size="sm"
+                      src={
+                        s?.profilePicture // Check suggestion's profile picture
+                          ? s.profilePicture.startsWith("http")
+                            ? s.profilePicture
+                            : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
+                                s.profilePicture
+                              }`
+                          : "/avatar.svg"
+                      }
+                      name={`${s.firstName} ${s.lastName}`}
+                      cursor="pointer"
                       onClick={() => navigate(`/profile/${s.id}`)}
-                  />
+                    />
                     <VStack align="start" spacing={0}>
                       <Text fontSize="1rem" fontWeight="semibold">
                         {s.firstName} {s.lastName}
                       </Text>
-                      
+
                       {/* You can uncomment this when position/company is available */}
-                      {/* <Text fontSize="sm">{s.position} at {s.company}</Text> */}
-                      
+                      <Text fontSize="sm">{s.nativeLanguage} </Text>
                     </VStack>
                   </Flex>
                   <Button
@@ -237,7 +236,7 @@ console.log(" from network :",+ connections );
                       });
                     }}
                   >
-                   +<FaUserFriends />
+                    +<FaUserFriends />
                   </Button>
                 </Flex>
               ))}

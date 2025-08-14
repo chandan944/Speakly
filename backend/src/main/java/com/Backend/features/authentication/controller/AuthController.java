@@ -87,6 +87,22 @@ public class AuthController {
         }
         return authService.updateUserProfile(user,firstName,lastName,hobbies ,nativeLanguage, bio);
    }
+
+
+    @PutMapping("/points/{id}")
+    public User UpdatePoints(
+            @PathVariable Long id,
+            @RequestAttribute("authenticatedUser") User user,
+            @RequestParam(required = false) int points,
+            @RequestParam(required = false) int asks
+    ){
+        if(!user.getId().equals(id)){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN , "User don't have permission");
+        }
+        return authService.updatePoints(user,points , asks);
+    }
+
+
    @PutMapping("/profile/{id}/profile-picture")
    public User updateProfilePicture(@RequestAttribute("authenticatedUser") User user,
                                     @PathVariable Long id,

@@ -22,6 +22,17 @@ public class Story {
 
     // ✅ FIX: Don't store binary data, just store URL as string
     private String imageUrl;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    private String title;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

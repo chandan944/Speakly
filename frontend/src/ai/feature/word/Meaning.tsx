@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { LiaDoorOpenSolid } from "react-icons/lia";
-import { X, SendIcon } from "lucide-react";
+import { X, SendIcon, Play, SpeakerIcon } from "lucide-react";
 import { BiFileFind } from "react-icons/bi";
-
+import { HiOutlineSpeakerWave } from "react-icons/hi2";
 // Chakra UI
 import {
   Button,
@@ -18,9 +18,12 @@ import {
   RadioGroup,
   Radio,
   FormControl,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
+import { usePageTitle } from "../../../hook/usePageTitle";
 
 const Meaning = () => {
   const { user } = useAuthentication();
@@ -29,6 +32,8 @@ const Meaning = () => {
   const [mode, setMode] = useState("auto");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const utteranceRef = useRef(null);
 
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.100");
@@ -39,6 +44,7 @@ const Meaning = () => {
   const wordCount = word.trim().split(/\s+/).filter(Boolean).length;
   const isSingleWord = wordCount === 1;
   const isMultiWord = wordCount > 1;
+
 
   // ✅ Auto-select mode based on input
   React.useEffect(() => {
@@ -58,7 +64,7 @@ const Meaning = () => {
     setResult("");
 
     const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
-    const MODEL ="gemini-2.5-flash-lite";
+    const MODEL = "gemini-2.5-flash-lite";
     // ✅ Fixed URL: removed extra space
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
@@ -68,7 +74,7 @@ const Meaning = () => {
 
     if (mode === "word") {
       prompt = `Define "${word}" in one short line each:
-**En:** The core meaning in English.
+**En:** The meaning of ${word} in very easy to understand way.
 **${nativeLang}:** Direct translation.
 **Use:** A natural sentence using the word.
 Keep it extremely concise.`;
@@ -78,9 +84,9 @@ Keep it extremely concise.`;
 **${nativeLang}:** Translation.
 Be very brief.`;
     } else if (mode === "ask") {
-      prompt = `Answer in one short sentence:
+      prompt = `Answer in very short:
 "${word}"
-Also give ${nativeLang} translation if needed.`;
+Also give ${nativeLang} meaning if needed.`;
     }
 
     try {
@@ -100,25 +106,109 @@ Also give ${nativeLang} translation if needed.`;
     } catch (err) {
       console.error(err);
       setResult(
-        '<span style="color: #ef4444; font-size: 14px;">Failed to fetch. Check your connection or API key.</span>'
+        '<span style="color: #ef4444; font-size: 14px;">Check your connection or Try again.</span>'
       );
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Fixed speech function
+  const cleanTextForSpeech = (text) => {
+    return text
+      .replace(/<[^>]*>/g, "") // Remove HTML tags
+      .replace(/\*\*.*?:\*\*/g, "") // Remove markdown bold labels
+      .replace(/[^\w\s.,!?]/g, " ") // Remove special characters except basic punctuation
+      .replace(/\s+/g, " ") 
+      .replace(/\*\*(.*?)\*\*/g, '<span class="highlight-yellow">$1</span>')
+      // Replace multiple spaces with single space
+      .trim();
+  };
+
+  const readAloud = () => {
+    const textToSpeak = word.trim();
+
+    if (!textToSpeak || !window.speechSynthesis || isSpeaking) {
+      return;
+    }
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    setIsSpeaking(true);
+
+    const cleanText = cleanTextForSpeech(textToSpeak);
+    if (!cleanText.trim()) {
+      setIsSpeaking(false);
+      return;
+    }
+
+    const speakWithBestVoice = () => {
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utteranceRef.current = utterance;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoices = [
+        voices.find(
+          (v) =>
+            v.name.includes("Microsoft") &&
+            v.name.includes("Natural") &&
+            v.lang.startsWith("en")
+        ),
+        voices.find(
+          (v) => v.name.includes("Google") && v.lang.startsWith("en")
+        ),
+        voices.find((v) => v.name.includes("Alex") && v.lang.startsWith("en")),
+        voices.find((v) => v.lang.startsWith("en-US")),
+        voices.find((v) => v.lang.startsWith("en")),
+      ].filter(Boolean);
+
+      if (preferredVoices.length > 0) {
+        utterance.voice = preferredVoices[0];
+      }
+
+      utterance.lang = "en-US";
+      utterance.rate = 0.75;
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+      };
+
+      utterance.onerror = (event) => {
+        console.error("❌ Speech synthesis error:", event);
+        setIsSpeaking(false);
+        utteranceRef.current = null;
+      };
+
+      window.speechSynthesis.speak(utterance);
+    };
+
+    if (window.speechSynthesis.getVoices().length === 0) {
+      window.speechSynthesis.onvoiceschanged = speakWithBestVoice;
+    } else {
+      speakWithBestVoice();
+    }
+  };
+
   // ✅ Enhanced formatter with better regex and styling
-  const formatResponse = (text: string) => {
-    const escapeRegex = (str: string) =>
-      str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const formatResponse = (text) => {
+    const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const lang = user?.nativeLanguage || "Hindi";
     const escapedLang = escapeRegex(lang);
 
     return text
       .replace(/\*\*(En:)\*\*/gi, '<span class="highlight-english">$1</span>')
-      .replace(new RegExp(`\\*\\*(${escapedLang}:)\\*\\*`, "gi"), '<span class="highlight-native">$1</span>')
+      .replace(
+        new RegExp(`\\*\\*(${escapedLang}:)\\*\\*`, "gi"),
+        '<span class="highlight-native">$1</span>'
+      )
       .replace(/\*\*(Use:)\*\*/gi, '<span class="highlight-example">$1</span>')
-      .replace(/\*\*(Meaning:)\*\*/gi, '<span class="highlight-phrase">$1</span>')
+      .replace(
+        /\*\*(Meaning:)\*\*/gi,
+        '<span class="highlight-phrase">$1</span>'
+      )
       .replace(/\*\*(.*?)\*\*/g, '<span class="highlight-fallback">$1</span>')
       .replace(/\n/g, "<br/>");
   };
@@ -199,17 +289,35 @@ Also give ${nativeLang} translation if needed.`;
           {/* Form */}
           <form onSubmit={fetchResponse}>
             <VStack p={4} spacing={3}>
-              <Input
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                placeholder={getPlaceholder()}
-                autoFocus
-                disabled={loading}
-                bg={inputBg}
-                focusBorderColor="purple.400"
-                size="md"
-                fontFamily="system-ui, -apple-system, sans-serif"
-              />
+              {/* Input with integrated Play button */}
+              <InputGroup>
+                <Input
+                  value={word}
+                  onChange={(e) => setWord(e.target.value)}
+                  placeholder={getPlaceholder()}
+                  autoFocus
+                  disabled={loading}
+                  bg={inputBg}
+                  focusBorderColor="purple.400"
+                  size="md"
+                  fontFamily="system-ui, -apple-system, sans-serif"
+                  pr="50px" // Make space for the play button
+                />
+                <InputRightElement width="48px">
+                  <IconButton
+                    icon={<HiOutlineSpeakerWave size={16} />}
+                    aria-label="Read aloud"
+                    size="sm"
+                    variant="ghost"
+                    colorScheme="green"
+                    onClick={readAloud}
+                    disabled={!word.trim() || isSpeaking}
+                    isLoading={isSpeaking}
+                    _hover={{ bg: "green.50" }}
+                    borderRadius="md"
+                  />
+                </InputRightElement>
+              </InputGroup>
 
               {/* Mode Selector */}
               {word.trim().length > 0 && (
@@ -300,6 +408,13 @@ Also give ${nativeLang} translation if needed.`;
           padding: 0.1em 0.3em;
           border-radius: 4px;
         }
+          .highlight-yellow{
+          color: #5b21b6;
+          font-weight: 700;
+          background: #f5f3ff;
+          padding: 0.1em 0.3em;
+          border-radius: 4px;
+          }
 
         .meaning-result {
           font-family: Inter, system-ui, sans-serif;
@@ -312,7 +427,10 @@ Also give ${nativeLang} translation if needed.`;
           background: transparent;
         }
         .meaning-result::-webkit-scrollbar-thumb {
-          background: ${useColorModeValue("rgba(0,0,0,0.1)", "rgba(255,255,255,0.2)")};
+          background: ${useColorModeValue(
+            "rgba(0,0,0,0.1)",
+            "rgba(255,255,255,0.2)"
+          )};
           border-radius: 3px;
         }
 
