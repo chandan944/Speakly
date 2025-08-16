@@ -18,7 +18,7 @@ import {
 
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserIcon, LogOutIcon } from "lucide-react";
+import { UserIcon, LogOutIcon, CoinsIcon } from "lucide-react";
 import { useAuthentication } from "../../../../features/authentication/context/AuthenticationContextProvider";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
@@ -148,30 +148,27 @@ export function MyProfile() {
                   >
                     {user?.firstName} {user?.lastName}
                   </Text>
-                  <Badge
-                    colorScheme="green"
-                    size="sm"
-                    borderRadius="full"
-                    display={{ base: "none", sm: "inline-flex" }}
-                  >
-                    Pro
-                  </Badge>
+                 
                 </HStack>
 
                 <Text
+                display={"flex"}
+                // justifyContent={"center"}
+                alignItems={"center"}
+                gap={2}
                   fontSize="sm"
                   color={textSecondary}
                   fontWeight="medium"
                   isTruncated
                   w="full"
                 >
-                  {user?.profession}
+                  {user?.points} <CoinsIcon/>{" "}
                 </Text>
 
                 <HStack spacing={1}>
                   <Icon as={UserIcon} w="3" h="3" color={textSecondary} />
                   <Text fontSize="xs" color={textSecondary} isTruncated>
-                    {user?.location || "Remote"}
+                    {user?.nativeLanguage || "Remote"}
                   </Text>
                 </HStack>
               </VStack>

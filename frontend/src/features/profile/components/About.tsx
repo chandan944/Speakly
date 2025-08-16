@@ -428,7 +428,7 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
                   {selectedFile && (
                     <HStack>
                       <Button leftIcon={<FcOk />} size="sm" colorScheme="blue" onClick={uploadProfilePicture}>
-                        Upload Picture
+                       Save
                       </Button>
                       <Button size="sm" variant="outline" onClick={() => {
                         setSelectedFile(null);

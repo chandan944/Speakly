@@ -31,6 +31,7 @@ export interface User {
   nativeLanguage?: string;      // ✅ renamed from location to nativeLanguage
   bio: string;
   points: number;
+  asks:number;
   profileComplete: boolean;
   profilePicture?: string;
 

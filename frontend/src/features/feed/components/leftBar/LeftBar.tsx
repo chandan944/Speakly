@@ -159,6 +159,15 @@ function LeftSidebar({ user }: ILeftSidebarProps) {
           }
           
         />
+          <InfoItem
+          label="Asks"
+          value={
+            user?.asks
+              ? `${user.asks}`
+              : "0"
+          }
+          
+        />
       </VStack>
 
       {/* 👥 Connections */}

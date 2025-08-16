@@ -27,7 +27,7 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
 import { LuHeartHandshake } from "react-icons/lu";
 import Meaning from "../../ai/feature/word/Meaning";
-import { BellRing, BookAIcon, Home, Trophy, Users } from "lucide-react";
+import { BellRing, BookAIcon, Feather, Home, Trophy, Users } from "lucide-react";
 import { BiUserVoice } from "react-icons/bi";
 import { MdOutlineQuiz } from "react-icons/md";
 
@@ -90,13 +90,7 @@ const Navbar = () => {
   console.log("from navebar", messageCount);
   const navItems = [
     { icon: <Home size={"17px"}/>, label: "Home", link: "/", showCount: false, count: 0 },
-    {
-      icon: <LuHeartHandshake size={"17px"} />,
-      label: "Sentences",
-      link: "/ai",
-      showCount: false,
-      count: 0, // Use messageCount from context
-    },
+ 
     {
       icon: <TbMessageChatbot size={"17px"} />,
       label: "Messages",
@@ -118,13 +112,14 @@ const Navbar = () => {
       showCount: true,
       count: notificationCount,
     },
-        {
-      icon: <Trophy size={"17px"}/>,
-      label: "Leaderboard",
-      link: "/leader",
+       {
+      icon: <Feather size={"17px"} />,
+      label: "Sentences",
+      link: "/ai",
       showCount: false,
-      count: 0,
+      count: 0, // Use messageCount from context
     },
+  
           {
       icon: <BookAIcon size={"17px"}/>,
       label: "Story",
@@ -143,6 +138,13 @@ const Navbar = () => {
       icon: <MdOutlineQuiz size={"19px"}/>,
       label: "Quiz",
       link: "/quizes",
+      showCount: false,
+      count: 0,
+    },
+          {
+      icon: <Trophy size={"17px"}/>,
+      label: "Leaderboard",
+      link: "/leader",
       showCount: false,
       count: 0,
     },
@@ -240,11 +242,11 @@ const Navbar = () => {
       <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent
-          mt="3.6rem"
+          mt="2rem"
           mr={1}
           borderRadius={5}
           maxW="11rem"
-          maxH={"30rem"}
+          maxH={"40rem"}
         >
           <DrawerCloseButton />
           <DrawerBody mt={5}>

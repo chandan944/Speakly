@@ -18,8 +18,9 @@ public class Post {
     private Long id;
 
 
-    @NotEmpty
+    @Column(nullable = false, length = 1000)
     private String content;
+
 
     private String picture;
 
@@ -46,6 +47,7 @@ public class Post {
     private LocalDateTime creationDate;
 
     private LocalDateTime updatedDate;
+
 
     public Post(String content, User author) {
         this.content = content;

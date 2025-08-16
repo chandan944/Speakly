@@ -37,11 +37,12 @@ import {
 } from "@chakra-ui/react";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Gamepad, PlayIcon, Send } from "lucide-react";
+import { Gamepad, Heart, PartyPopper, PlayIcon, Send } from "lucide-react";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { MdDoNotTouch } from "react-icons/md";
 import Meaning from "../word/Meaning";
 import { usePageTitle } from "../../../hook/usePageTitle";
+import { useCount } from "../../../components/Notify/CountContext";
 
 // === INTERFACES ===
 interface Question {
@@ -91,7 +92,8 @@ export default function QuizApp() {
         explanation: "",
       }))
   );
-
+  const [showAskCard, setShowAskCard] = useState(false);
+ const { setPointsAsks } = useCount();
   // Hooks
   const { user } = useAuthentication();
   const toast = useToast();
@@ -253,6 +255,15 @@ export default function QuizApp() {
 
   // Play quiz
   const startQuiz = (quiz: Quiz) => {
+
+    if (user?.asks <= 3 ) {
+      setShowAskCard(true);
+      return; // Stop execution, don't proceed with API call
+    }
+    setPointsAsks(0 , 4)
+
+
+
     if (!quiz.questions?.length) {
       toast({ title: "No questions in this quiz", status: "warning" });
       return;
@@ -287,11 +298,23 @@ export default function QuizApp() {
         currentQuiz?.questions[currentQuestionIndex].correctOption
           ? 1
           : 0);
-      toast({
-        title: `🎉 Quiz Complete! Score: ${finalScore}/${currentQuiz?.questions.length}`,
+
+      if (finalScore === 10) {
+         setPointsAsks(finalScore , -4)
+        toast({
+        title: `OMG! 💯 Score. + ${finalScore} points`,
         status: "success",
         duration: 4000,
       });
+      }
+      else{
+        setPointsAsks(finalScore , 0)
+        toast({
+        title: `🎉 Quiz Complete! Score: ${finalScore}/${currentQuiz?.questions.length}. + ${finalScore} points`,
+        status: "success",
+        duration: 4000,
+      });
+      }
       setIsPlaying(false);
       onViewClose();
     }
@@ -306,6 +329,178 @@ export default function QuizApp() {
       fontFamily="'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif"
       
     >
+      {showAskCard && (
+        <Box
+          position="absolute"
+          top="5px"
+          left={50}
+          width="320px"
+          maxW="95vw"
+          bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          borderRadius="2xl"
+          boxShadow="0 20px 40px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255,255,255,0.1)"
+          zIndex={10000}
+          overflow="hidden"
+          transform="scale(0.98)"
+          animation="bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards"
+        >
+          {/* Animated Background Elements */}
+          <Box
+            position="absolute"
+            top="-50%"
+            right="-20%"
+            width="200px"
+            height="200px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.1)"
+            animation="pulse 3s ease-in-out infinite"
+          />
+          <Box
+            position="absolute"
+            bottom="-30%"
+            left="-10%"
+            width="150px"
+            height="150px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.05)"
+            animation="pulse 2s ease-in-out infinite reverse"
+          />
+          
+          <VStack spacing={6} p={8} position="relative" zIndex={1}>
+            {/* Eye-catching Icon */}
+           
+            
+            {/* Compelling Headline */}
+            <VStack spacing={2}>
+              <Text 
+                fontSize="xl" 
+                fontWeight="800" 
+                color="white" 
+                textAlign="center"
+                textShadow="0 2px 4px rgba(0,0,0,0.3)"
+              >
+                Unlock Your Learning Potential!
+              </Text>
+              <Text 
+                fontSize="sm" 
+                color="rgba(255,255,255,0.9)" 
+                textAlign="center"
+                fontWeight="500"
+              >
+                You're so close to discovering amazing words & meanings
+              </Text>
+            </VStack>
+
+            {/* Scarcity + Social Proof */}
+            <Box
+              bg="rgba(255,255,255,0.15)"
+              borderRadius="xl"
+              p={4}
+              width="100%"
+              backdropFilter="blur(10px)"
+              border="1px solid rgba(255,255,255,0.2)"
+            >
+              <VStack spacing={2}>
+                <HStack spacing={2} align="center">
+                  <Text fontSize="lg">⚡</Text>
+                  <Text color="white" fontSize="sm" fontWeight="600">
+                    Limited Time: FREE 5 Asks
+                  </Text>
+                </HStack>
+                <Text color="rgba(255,255,255,0.8)" fontSize="xs" textAlign="center">
+                  Join 10,000+ learners who expanded their vocabulary today
+                </Text>
+              </VStack>
+            </Box>
+
+            {/* Progress Bar Illusion */}
+            <Box width="100%">
+              <HStack justify="space-between" mb={2}>
+                <Text color="rgba(255,255,255,0.9)" fontSize="xs">
+                  Learning Progress
+                </Text>
+                <Text color="white" fontSize="xs" fontWeight="bold">
+                  87% Complete
+                </Text>
+              </HStack>
+              <Box bg="rgba(255,255,255,0.2)" borderRadius="full" height="6px">
+                <Box 
+                  bg="linear-gradient(90deg, #ffd700, #ffed4a)"
+                  borderRadius="full" 
+                  height="100%" 
+                  width="87%"
+                  boxShadow="0 0 10px rgba(255,215,0,0.6)"
+                  animation="shimmer 2s ease-in-out infinite"
+                />
+              </Box>
+            </Box>
+
+            {/* Action Buttons */}
+            <VStack spacing={3} width="100%">
+              <Button
+                bg="linear-gradient(135deg, #ffd700 0%, #ffed4a 100%)"
+                color="black"
+                fontWeight="800"
+                fontSize="md"
+                height="50px"
+                width="100%"
+                borderRadius="xl"
+                boxShadow="0 8px 20px rgba(255,215,0,0.4)"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 25px rgba(255,215,0,0.6)"
+                }}
+                _active={{
+                  transform: "translateY(0px)"
+                }}
+                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                onClick={async () => {
+                  try {
+                   
+                    await setPointsAsks(0, - 5);
+                    setShowAskCard(false);
+                  } catch (error) {
+                    console.error("Error adding asks:", error);
+                  }
+                }}
+              >
+                <HStack spacing={2}>
+                  <Text>🎁</Text>
+                  <Text>GET 5 FREE ASKS NOW</Text>
+                  <Text>🎁</Text>
+                </HStack>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                color="rgba(255,255,255,0.7)"
+                fontSize="sm"
+                height="35px"
+                _hover={{
+                  color: "white",
+                  bg: "rgba(255,255,255,0.1)"
+                }}
+                onClick={() => setShowAskCard(false)}
+              >
+                Maybe later
+              </Button>
+            </VStack>
+
+            {/* Trust Signals */}
+            <HStack spacing={4} opacity={0.8}>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Instant Access
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ No Payment
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Premium Quality
+              </Text>
+            </HStack>
+          </VStack>
+        </Box>
+      )}
       <VStack spacing={8} maxW="6xl" mx="auto">
         {/* Header */}
         <ScaleFade initialScale={0.8} in={true}>
@@ -320,7 +515,18 @@ export default function QuizApp() {
               color="green.300"
               textShadow="1px 1px 2px rgba(0,0,0,0.1)"
             >
-              <Gamepad size={"140px"} /> English Quiz Adventure
+             <Box
+  bgGradient="linear(to-r, pink.200, yellow.200)"
+  rounded="full"
+  p={2.5}
+  boxShadow="0 0 12px rgba(255, 182, 193, 0.6)"
+  display="flex"
+  alignItems="center"
+  justifyContent="center"
+>
+  <Heart size={32} color="#d946ef" />
+</Box>
+ English Quiz Adventure
             </Heading>
             <Text fontSize="lg" color="gray.600" fontStyle="italic">
               Learn, Play, Level Up!
@@ -422,11 +628,11 @@ export default function QuizApp() {
                       <HStack spacing={3} w="full" justify="space-between">
                         <Button
                           leftIcon={<PlayIcon size={16} />}
-                          bg={"blue.500"}
+                          bg={"#8AFF8A"}
                           size="sm"
                           onClick={() => startQuiz(quiz)}
-                          _hover={{ bg: "blue.600" }}
-                          color={"white"}
+                          _hover={{ bg: "#5CFF5C" }}
+                          
                         >
                           Play
                         </Button>
@@ -594,7 +800,7 @@ export default function QuizApp() {
           <ModalBody>
             {currentQuiz && (
               <VStack spacing={6}>
-                <Text fontSize="1.2rem" fontWeight="medium" color="green.300">
+                <Text fontSize="1.2rem" fontWeight="medium">
                   {currentQuestionIndex + 1}.{" "}
                   {currentQuiz.questions[currentQuestionIndex].questionText}
                 </Text>
@@ -657,7 +863,7 @@ export default function QuizApp() {
                         {selectedOption ===
                         currentQuiz.questions[currentQuestionIndex]
                           .correctOption ? (
-                          <IoCheckmarkDoneCircleSharp />
+                          <IoCheckmarkDoneCircleSharp size={"35px"} color="#00FF00"/>
                         ) : (
                           <MdDoNotTouch />
                         )}
@@ -680,7 +886,8 @@ export default function QuizApp() {
                     <Button
                       mt={2}
                       // w="full"
-                      colorScheme="green"
+                      bg={"#8AFF8A"}
+                       _hover={{ bg: "#5CFF5C" }}
                       onClick={nextQuestion}
                       size="md"
                       borderRadius="full"
@@ -697,12 +904,14 @@ export default function QuizApp() {
                     alignItems={"center"}
                     gap={2}
                     p={4}
-                    bg="green.400"
+                    px={10}
+                    bg="#8AFF8A"
                     size="md"
                     isDisabled={!selectedOption}
                     onClick={submitAnswer}
                     borderRadius="full"
                     fontWeight="bold"
+                     _hover={{ bg: "#5CFF5C" }}
                   >
                     <Send /> Submit
                   </Button>

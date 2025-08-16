@@ -89,12 +89,12 @@ public class AuthController {
    }
 
 
-    @PutMapping("/points/{id}")
+    @PutMapping("/{id}/points")
     public User UpdatePoints(
             @PathVariable Long id,
             @RequestAttribute("authenticatedUser") User user,
-            @RequestParam(required = false) int points,
-            @RequestParam(required = false) int asks
+            @RequestParam(required = false) Integer points,
+            @RequestParam(required = false) Integer asks
     ){
         if(!user.getId().equals(id)){
             throw new ResponseStatusException(HttpStatus.FORBIDDEN , "User don't have permission");

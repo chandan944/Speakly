@@ -40,8 +40,8 @@ public class User {
     private List<String> hobbies;
     @FullTextField(analyzer = "standard")
     private String nativeLanguage = null; // replaced location
-    private int points = 0;
-    private int asks = 0;// added for leaderboard
+    private Integer points = 0;
+    private Integer asks = 0;// added for leaderboard
     private String bio = "Hey there lets fun together";
 
 

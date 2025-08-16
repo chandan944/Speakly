@@ -83,8 +83,9 @@ public class AuthService {
         String hashedToken = encoder.encode(emailVerificationToken);
         user.setEmailVerificationToken(hashedToken);
         user.setEmailVerificationTokenExpiryDate(LocalDateTime.now().plusMinutes(2));
-
+        user.setAsks(30);
         userRepository.save(user);
+
         String subject = "Email Verification for Speakly";
         String body = String.format("""
                 Only one step to take full advantage of Speakly.
@@ -137,6 +138,7 @@ public class AuthService {
             User user = userRepository.findByEmail(email).orElse(null);
 
             if (user == null) {
+
                 Boolean emailVerified = claims.get("email_verified", Boolean.class);
                 String firstName = claims.get("given_name", String.class);
                 String lastName = claims.get("family_name", String.class);
@@ -144,7 +146,9 @@ public class AuthService {
                 newUser.setEmailVerified(emailVerified);
                 newUser.setFirstName(firstName);
                 newUser.setLastName(lastName);
+                newUser.setAsks(30);
                 userRepository.save(newUser);
+
             }
 
             String token = jsonWebToken.generateToken(email);
@@ -327,10 +331,10 @@ public class AuthService {
         return userRepository.findAllByOrderByPointsDesc();
     }
 
-    public User updatePoints(User user, int points, int asks) {
+    public User updatePoints(User user, Integer points, Integer asks) {
 
-        user.setPoints(points);
-        user.setAsks(asks);                           // ✅ set points properly
+        user.setPoints(user.getPoints() + points);
+        user.setAsks(user.getAsks() - asks);                           // ✅ set points properly
         return userRepository.save(user);             // ✅ return updated user
     }
 

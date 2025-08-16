@@ -21,6 +21,8 @@ interface CountContextType {
   incrementMessageCount: (amount: number) => void;
   decrementMessageCount: (amount: number) => void;
   resetMessageCount: () => void;
+  setPointsAsks: (points?: number, asks?: number) => Promise<void>; // Function to update points and asks
+
 }
 
 const CountContext = createContext<CountContextType | undefined>(undefined);
@@ -39,9 +41,9 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
   const [count, setCount] = useState(0);
   const [RecievedConnection, setRecievedConnection] = useState(0); // Keeping your typo
   const [messageCount, setMessageCount] = useState(0);
-
-  const auth = useAuthentication();
-  const user = auth?.user;
+   const auth = useAuthentication(); // get the whole object first
+  const user = auth?.user;          // safe optional chaining
+  const setUser = auth?.setUser;
 
   // 🔔 Fetch unread notifications
   useEffect(() => {
@@ -63,38 +65,28 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
 
 
   
-    const setPointsAsks = async (points: number, asks: number) => {
-    if (!user) {
-      console.error("User not loaded ❌");
-      return;
-    }
+const setPointsAsks = async (points?: number, asks?: number) => {
 
-    try {
-      
+  try {
+    const response = await fetch(`http://localhost:8080/api/v1/authentication/${user?.id}/points?points=${points}&asks=${asks}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      const response = await fetch(
-        `http://localhost:8080/points/${user.id}?points=${points}&asks=${asks}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // JWT token
-          },
-        }
-      );
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const updatedUser: User = await response.json();
+    setUser(updatedUser);
+  } catch (err: any) {
+    setError(err.message || "Failed to update points and asks");
+  } finally {
+    setLoading(false);
+  }
+};
 
-      const updatedUser: User = await response.json();
-      setUser(updatedUser);
-    } catch (err: any) {
-      setError(err.message || "Failed to update points and asks");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // 🤝 Fetch pending connection requests
   useEffect(() => {
@@ -168,6 +160,7 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const contextValue: CountContextType = {
+    setPointsAsks,
     count,
     setCount,
     RecievedConnection,
@@ -187,4 +180,12 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
 };
 
 
+
+function setLoading(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+
+function setError(arg0: any) {
+  throw new Error("Function not implemented.");
+}
 

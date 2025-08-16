@@ -159,7 +159,7 @@ export function Network() {
               >
                 <Flex justifyItems={"center"} alignItems={"center"} gap={2}>
                   <MdMobileFriendly />
-                  <Text fontWeight="medium"> Connections</Text>
+                  <Text fontWeight="medium"> Friends </Text>
                 </Flex>
                 <Text
                   fontSize="sm"

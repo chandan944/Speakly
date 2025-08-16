@@ -3,17 +3,17 @@ import {
   Camera,
   Send,
   X,
-  Heart,
-  Laugh,
+
   Edit,
   Trash2,
   Plus,
-  Clock,
   Loader2,
   MessageSquare,
-  Lock,
+
   Star,
+  Smile,
 } from "lucide-react";
+import { BsEmojiSurpriseFill ,BsFire , BsEmojiGrinFill} from "react-icons/bs";
 import {
   Box,
   Button,
@@ -22,7 +22,6 @@ import {
   VStack,
   HStack,
   IconButton,
-  Avatar,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -49,6 +48,8 @@ import {
 } from "../../../features/authentication/context/AuthenticationContextProvider";
 import Meaning from "../word/Meaning";
 import { usePageTitle } from "../../../hook/usePageTitle";
+import { useCount } from "../../../components/Notify/CountContext";
+import { FaHeart } from "react-icons/fa";
 
 // === INTERFACES ===
 
@@ -78,7 +79,7 @@ const StoryFormatter = ({ content }: { content: string }) => {
       text
         // 🔶 Yellow highlight for emphasis
         .replace(/\*\*(.*?)\*\*/g, '<span class="highlight-yellow">$1</span>')
-.replace(/\*([\s\S]+?)\*/g, '<span class="highlight-blue">$1</span>')
+        .replace(/\*([\s\S]+?)\*/g, '<span class="highlight-blue">$1</span>')
 
         // 💬 Italic for thoughts/whispers
         .replace(/,,(.*?),,/g, '<span class="italic-thought">$1</span>')
@@ -125,6 +126,8 @@ const StoryPage = () => {
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
+  const [showAskCard, setShowAskCard] = useState(false);
+  const { setPointsAsks } = useCount();
   const { user } = useAuthentication();
   const {
     isOpen: isCreateOpen,
@@ -507,17 +510,7 @@ const StoryPage = () => {
     }
   }, [selectedImage]);
 
-  // Get avatar URL
-  const getAvatarUrl = (user: User) => {
-    if (user.profilePicture) {
-      return user.profilePicture.startsWith("http")
-        ? user.profilePicture
-        : `${import.meta.env.VITE_API_URL}/api/v1/storage/${
-            user.profilePicture
-          }`;
-    }
-    return "/avatar.svg";
-  };
+
 
   // Get image URL
   const getImageUrl = (story: Story) => {
@@ -583,12 +576,29 @@ const StoryPage = () => {
             New Story
           </Button>
         ) : (
-          <HStack>
-            <Lock size={16} color="gray" />
-            <Text fontSize="sm" color="gray.500">
-              Read-only mode
-            </Text>
-          </HStack>
+        
+<HStack spacing={3}>
+  <Box
+    bg="yellow.100"
+    rounded="full"
+    p={2}
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Smile size={32} color="#f59e0b" /> {/* Bright yellow smile */}
+  </Box>
+
+  <VStack align="start" spacing={0}>
+    <Text fontSize="md" fontWeight="bold" color="orange.500">
+      Energy Boost! ⚡
+    </Text>
+    <Text fontSize="sm" color="gray.500">
+      Your next chapter is just around the corner!
+    </Text>
+  </VStack>
+</HStack>
+
         )}
       </Flex>
 
@@ -602,7 +612,178 @@ const StoryPage = () => {
           </AlertDescription>
         </Alert>
       )}
+      {showAskCard && (
+        <Box
+          position="absolute"
+          top="5px"
+          left={50}
+          width="320px"
+          maxW="95vw"
+          bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          borderRadius="2xl"
+          boxShadow="0 20px 40px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255,255,255,0.1)"
+          zIndex={10000}
+          overflow="hidden"
+          transform="scale(0.98)"
+          animation="bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards"
+        >
+          {/* Animated Background Elements */}
+          <Box
+            position="absolute"
+            top="-50%"
+            right="-20%"
+            width="200px"
+            height="200px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.1)"
+            animation="pulse 3s ease-in-out infinite"
+          />
+          <Box
+            position="absolute"
+            bottom="-30%"
+            left="-10%"
+            width="150px"
+            height="150px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.05)"
+            animation="pulse 2s ease-in-out infinite reverse"
+          />
+          
+          <VStack spacing={6} p={8} position="relative" zIndex={1}>
+            {/* Eye-catching Icon */}
+           
+            
+            {/* Compelling Headline */}
+            <VStack spacing={2}>
+              <Text 
+                fontSize="xl" 
+                fontWeight="800" 
+                color="white" 
+                textAlign="center"
+                textShadow="0 2px 4px rgba(0,0,0,0.3)"
+              >
+                Unlock Your Learning Potential!
+              </Text>
+              <Text 
+                fontSize="sm" 
+                color="rgba(255,255,255,0.9)" 
+                textAlign="center"
+                fontWeight="500"
+              >
+                You're so close to discovering amazing words & meanings
+              </Text>
+            </VStack>
 
+            {/* Scarcity + Social Proof */}
+            <Box
+              bg="rgba(255,255,255,0.15)"
+              borderRadius="xl"
+              p={4}
+              width="100%"
+              backdropFilter="blur(10px)"
+              border="1px solid rgba(255,255,255,0.2)"
+            >
+              <VStack spacing={2}>
+                <HStack spacing={2} align="center">
+                  <Text fontSize="lg">⚡</Text>
+                  <Text color="white" fontSize="sm" fontWeight="600">
+                    Limited Time: FREE 5 Asks
+                  </Text>
+                </HStack>
+                <Text color="rgba(255,255,255,0.8)" fontSize="xs" textAlign="center">
+                  Join 10,000+ learners who expanded their vocabulary today
+                </Text>
+              </VStack>
+            </Box>
+
+            {/* Progress Bar Illusion */}
+            <Box width="100%">
+              <HStack justify="space-between" mb={2}>
+                <Text color="rgba(255,255,255,0.9)" fontSize="xs">
+                  Learning Progress
+                </Text>
+                <Text color="white" fontSize="xs" fontWeight="bold">
+                  87% Complete
+                </Text>
+              </HStack>
+              <Box bg="rgba(255,255,255,0.2)" borderRadius="full" height="6px">
+                <Box 
+                  bg="linear-gradient(90deg, #ffd700, #ffed4a)"
+                  borderRadius="full" 
+                  height="100%" 
+                  width="87%"
+                  boxShadow="0 0 10px rgba(255,215,0,0.6)"
+                  animation="shimmer 2s ease-in-out infinite"
+                />
+              </Box>
+            </Box>
+
+            {/* Action Buttons */}
+            <VStack spacing={3} width="100%">
+              <Button
+                bg="linear-gradient(135deg, #ffd700 0%, #ffed4a 100%)"
+                color="black"
+                fontWeight="800"
+                fontSize="md"
+                height="50px"
+                width="100%"
+                borderRadius="xl"
+                boxShadow="0 8px 20px rgba(255,215,0,0.4)"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 25px rgba(255,215,0,0.6)"
+                }}
+                _active={{
+                  transform: "translateY(0px)"
+                }}
+                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                onClick={async () => {
+                  try {
+                   
+                    await setPointsAsks(0, - 5);
+                    setShowAskCard(false);
+                  } catch (error) {
+                    console.error("Error adding asks:", error);
+                  }
+                }}
+              >
+                <HStack spacing={2}>
+                  <Text>🎁</Text>
+                  <Text>GET 5 FREE ASKS NOW</Text>
+                  <Text>🎁</Text>
+                </HStack>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                color="rgba(255,255,255,0.7)"
+                fontSize="sm"
+                height="35px"
+                _hover={{
+                  color: "white",
+                  bg: "rgba(255,255,255,0.1)"
+                }}
+                onClick={() => setShowAskCard(false)}
+              >
+                Maybe later
+              </Button>
+            </VStack>
+
+            {/* Trust Signals */}
+            <HStack spacing={4} opacity={0.8}>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Instant Access
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ No Payment
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Premium Quality
+              </Text>
+            </HStack>
+          </VStack>
+        </Box>
+      )}
       {/* Error State */}
       {error && (
         <Alert status="error" mb={4} borderRadius="md">
@@ -641,7 +822,7 @@ const StoryPage = () => {
             <Button
               mt={4}
               leftIcon={<Plus />}
-              colorScheme="purple"
+             
               onClick={onCreateOpen}
             >
               Create Your First Story
@@ -709,8 +890,6 @@ const StoryPage = () => {
 
                 {/* Content */}
                 <Box p={4}>
-                
-
                   <Text fontSize="sm" noOfLines={2} mb={3}>
                     {story.title || "Untitled Story"}
                   </Text>
@@ -747,6 +926,16 @@ const StoryPage = () => {
                     colorScheme="purple"
                     width="full"
                     onClick={() => {
+                      if (user?.asks <= 5) {
+                        console.warn(
+                          "⚠️ Not enough asks left — showing ask card instead of opening story"
+                        );
+                        setShowAskCard(true);
+                        return; // ⛔ Stop further execution
+                      }
+
+                      // ✅ User has enough asks
+                      setPointsAsks(5, 5);
                       setActiveStory(story);
                       onViewOpen();
                     }}
@@ -775,7 +964,6 @@ const StoryPage = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                
               />
 
               <Textarea
@@ -840,7 +1028,7 @@ const StoryPage = () => {
       <Modal isOpen={isViewOpen} onClose={onViewClose} size="lg">
         <ModalOverlay />
         <ModalContent borderRadius="2xl">
-          <ModalHeader color={"green.500"}>View Story</ModalHeader>
+          <ModalHeader color={"green.500"}>Read {activeStory?.title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             {activeStory && (
@@ -876,25 +1064,25 @@ const StoryPage = () => {
                 <HStack spacing={3} justify="center" width="100%" mt={4}>
                   <EmojiButton
                     emoji="❤️"
-                    icon={Heart}
+                    icon={FaHeart}
                     label="Like"
                     onClick={() => reactToStory(activeStory.id, "❤️")}
                   />
                   <EmojiButton
                     emoji="😂"
-                    icon={Laugh}
+                    icon={BsEmojiGrinFill}
                     label="Laugh"
                     onClick={() => reactToStory(activeStory.id, "😂")}
                   />
                   <EmojiButton
                     emoji="😮"
-                    icon={Camera}
+                    icon={BsEmojiSurpriseFill}
                     label="Surprise"
                     onClick={() => reactToStory(activeStory.id, "😮")}
                   />
                   <EmojiButton
                     emoji="🔥"
-                    icon={Star}
+                    icon={BsFire}
                     label="Fire"
                     onClick={() => reactToStory(activeStory.id, "🔥")}
                   />
@@ -990,7 +1178,7 @@ const StoryPage = () => {
                       <Send size={16} />
                     )
                   }
-                  colorScheme="purple"
+                 color={"#00FF00"}
                   width="full"
                   isLoading={loading}
                   onClick={updateStory}

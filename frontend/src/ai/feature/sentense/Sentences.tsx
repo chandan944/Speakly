@@ -18,9 +18,11 @@ import {
   useDisclosure,
   ScaleFade,
   Badge,
+  useToast,
 } from "@chakra-ui/react";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 import { usePageTitle } from "../../../hook/usePageTitle";
+import { useCount } from "../../../components/Notify/CountContext";
 
 const Sentence = () => {
   const { user } = useAuthentication();
@@ -31,8 +33,9 @@ const Sentence = () => {
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
-
-
+  const [showAskCard, setShowAskCard] = useState(false);
+  const { setPointsAsks } = useCount();
+  const toast = useToast();
   const bgColor = useColorModeValue("white", "gray.800");
 
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -44,8 +47,18 @@ const Sentence = () => {
   const feedbackRef = useRef(null);
 usePageTitle("Sentences");
 
+
   // Generate Sentence
   const generateSentence = async () => {
+
+        if (user?.asks <= 1 ) {
+      setShowAskCard(true);
+      return; // Stop execution, don't proceed with API call
+    }
+    setPointsAsks(0 , 1)
+
+
+
     if (!topic.trim()) return;
     setLoading(true);
     setGeneratedSentence("");
@@ -89,24 +102,38 @@ usePageTitle("Sentences");
   };
 
   // Get Feedback
-  const getFeedback = async () => {
-    if (!userTranslation.trim() || !generatedSentence) return;
+const getFeedback = async () => {
+  console.log("🚀 getFeedback called");
+  console.log("📝 User translation:", userTranslation);
+  console.log("📝 Generated sentence:", generatedSentence);
 
-    setFeedbackLoading(true);
-    setFeedback("");
+  if (!userTranslation.trim() || !generatedSentence) {
+    console.warn("⚠️ Missing translation or generated sentence, stopping.");
+    return;
+  }
 
-    const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
-    const MODEL = "gemini-2.5-flash-lite";
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+  if (user?.asks <= 1) {
+    console.warn("⚠️ Not enough asks left, showing ask card.");
+    setShowAskCard(true);
+    return;
+  }
 
-const prompt = `
+  setPointsAsks(0, 1);
+  setFeedbackLoading(true);
+  setFeedback("");
+
+  const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
+  const MODEL = "gemini-2.5-flash-lite";
+  const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+  const prompt = `
 Compare the user's translation with the original sentence: "${generatedSentence}". 
 Give very concise, clear, and **encouraging feedback** in English, with a small touch of ${nativeLang}. 
 Respond **strictly in the following format** (no extra text, no missing sections):
 
 **Score:** [percent]%  
 🛠️ **Fixes:** [Clearly explain what is wrong or could be improved in the user's translation — short but specific]  
-💡 **Better Version:** [Provide a polished, natural-sounding translation]  
+💡 **Better Version:** [natural-sounding translation]  
 📘 **Tip:** [1 short, practical language-learning tip related to the mistake]  
 💖 **Encouragement:** [1 sentence motivating the user, friendly tone]  
 
@@ -116,27 +143,74 @@ User's Attempt:
 ${userTranslation}  
 `;
 
-    try {
-      const res = await fetch(URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      });
+  try {
+    console.log("📡 Sending API request...");
+    const res = await fetch(URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+      }),
+    });
 
-      if (!res.ok) throw new Error("API error");
+    console.log("📡 API Response status:", res.status);
+    if (!res.ok) throw new Error(`API error - Status ${res.status}`);
 
-      const data = await res.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      setFeedback(text || "No feedback available.");
-    } catch (err) {
-      console.error(err);
-      setFeedback('<span style="color: #ef4444">Failed to get feedback. Try again.</span>');
-    } finally {
-      setFeedbackLoading(false);
+    const data = await res.json();
+    console.log("📥 API raw response:", data);
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    console.log("📜 Extracted feedback text:", text);
+
+    if (!text) {
+      console.error("❌ No feedback text in API response");
+      setFeedback("No feedback available.");
+      return;
     }
-  };
+
+    setFeedback(text);
+
+    // Extract score from latest text, not old state
+    const match = text.match(/\*\*Score:\*\*\s*(\d+)%/);
+    console.log("🔍 Regex match result:", match);
+
+    if (match) {
+      const score = parseInt(match[1], 10);
+      console.log("✅ Extracted Score:", score, "| Difficulty:", difficulty);
+
+      // Score conditions
+      if (
+        (score >= 75 && difficulty === "easy") ||
+        (score >= 60 && difficulty === "medium") ||
+        (score >= 45 && difficulty === "hard")
+      ) {
+        console.log("🏆 Passing score - Showing success toast");
+        toast({
+          title: `Wow! your score is: ${score}% 😮\n+3 points`,
+          status: "success",
+          duration: 2000,
+        });
+        setPointsAsks(3, -2);
+      } else {
+        console.log("⚠️ Score below threshold - Showing warning toast");
+        toast({
+          title: `Need improvement!: ${score}% 😮`,
+          status: "warning",
+          duration: 4000,
+        });
+      }
+    } else {
+      console.warn("⚠️ Score not found in feedback text.");
+    }
+  } catch (err) {
+    console.error("💥 Error in getFeedback:", err);
+    setFeedback('<span style="color: #ef4444">Failed to get feedback. Try again.</span>');
+  } finally {
+    setFeedbackLoading(false);
+    console.log("⏳ Feedback loading finished");
+  }
+};
+
 
   // Format feedback
   const formatFeedback = (text:string) => {
@@ -174,6 +248,179 @@ ${userTranslation}
       overflow="hidden"
     >
 
+
+      {showAskCard && (
+        <Box
+          position="absolute"
+          top="5px"
+          left={50}
+          width="320px"
+          maxW="95vw"
+          bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          borderRadius="2xl"
+          boxShadow="0 20px 40px rgba(102, 126, 234, 0.4), 0 0 0 1px rgba(255,255,255,0.1)"
+          zIndex={10000}
+          overflow="hidden"
+          transform="scale(0.98)"
+          animation="bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards"
+        >
+          {/* Animated Background Elements */}
+          <Box
+            position="absolute"
+            top="-50%"
+            right="-20%"
+            width="200px"
+            height="200px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.1)"
+            animation="pulse 3s ease-in-out infinite"
+          />
+          <Box
+            position="absolute"
+            bottom="-30%"
+            left="-10%"
+            width="150px"
+            height="150px"
+            borderRadius="full"
+            bg="rgba(255,255,255,0.05)"
+            animation="pulse 2s ease-in-out infinite reverse"
+          />
+          
+          <VStack spacing={6} p={8} position="relative" zIndex={1}>
+            {/* Eye-catching Icon */}
+           
+            
+            {/* Compelling Headline */}
+            <VStack spacing={2}>
+              <Text 
+                fontSize="xl" 
+                fontWeight="800" 
+                color="white" 
+                textAlign="center"
+                textShadow="0 2px 4px rgba(0,0,0,0.3)"
+              >
+                Unlock Your Learning Potential!
+              </Text>
+              <Text 
+                fontSize="sm" 
+                color="rgba(255,255,255,0.9)" 
+                textAlign="center"
+                fontWeight="500"
+              >
+                You're so close to discovering amazing words & meanings
+              </Text>
+            </VStack>
+
+            {/* Scarcity + Social Proof */}
+            <Box
+              bg="rgba(255,255,255,0.15)"
+              borderRadius="xl"
+              p={4}
+              width="100%"
+              backdropFilter="blur(10px)"
+              border="1px solid rgba(255,255,255,0.2)"
+            >
+              <VStack spacing={2}>
+                <HStack spacing={2} align="center">
+                  <Text fontSize="lg">⚡</Text>
+                  <Text color="white" fontSize="sm" fontWeight="600">
+                    Limited Time: FREE 5 Asks
+                  </Text>
+                </HStack>
+                <Text color="rgba(255,255,255,0.8)" fontSize="xs" textAlign="center">
+                  Join 10,000+ learners who expanded their vocabulary today
+                </Text>
+              </VStack>
+            </Box>
+
+            {/* Progress Bar Illusion */}
+            <Box width="100%">
+              <HStack justify="space-between" mb={2}>
+                <Text color="rgba(255,255,255,0.9)" fontSize="xs">
+                  Learning Progress
+                </Text>
+                <Text color="white" fontSize="xs" fontWeight="bold">
+                  87% Complete
+                </Text>
+              </HStack>
+              <Box bg="rgba(255,255,255,0.2)" borderRadius="full" height="6px">
+                <Box 
+                  bg="linear-gradient(90deg, #ffd700, #ffed4a)"
+                  borderRadius="full" 
+                  height="100%" 
+                  width="87%"
+                  boxShadow="0 0 10px rgba(255,215,0,0.6)"
+                  animation="shimmer 2s ease-in-out infinite"
+                />
+              </Box>
+            </Box>
+
+            {/* Action Buttons */}
+            <VStack spacing={3} width="100%">
+              <Button
+                bg="linear-gradient(135deg, #ffd700 0%, #ffed4a 100%)"
+                color="black"
+                fontWeight="800"
+                fontSize="md"
+                height="50px"
+                width="100%"
+                borderRadius="xl"
+                boxShadow="0 8px 20px rgba(255,215,0,0.4)"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 12px 25px rgba(255,215,0,0.6)"
+                }}
+                _active={{
+                  transform: "translateY(0px)"
+                }}
+                transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                onClick={async () => {
+                  try {
+                   
+                    await setPointsAsks(0, - 5);
+                    setShowAskCard(false);
+                  } catch (error) {
+                    console.error("Error adding asks:", error);
+                  }
+                }}
+              >
+                <HStack spacing={2}>
+                  <Text>🎁</Text>
+                  <Text>GET 5 FREE ASKS NOW</Text>
+                  <Text>🎁</Text>
+                </HStack>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                color="rgba(255,255,255,0.7)"
+                fontSize="sm"
+                height="35px"
+                _hover={{
+                  color: "white",
+                  bg: "rgba(255,255,255,0.1)"
+                }}
+                onClick={() => setShowAskCard(false)}
+              >
+                Maybe later
+              </Button>
+            </VStack>
+
+            {/* Trust Signals */}
+            <HStack spacing={4} opacity={0.8}>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Instant Access
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ No Payment
+              </Text>
+              <Text fontSize="xs" color="rgba(255,255,255,0.8)">
+                ✓ Premium Quality
+              </Text>
+            </HStack>
+          </VStack>
+        </Box>
+      )}
 
       {/* Main Content */}
       <VStack spacing={8} maxW="4xl" mx="auto" align="stretch">
@@ -430,3 +677,5 @@ ${userTranslation}
 };
 
 export default Sentence;
+
+

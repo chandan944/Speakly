@@ -24,7 +24,7 @@ import {
 import { usePageTitle } from "../../hook/usePageTitle";
 import { request } from "../../utils/api";
 
-import { TrophyIcon, CoinsIcon } from "lucide-react";
+import { TrophyIcon, CoinsIcon, Star, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Medal Icon
@@ -143,28 +143,33 @@ export function Leaderboard() {
                   wrap="nowrap"
                 >
                   {/* Rank & Medal */}
-                  <Box flexShrink={0} w="40px">
-                    {isTop3 ? (
-                      <Badge
-                        bg={getMedalBg(rank)}
-                        color={rank === 1 ? "yellow.800" : "black"}
-                        px={1}
-                        py={0.5}
-                        borderRadius="md"
-                        fontWeight="bold"
-                        fontSize="xs"
-                      >
-                        <HStack spacing={0.5} justify="center">
-                          <MedalIcon rank={rank} />
-                          <Text fontSize="xs">{rank}</Text>
-                        </HStack>
-                      </Badge>
-                    ) : (
-                      <Text fontSize="sm" color="gray.500" fontWeight="medium">
-                        {rank}.
-                      </Text>
-                    )}
-                  </Box>
+<Box flexShrink={0} w="40px">
+  {isTop3 ? (
+    <Badge
+      bg={getMedalBg(rank)}
+      color="white"
+      px={2}
+      py={1}
+      borderRadius="full"
+      fontWeight="bold"
+      fontSize="xs"
+      boxShadow="0 0 10px rgba(255,215,0,0.6)"
+    >
+      <HStack spacing={0.5} justify="center">
+        <Sparkles size={14} />
+        <Text fontSize="xs">{rank}</Text>
+      </HStack>
+    </Badge>
+  ) : (
+    <HStack spacing={0.5} color="gray.500">
+      <Star size={14} />
+      <Text fontSize="sm" fontWeight="medium">
+        {rank}.
+      </Text>
+    </HStack>
+  )}
+</Box>
+
                 
                     {/* Avatar & Name */}
                     <HStack flex="1" spacing={3} minW="0" 

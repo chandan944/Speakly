@@ -17,8 +17,7 @@ import {
   SimpleGrid,
   Flex,
   HStack,
-  ScaleFade,
-  Icon,
+  ScaleFade
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "../../context/AuthenticationContextProvider";
@@ -26,17 +25,52 @@ import { ArrowBackIcon, ArrowForwardIcon, CheckCircleIcon } from "@chakra-ui/ico
 
 // 🎯 Common Hobbies
 const HOBBY_OPTIONS = [
-  "Reading 📚", "Music 🎵", "Traveling 🌍", "Photography 📸", "Cooking 🍳",
-  "Gardening 🌱", "Gaming 🎮", "Drawing 🎨", "Writing ✍️", "Dancing 💃",
-  "Fitness 🏋️", "Cycling 🚴", "Hiking 🥾", "Swimming 🏊", "Running 🏃",
-  "Yoga 🧘", "Movies 🎬", "Crafting ✂️", "Fishing 🎣", "Coding 💻",
+  "Reading", "Music", "Traveling", "Photography", "Cooking",
+  "Gardening", "Gaming", "Drawing", "Writing", "Dancing",
+  "Fitness", "Cycling", "Hiking", "Swimming", "Running",
+  "Yoga", "Movies", "Crafting", "Fishing", "Coding",
 ];
 
 // 🌐 Indian Languages
 const LANGUAGE_OPTIONS = [
-  "Hindi", "Marathi", "Telugu", "Tamil", "Kannada", "Gujarati", "Punjabi",
-  "Bengali", "Malayalam", "Odia", "Urdu", "Assamese", "Konkani", "Sanskrit",
+  // 🌏 Asia — Massive populations learning English
+  "Mandarin Chinese", // 🇨🇳 ~1.1B native speakers
+  "Hindi",            // 🇮🇳 ~600M
+  "Bengali",          // 🇮🇳🇧🇩 ~270M
+  "Arabic",           // 🌍 ~310M
+  "Urdu",             // 🇵🇰🇮🇳 ~170M
+  "Indonesian",       // 🇮🇩 ~170M
+  "Japanese",         // 🇯🇵 ~125M
+  "Punjabi",          // 🇮🇳🇵🇰 ~125M
+  "Telugu",           // 🇮🇳 ~95M
+  "Marathi",          // 🇮🇳 ~83M
+  "Tamil",            // 🇮🇳🇱🇰 ~80M
+  "Turkish",          // 🇹🇷 ~80M
+  "Korean",           // 🇰🇷🇰🇵 ~78M
+  "Vietnamese",       // 🇻🇳 ~77M
+  "Gujarati",         // 🇮🇳 ~56M
+
+  // 🌍 Africa & Middle East — Growing English adoption
+  "Swahili",          // 🌍 ~70M native + 90M second language
+  "Persian (Farsi)",  // 🇮🇷🇦🇫 ~70M
+  "Amharic",          // 🇪🇹 ~32M
+  "Hausa",            // 🇳🇬 ~50M
+
+  // 🌎 Europe & Latin America — Large learners
+  "Spanish",          // 🌍 ~480M
+  "Portuguese",       // 🇧🇷🇵🇹 ~220M
+  "French",           // 🌍 ~80M native, 280M total
+  "German",           // 🇩🇪🇦🇹🇨🇭 ~76M
+  "Russian",          // 🌍 ~150M
+  "Italian",          // 🇮🇹 ~65M
+  "Polish",           // 🇵🇱 ~45M
+  "Ukrainian",        // 🇺🇦 ~30M
+
+  // 📌 Smaller but high-shift rate to English
+  "Malay",            // 🇲🇾 ~18M
+  "Filipino (Tagalog)" // 🇵🇭 ~28M
 ];
+
 
 function UserProfile() {
   const toast = useToast();
@@ -151,8 +185,8 @@ function UserProfile() {
         <ScaleFade initialScale={0.95} in={step === 0}>
           {step === 0 && (
             <>
-              <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
-                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+              <FormControl  isInvalid={!!error && (!data.firstName || !data.lastName)}>
+                <FormLabel my={5} fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
                   First Name
                 </FormLabel>
                 <Input
@@ -168,8 +202,8 @@ function UserProfile() {
                 />
               </FormControl>
 
-              <FormControl isRequired isInvalid={!!error && (!data.firstName || !data.lastName)}>
-                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+              <FormControl isInvalid={!!error && (!data.firstName || !data.lastName)}>
+                <FormLabel my={5} fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
                   Last Name
                 </FormLabel>
                 <Input
@@ -194,9 +228,9 @@ function UserProfile() {
         {/* Step 1: Hobbies */}
         <ScaleFade initialScale={0.95} in={step === 1}>
           {step === 1 && (
-            <FormControl isRequired isInvalid={!!error && !data.hobbies.length}>
+            <FormControl  isInvalid={!!error && !data.hobbies.length}>
               <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
-                Select Your Hobbies 🎯
+                Select Your Hobbies
               </FormLabel>
               <CheckboxGroup
                 value={data.hobbies}
@@ -234,32 +268,57 @@ function UserProfile() {
         <ScaleFade initialScale={0.95} in={step === 2}>
           {step === 2 && (
             <>
-              <FormControl isRequired isInvalid={!!error && !data.nativeLanguage}>
-                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
-                  Native Language 🗣️
+              <FormControl isInvalid={!!error && !data.nativeLanguage}>
+                <FormLabel my={5} fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  Native Language
                 </FormLabel>
-                <Select
-                  placeholder="Select your language"
-                  value={data.nativeLanguage}
-                  onChange={(e) => setData((prev) => ({ ...prev, nativeLanguage: e.target.value }))}
-                  onFocus={() => setError("")}
-                  borderRadius="lg"
-                  focusBorderColor="blue.400"
-                  _focus={{ shadow: "sm" }}
-                  bg="white"
-                  _dark={{ bg: "gray.700" }}
-                >
-                  {LANGUAGE_OPTIONS.map((lang) => (
-                    <option key={lang} value={lang}>
-                      {lang}
-                    </option>
-                  ))}
-                </Select>
+              <Select
+  placeholder="🌐 Choose your language"
+  value={data.nativeLanguage}
+  onChange={(e) =>
+    setData((prev) => ({ ...prev, nativeLanguage: e.target.value }))
+  }
+  onFocus={() => setError("")}
+  bg="white"
+  _dark={{ bg: "gray.800", color: "white", borderColor: "gray.600" }}
+  border="2px solid"
+  borderColor="gray.200"
+  borderRadius="xl"
+  fontWeight="medium"
+  fontSize="md"
+ 
+  shadow="sm"
+  transition="all 0.25s ease-in-out"
+  _hover={{
+    borderColor: "blue.400",
+    shadow: "md",
+    transform: "translateY(-1px)",
+  }}
+  _focus={{
+    borderColor: "blue.500",
+    shadow: "lg",
+    outline: "none",
+  }}
+>
+  {LANGUAGE_OPTIONS.map((lang) => (
+    <option
+      key={lang}
+      value={lang}
+      style={{
+        backgroundColor: "white",
+        color: "black",
+      }}
+    >
+      {lang}
+    </option>
+  ))}
+</Select>
+
               </FormControl>
 
-              <FormControl isRequired isInvalid={!!error && !data.bio}>
-                <FormLabel fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
-                  About You 💬
+              <FormControl isInvalid={!!error && !data.bio}>
+                <FormLabel my={5} fontSize="sm" fontWeight="medium" color="gray.700" _dark={{ color: "gray.200" }}>
+                  About You 
                 </FormLabel>
                 <Input
                   placeholder="I love learning new things and exploring cultures 🌍"
