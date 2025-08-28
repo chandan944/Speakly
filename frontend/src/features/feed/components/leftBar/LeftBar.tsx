@@ -119,7 +119,7 @@ function LeftSidebar({ user }: ILeftSidebarProps) {
           {user?.lastName?.slice(1)}
         </Text>
       </Box>
-
+      <hr/>
       {/* 📋 Info Items */}
       <VStack align="start" spacing={3} px={2}>
         {/* <InfoItem label="Name" value={`${user?.firstName?.toUpperCase()} ${user?.lastName}`} /> */}
@@ -169,7 +169,7 @@ function LeftSidebar({ user }: ILeftSidebarProps) {
           
         />
       </VStack>
-
+       <hr/>
       {/* 👥 Connections */}
       <Box mt={2}>
         <Button

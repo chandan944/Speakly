@@ -62,6 +62,7 @@ dependencies {
 
 	// Explicitly add SnakeYAML with correct version
 	implementation("org.yaml:snakeyaml:2.4")
+	implementation("me.paulschwarz:spring-dotenv:3.0.0")
 
 	// Search dependencies
 	implementation("org.hibernate.search:hibernate-search-mapper-orm:7.2.2.Final")
@@ -69,6 +70,12 @@ dependencies {
 	implementation("org.jboss.logging:jboss-logging:3.6.1.Final")
 
 	// Authentication, Gmail And Validator dependencies
+
+
+
+	implementation("com.sendgrid:sendgrid-java:4.10.3") // ✅ SendGrid SDK
+
+
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")

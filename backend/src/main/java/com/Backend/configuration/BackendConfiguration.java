@@ -37,7 +37,7 @@ public class BackendConfiguration {
             List<String> allHobbies = new ArrayList<>(List.of("🎮 Gaming", "🎵 Music", "✈️ Travel", "📚 Reading", "🎨 Art", "🏃 Running"));
 
             // 🟢 Create Users (as before)
-            for (int i = 1; i <= 50; i++) {
+            for (int i = 1; i <= 2; i++) {
                 String firstName = faker.name().firstName();
                 String lastName = faker.name().lastName();
                 String email = (firstName + "." + lastName + i + "@mail.com").toLowerCase();
@@ -107,7 +107,7 @@ public class BackendConfiguration {
 
         // Quiz Set 1: Articles (The, A, An)
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/Gfk3jQCH",
                 "Articles: 'The' is used before unique things or well-known objects.",
                 Arrays.asList(
                         new QuestionData("Why is it correct to say 'The Moon is bright tonight'?",
@@ -152,7 +152,7 @@ public class BackendConfiguration {
 
         // Quiz Set 2: Indefinite Articles (A/An)
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/sdvrQpyX",
                 "Indefinite Articles: 'A' and 'An' are used for non-specific things.",
                 Arrays.asList(
                         new QuestionData("Why do we say 'I saw a cat' instead of 'I saw the cat'?",
@@ -196,7 +196,7 @@ public class BackendConfiguration {
 
         // Quiz Set 3: Comparatives and Superlatives
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/0pKGbrQs",
                 "Comparatives compare two things, superlatives show the highest degree.",
                 Arrays.asList(
                         new QuestionData("Why is 'Mount Everest is the highest mountain' correct?",
@@ -240,7 +240,7 @@ public class BackendConfiguration {
 
         // Quiz Set 4: Present Simple Tense
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/0RGHrvVR",
                 "Present Simple: Used for habits, facts, and routines.",
                 Arrays.asList(
                         new QuestionData("Why is 'She plays tennis every Sunday' correct?",
@@ -284,7 +284,7 @@ public class BackendConfiguration {
 
         // Quiz Set 5: Past Simple Tense
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/LDqZK5WF",
                 "Past Simple: Used for actions completed in the past.",
                 Arrays.asList(
                         new QuestionData("Why is 'I visited Paris last year' correct?",
@@ -459,7 +459,7 @@ public class BackendConfiguration {
 
         // Quiz Set 9: Passive Voice
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/ycNK6W",
                 "Passive Voice: Used when the action is more important than who does it.",
                 Arrays.asList(
                         new QuestionData("Why use 'The book was written by Shakespeare'?",
@@ -505,7 +505,7 @@ public class BackendConfiguration {
 
         // Quiz Set 10: Prepositions of Time (at, in, on)
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/q319CDQ2",
                 "Prepositions of Time: 'At' for specific times, 'In' for months/years, 'On' for days.",
                 Arrays.asList(
                         new QuestionData("Which preposition: 'I wake up __ 7 o'clock.'",
@@ -543,7 +543,7 @@ public class BackendConfiguration {
 
         // Quiz Set 11: Prepositions of Place (at, in, on)
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "https://ibb.co/q319CDQ2",
                 "Prepositions of Place: 'At' for points, 'In' for enclosed spaces, 'On' for surfaces.",
                 Arrays.asList(
                         new QuestionData("Which preposition: 'I'm __ home.'",
@@ -581,7 +581,8 @@ public class BackendConfiguration {
 
         // Quiz Set 12: Subject-Verb Agreement
         quizzes.add(new QuizData(
-                "https://images.pexels.com/photos/5428830/pexels-photo-5428830.jpeg",
+                "" +
+                        "",
                 "Subject-Verb Agreement: Singular subjects take singular verbs, plural subjects take plural verbs.",
                 Arrays.asList(
                         new QuestionData("Which is correct?",

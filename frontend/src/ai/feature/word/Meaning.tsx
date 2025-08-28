@@ -81,8 +81,9 @@ const Meaning = () => {
     // ✅ If user has asks, proceed with API call
    
 
-    const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
+    const API_KEY = import.meta.env.VITE_API_URL_GEMINI;
     const MODEL = "gemini-2.5-flash-lite";
+    console.log("🔍 Using API Key:", API_KEY);
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
     const nativeLang = user?.nativeLanguage || "English";
 
@@ -97,7 +98,7 @@ Keep it extremely concise.`;
     } else if (mode === "multi") {
       prompt = `Explain the sentence "${word}" in one line:
 **Meaning:** What it means.
-**${nativeLang}:** Translation.
+**${nativeLang}:** what does it mean.
 Be very brief.`;
     } else if (mode === "ask") {
       prompt = `Answer in very short:
@@ -467,11 +468,7 @@ Also give ${nativeLang} meaning if needed.`;
             >
               <BiFileFind /> Define & Translate
             </Text>
-            <HStack spacing={2}>
-              <Text fontSize="xs" color="gray.500">
-                Asks: {user?.asks || 0}
-              </Text>
-              <IconButton
+             <IconButton
                 icon={<X size={16} />}
                 aria-label="Close"
                 variant="ghost"
@@ -479,7 +476,6 @@ Also give ${nativeLang} meaning if needed.`;
                 onClick={onClose}
                 color={useColorModeValue("gray.500", "gray.400")}
               />
-            </HStack>
           </Flex>
 
           {/* Form */}

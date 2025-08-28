@@ -65,7 +65,7 @@ usePageTitle("Sentences");
     setUserTranslation("");
     setFeedback("");
 
-    const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
+    const API_KEY = import.meta.env.VITE_API_URL_GEMINI;
     const MODEL = "gemini-2.5-flash-lite";
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
@@ -122,7 +122,7 @@ const getFeedback = async () => {
   setFeedbackLoading(true);
   setFeedback("");
 
-  const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
+  const API_KEY = import.meta.env.VITE_API_URL_GEMINI;
   const MODEL = "gemini-2.5-flash-lite";
   const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 

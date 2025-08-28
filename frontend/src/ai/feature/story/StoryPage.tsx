@@ -158,7 +158,9 @@ const StoryPage = () => {
   // Admin email restriction
   const isAdmin = user?.email === "chandanprajapati6307@gmail.com";
 
-  const API_BASE = "http://localhost:8080/api/v1/story";
+const API = import.meta.env.VITE_API_URL
+
+  const API_BASE = `${API}/api/v1/story`;
 
   // Get safe reactions (handles null/undefined)
   const getReactions = (story: Story): StoryReaction[] => {

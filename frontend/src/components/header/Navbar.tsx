@@ -19,21 +19,25 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
-
+import { GiCentaurHeart } from "react-icons/gi";
 import { Search } from "./components/search/Search";
 import { MyProfile } from "./components/myProfile/MyProfile";
 import logo from "../../assets/apple-touch-icon.png";
 import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
-import { LuHeartHandshake } from "react-icons/lu";
+import { FaHeartCircleExclamation } from "react-icons/fa6";
 import Meaning from "../../ai/feature/word/Meaning";
-import { BellRing, BookAIcon, Feather, Home, Trophy, Users } from "lucide-react";
+import { BellRing, BookAIcon, Feather, Gamepad2Icon, HeartIcon, Home, Trophy, Users } from "lucide-react";
 import { BiUserVoice } from "react-icons/bi";
-import { MdOutlineQuiz } from "react-icons/md";
+import { MdGames, MdOutlineQuiz } from "react-icons/md";
+import { useAuthentication } from "../../features/authentication/context/AuthenticationContextProvider";
 
 const Navbar = () => {
   const { colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+     const auth = useAuthentication(); // get the whole object first
+     const user = auth?.user;
+  
   // const location = useLocation();
 
   // 🎯 Notification count from context
@@ -112,13 +116,15 @@ const Navbar = () => {
       showCount: true,
       count: notificationCount,
     },
-       {
-      icon: <Feather size={"17px"} />,
-      label: "Sentences",
-      link: "/ai",
+
+        {
+      icon: <Gamepad2Icon size={"17px"}/>,
+      label: "Games",
+      link: "/games",
       showCount: false,
-      count: 0, // Use messageCount from context
+      count: 0,
     },
+
   
           {
       icon: <BookAIcon size={"17px"}/>,
@@ -148,6 +154,7 @@ const Navbar = () => {
       showCount: false,
       count: 0,
     },
+   
   ];
 
   // 🛠 Badge component
@@ -191,7 +198,7 @@ const Navbar = () => {
         top="0"
         zIndex="999"
       >
-        <Flex as={RouterLink} to="/" align="center" gap={2}>
+        <Flex as={RouterLink} to="/" align="center" gap={1}>
           <Image src={logo} boxSize="36px" borderRadius="full" alt="Speakly" />
           <Heading
             size="md"
@@ -203,7 +210,7 @@ const Navbar = () => {
           </Heading>
         </Flex>
 
-        <Box flex="1" maxW="20rem" mx={4}>
+        <Box flex="1" maxW="19rem" mx={2}>
           <Search />
         </Box>
 
@@ -212,7 +219,7 @@ const Navbar = () => {
             <Box key={i} position="relative">
               {item.showCount && <CountBadge count={item.count} />}
               <Button
-              size={"xs"}
+               size={"xs"}
                 as={RouterLink}
                 to={item.link}
                 leftIcon={item.icon}
@@ -224,6 +231,35 @@ const Navbar = () => {
               </Button>
             </Box>
           ))}
+
+
+
+          {user?.asks > 10 ? (
+            <Box position="relative">
+              <Button
+                size={"17px"}
+                as={RouterLink}
+               marginRight={3}
+                leftIcon={<GiCentaurHeart fill="#5CFF5C" size={"17px"} />}
+                variant="ghost"
+                
+              >
+                {user?.asks || 0}
+              </Button>
+            </Box>
+          ): (          <Box  position="relative">
+             
+              <Button
+             marginRight={3}
+              size={"xs"}
+                leftIcon={<FaHeartCircleExclamation fill="#FF5C5C" size={"17px"} />}
+                variant="ghost"
+              
+              >
+                {user?.asks || 0}
+              </Button>
+            </Box>)}
+
         </HStack>
 
         <Flex align="center">
@@ -264,7 +300,7 @@ const Navbar = () => {
                     onClick={onClose}
                     _hover={{ color: "teal.500" }}
                   >
-                    {item.label}
+                    {item.label}  
                   </Button>
                 </Box>
               ))}

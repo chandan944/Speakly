@@ -43,7 +43,7 @@ import { MdDoNotTouch } from "react-icons/md";
 import Meaning from "../word/Meaning";
 import { usePageTitle } from "../../../hook/usePageTitle";
 import { useCount } from "../../../components/Notify/CountContext";
-
+  const API_KEY = import.meta.env.VITE_API_URL;
 // === INTERFACES ===
 interface Question {
   questionText: string;
@@ -63,7 +63,7 @@ interface Quiz {
 }
 
 // === CONFIG ===
-const API_BASE = "http://localhost:8080/api/quizzes";
+const API_BASE = `${API_KEY}/api/quizzes`;
 
 export default function QuizApp() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -842,7 +842,7 @@ export default function QuizApp() {
                 {showExplanation ? (
                   <Box
                     p={6}
-                    bgGradient="linear(to-r, white, gray.50)"
+                   
                     borderRadius="xl"
                     w="full"
                     textAlign="center"
@@ -863,7 +863,7 @@ export default function QuizApp() {
                         {selectedOption ===
                         currentQuiz.questions[currentQuestionIndex]
                           .correctOption ? (
-                          <IoCheckmarkDoneCircleSharp size={"35px"} color="#00FF00"/>
+                          <IoCheckmarkDoneCircleSharp size={"35px"} />
                         ) : (
                           <MdDoNotTouch />
                         )}

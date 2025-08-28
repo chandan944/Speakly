@@ -21,7 +21,7 @@ const AI = () => {
   const [loading, setLoading] = useState(false);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
-  const API_KEY = "AIzaSyAXynXOYOILKRGuch9-Rrn0Vty6PDgRXqA";
+  const API_KEY = import.meta.env.VITE_API_URL_GEMINI;
   const MODEL = "gemini-2.5-flash";
   const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 

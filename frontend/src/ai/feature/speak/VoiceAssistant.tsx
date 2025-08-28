@@ -13,13 +13,12 @@ import {
   SpeakerIcon,
   VoteIcon,
   Volume1Icon,
+  Speech,
 } from "lucide-react";
-import { BsSpeakerFill } from "react-icons/bs";
+import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 
 // Mock authentication context for demo
-const useAuthentication = () => ({
-  user: { nativeLanguage: "Hindi" },
-});
+
 
 const usePageTitle = (title: string) => {
   useEffect(() => {
@@ -239,7 +238,7 @@ const VoiceAssistant = () => {
   };
 
   // Gemini API Configuration
-  const API_KEY = "AIzaSyBM7_ac70ZpFIcXMoTWuASYyZNBAS_c78A";
+  const API_KEY = import.meta.env.VITE_API_URL_GEMINI;
   const MODEL = "gemini-2.5-flash-lite";
   const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
@@ -294,8 +293,8 @@ Reply like my coolest friend using ${user?.nativeLanguage} + simple English.
 — If I write in ${user?.nativeLanguage}, first give a one-line simple English translation.  
 
 📝 Format (1–2 short lines each):  
-1)  **Answer** — reply to my message (friendly, playful).  
-2) ✅ **Fix** — best English version (only if needed). Correct grammar/syntax/word choice.  
+1)  **Answer** — reply to my ${text} message (friendly, playful).  
+2) ✅ **Fix** — best English version (only if needed). Correct grammar/syntax/word choice use single astric where you corrected.  
 3) 💡 **Tip** — explain in very easy ${user?.nativeLanguage}; give one tiny rule or example.  
 4) ❓ **Question** — fun/easy follow-up to keep chatting.  
 
@@ -307,7 +306,7 @@ Reply like my coolest friend using ${user?.nativeLanguage} + simple English.
 Here’s what I said: ${text}  
 `;
 
-
+console.log("Prompt "+prompt);
       try {
         const response = await fetch(GEMINI_URL, {
           method: "POST",
@@ -663,7 +662,7 @@ Here’s what I said: ${text}
           {/* Header */}
           <div className="flex flex-col items-center space-y-3">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-lime-500 flex items-center justify-center">
-              <MessageSquare size={32} color="white" />
+              <MessageSquare size={32}  />
             </div>
             <h1 className="text-3xl font-bold text-center ">
               🎤 Enhanced English Feedback Assistant
@@ -671,13 +670,13 @@ Here’s what I said: ${text}
             <p className="text-center text-lg ">
               Real-time Speech → Edit → Get Feedback → Improve
             </p>
-            <p className="text-sm text-gray-600 text-center">
+            <p className="text-sm text-center">
               ✨ Auto-stops after 3 seconds of silence to prevent loops
             </p>
           </div>
 
           {/* Main Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className=" rounded-2xl shadow-xl p-8">
             <div className="flex flex-col space-y-6">
               {/* Mic Control */}
               <div className="flex flex-col items-center space-y-4">
@@ -695,7 +694,7 @@ Here’s what I said: ${text}
                       className="w-20 h-20 bg-lime-500 hover:bg-lime-600 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
                       disabled={isProcessing}
                     >
-                      <Mic size={32} />
+                      <Speech size={32} />
                     </button>
                   )}
                 </div>

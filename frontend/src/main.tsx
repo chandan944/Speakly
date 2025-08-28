@@ -36,6 +36,13 @@ import Sentences from "./ai/feature/sentense/Sentences";
 import StoryPage from "./ai/feature/story/StoryPage";
 import VoiceAssistant from "./ai/feature/speak/VoiceAssistant";
 import QuizApp from "./ai/feature/quizes/QuizManager";
+import GameManu from "./games/manu/GameManu";
+import SentenceBuilderQuest from "./games/FlipGame/arrange/ArrangeSentence";
+import FillBlankGame from "./games/FlipGame/fill/FillTheWord";
+import FindMistak from "./games/FlipGame/find/FindMistek";
+import EmojiPuzzleGame from "./games/FlipGame/guess/GuessWord";
+import RandomChaosGame from "./games/ChaoseButton";
+import GuessFakeWordGame from "./games/FlipGame/Flip/CardFlip";
 // import Conversation from "./features/messaging/pages/Conversation";
 
 const router = createBrowserRouter([
@@ -56,7 +63,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/quizes",
-            element: <QuizApp/>,
+            element: <QuizApp />,
           },
           {
             path: "ai", // 🏠 If someone visits just `/`, show the Feed page!
@@ -86,7 +93,7 @@ const router = createBrowserRouter([
           },
           {
             path: "speak", // 💼 Jobs tab
-            element: <VoiceAssistant/>,
+            element: <VoiceAssistant />,
           },
           {
             path: "messaging", // 💬 Messaging tab
@@ -101,6 +108,34 @@ const router = createBrowserRouter([
           {
             path: "notification", // 🔔 Notification tab
             element: <Notifications />,
+          },
+          {
+            path: "games", // 🔔 Notification tab
+            element: <GameManu />,
+          },
+          {
+            path: "arrange",
+            element: <SentenceBuilderQuest />,
+          },
+           {
+            path: "fillintheblank",
+            element: <FillBlankGame />,
+          },
+           {
+            path: "findmsitek",
+            element: <FindMistak />,
+          },
+           {
+            path: "emojipuzzlegame",
+            element: <EmojiPuzzleGame />,
+          },
+           {
+            path: "randomchaosgame",
+            element: <RandomChaosGame />,
+          },
+           {
+            path: "fakeword",
+            element: <GuessFakeWordGame />,
           },
           {
             path: "profile/:id",

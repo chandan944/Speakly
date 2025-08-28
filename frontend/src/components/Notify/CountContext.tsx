@@ -10,7 +10,7 @@ import { request } from "../../utils/api";
 import type { IConnection } from "../../features/network/components/connection/Connection";
 import { useAuthentication, type User } from "../../features/authentication/context/AuthenticationContextProvider";
 import type { IConversation } from "../../features/messaging/components/conversations/Conversations";
-
+  const API_KEY = import.meta.env.VITE_API_URL;
 interface CountContextType {
   count: number; // Notification count
   RecievedConnection: number; // Connection requests count (keeping your typo for compatibility)
@@ -68,7 +68,7 @@ export const CountProvider = ({ children }: { children: ReactNode }) => {
 const setPointsAsks = async (points?: number, asks?: number) => {
 
   try {
-    const response = await fetch(`http://localhost:8080/api/v1/authentication/${user?.id}/points?points=${points}&asks=${asks}`, {
+    const response = await fetch(`${API_KEY}/api/v1/authentication/${user?.id}/points?points=${points}&asks=${asks}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

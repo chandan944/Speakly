@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -86,12 +88,13 @@ public class AuthService {
         user.setAsks(30);
         userRepository.save(user);
 
-        String subject = "Email Verification for Speakly";
+        String subject = "Email Verification for Talksy";
         String body = String.format("""
-                Only one step to take full advantage of Speakly.
-
-                Enter this code to verify your email: %s. The code will expire in %s minutes.""",
-                emailVerificationToken, 2);
+        <h2>Only one step to take full advantage of Talksy 🚀</h2>
+        <p>Enter this code to verify your email:</p>
+        <h3 style="color:blue;">%s</h3>
+        <p><small>The code will expire in <b>%s</b> minutes.</small></p>
+        """, emailVerificationToken, 2);
         try{
             emailService.sendEmail(registerRequest.email() ,subject,body);
         } catch (Exception e) {
@@ -338,4 +341,15 @@ public class AuthService {
         return userRepository.save(user);             // ✅ return updated user
     }
 
+
+
+    @Scheduled(cron = "0 0 */5 * * *")
+    @Transactional // ← Best to put it here, on the service method
+    public void addAsksEveryFiveHours() {
+        userRepository.addAsksToAllUsers();
+        System.out.println("✅ Bulk +1 ask to all users at " + LocalTime.now());
+    }
+
+
 }
+
