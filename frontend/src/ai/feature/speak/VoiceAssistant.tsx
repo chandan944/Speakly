@@ -741,8 +741,8 @@ console.log("Prompt "+prompt);
               {/* Editable Transcript */}
               {transcript && (
                 <div className="p-5 rounded-xl border-l-4 border-blue-400">
-                  <h3 className="font-bold mb-3 text-lg">
-                    ✏️ Your Speech (Editable):
+                  <h3 className="font-bold mb-3 text-xs">
+                    Your Speech (Editable):
                   </h3>
                   <textarea
                     value={transcript}
@@ -812,7 +812,7 @@ console.log("Prompt "+prompt);
               {(transcript || feedback || isListening) && (
                 <button
                   onClick={clearAll}
-                  className="flex bg-gray-500 hover:bg-gray-600 text-white items-center justify-center gap-3 py-3 px-4 rounded-xl transition-colors"
+                  className="flex bg-green-300 hover:bg-green-400 max-w-40 items-center justify-center gap-3 py-1 px-2 rounded-xl transition-colors"
                 >
                   <RefreshCw size={18} />
                   <span>Start Over</span>

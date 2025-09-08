@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { RefreshCw, Zap, Star, Target } from 'lucide-react';
 
 const RandomChaosGame = () => {
@@ -35,7 +35,7 @@ const RandomChaosGame = () => {
       id: 'fact',
       name: 'Fun Fact',
       emoji: '🎯',
-      prompt: (keyword) => `Topic: ${keyword}
+      prompt: (keyword: any) => `Topic: ${keyword}
       
 Give me one simple, interesting fact about ${keyword} that anyone can easily understand.
 Make it short, clear, and educational.
@@ -46,7 +46,8 @@ Just write the fact directly, nothing else.`
       id: 'tip',
       name: 'Quick Tip',
       emoji: '💡',
-      prompt: (keyword) => `Topic: ${keyword}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      prompt: (keyword: any) => `Topic: ${keyword}
       
 Give me one simple, practical tip related to ${keyword} that people can actually use.
 Make it clear and easy to understand.
@@ -57,7 +58,7 @@ Just write the tip directly, nothing else.`
       id: 'question',
       name: 'Think About It',
       emoji: '🤔',
-      prompt: (keyword) => `Topic: ${keyword}
+      prompt: (keyword: unknown) => `Topic: ${keyword}
       
 Give me one interesting question about ${keyword} that makes people think.
 Make it simple but thought-provoking.
@@ -68,7 +69,7 @@ Just write the question directly, nothing else.`
       id: 'joke',
       name: 'Light Humor',
       emoji: '😊',
-      prompt: (keyword) => `Topic: ${keyword}
+      prompt: (keyword: unknown) => `Topic: ${keyword}
       
 Give me one clean, simple joke or funny observation about ${keyword}.
 Make it family-friendly and easy to understand.
@@ -147,137 +148,137 @@ Just write the joke directly, nothing else.`
     setIsLoading(false);
   };
 
-  const getContentTypeInfo = (type) => {
+  const getContentTypeInfo = (type: string) => {
     return contentTypes.find(ct => ct.id === type) || contentTypes[0];
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex flex-col items-center justify-center min-h-screen space-y-8 py-8">
-          
-          {/* Header */}
-          <div className="text-center space-y-2">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-800 animate-pulse">
-              🎲 Random Discovery
-            </h1>
-            <p className="text-lg text-gray-600 max-w-md">
-              Tap the button for instant learning! Get facts, tips, questions, and light humor!
-            </p>
-          </div>
-          
-          {/* Stats */}
-          <div className="flex gap-4 flex-wrap justify-center">
-            <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-              <Target size={16} />
-              <span>Taps: {tapCount}</span>
-            </div>
-            <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-              <Zap size={16} />
-              <span>Streak: {streak}</span>
-            </div>
-          </div>
-          
-          {/* Main Button */}
-          <div className="text-center">
-            <button
-              onClick={generateChaos}
-              disabled={isLoading}
-              className={`
-                w-48 h-48 rounded-full text-white font-bold text-xl
-                bg-gradient-to-br from-blue-500 to-purple-600
-                hover:from-blue-600 hover:to-purple-700
-                active:scale-95 transform transition-all duration-200
-                shadow-lg hover:shadow-xl
-                disabled:opacity-70 disabled:cursor-not-allowed
-                flex flex-col items-center justify-center space-y-2
-              `}
-            >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-              ) : (
-                <>
-                  <div className="text-5xl">🎯</div>
-                  <div className="text-lg">TAP FOR</div>
-                  <div className="text-xl">DISCOVERY!</div>
-                </>
-              )}
-            </button>
-          </div>
-          
-          {/* Content Display */}
-          {currentContent && (
-            <div className="w-full max-w-lg transform transition-all duration-300 scale-100">
-              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-blue-100">
-                <div className="text-center space-y-4">
-                  <div className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{getContentTypeInfo(contentType).emoji}</span>
-                      <span>{getContentTypeInfo(contentType).name}</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    {currentContent}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Encouraging Messages */}
-          {tapCount > 0 && (
-            <div className="text-center space-y-2">
-              <p className="text-gray-600 text-sm">
-                {tapCount < 3 ? "Great start! Tap again to learn more!" :
-                 tapCount < 10 ? "You're on a learning streak! Keep going!" :
-                 tapCount < 25 ? "Wow! You're a learning machine!" :
-                 "Amazing! You're officially a discovery master!"}
-              </p>
-              
-              {streak > 2 && (
-                <p className="text-orange-600 text-sm font-bold">
-                  🔥 {streak} in a row! You're on fire!
-                </p>
-              )}
-            </div>
-          )}
-          
-          {/* Instructions */}
-          <div className="bg-white bg-opacity-80 rounded-xl p-6 w-full max-w-md">
-            <div className="text-center space-y-3">
-              <div className="flex items-center justify-center gap-2">
-                <Star className="text-yellow-500" size={24} />
-                <h3 className="text-lg font-bold text-gray-700">How It Works</h3>
-              </div>
-              <div className="text-gray-600 text-sm space-y-2">
-                <p>🎯 Tap the button for random discoveries</p>
-                <p>💡 Get simple facts, tips, questions & jokes</p>
-                <p>⚡ Tap quickly to build your streak</p>
-                <p>🎲 Every tap brings something new to learn!</p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Refresh Button */}
-          {!isLoading && tapCount > 5 && (
-            <button
-              onClick={() => {
-                setCurrentContent('');
-                setTapCount(0);
-                setStreak(0);
-              }}
-              className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-sm transition-colors"
-            >
-              <RefreshCw size={16} />
-              Reset Stats
-            </button>
-          )}
-          
+return (
+  <div className="min-h-screen p-4">
+    <div className="max-w-2xl mx-auto">
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-8 py-8">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl md:text-5xl font-bold animate-pulse">
+            🎲 Random Discovery
+          </h1>
+          <p className="text-lg max-w-md">
+            Tap the button for instant learning! Get facts, tips, questions, and light humor!
+          </p>
         </div>
+        
+        {/* Stats */}
+        <div className="flex gap-4 flex-wrap justify-center">
+          <div className="px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
+            <Target size={16} />
+            <span>Taps: {tapCount}</span>
+          </div>
+          <div className="px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
+            <Zap size={16} />
+            <span>Streak: {streak}</span>
+          </div>
+        </div>
+        
+        {/* Main Button */}
+        <div className="text-center">
+          <button
+            onClick={generateChaos}
+            disabled={isLoading}
+
+            className={`
+              bg-blue-500 hover:bg-blue-600 text-white
+              w-48 h-48 rounded-full font-bold text-xl
+              hover:active:scale-95 transform transition-all duration-200
+              shadow-lg hover:shadow-xl
+              disabled:opacity-70 disabled:cursor-not-allowed
+              flex flex-col items-center justify-center space-y-2
+            `}
+          >
+            {isLoading ? (
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 "></div>
+            ) : (
+              <>
+                <div className="text-5xl">🎯</div>
+                <div className="text-lg">TAP FOR</div>
+                <div className="text-xl">DISCOVERY!</div>
+              </>
+            )}
+          </button>
+        </div>
+        
+        {/* Content Display */}
+        {currentContent && (
+          <div className="w-full max-w-lg transform transition-all duration-300 scale-100">
+            <div className="rounded-2xl shadow-xl p-6 border-2">
+              <div className="text-center space-y-4">
+                <div className="inline-block px-4 py-2 rounded-lg font-semibold">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{getContentTypeInfo(contentType).emoji}</span>
+                    <span>{getContentTypeInfo(contentType).name}</span>
+                  </div>
+                </div>
+                
+                <p className="text-lg leading-relaxed">
+                  {currentContent}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Encouraging Messages */}
+        {tapCount > 0 && (
+          <div className="text-center space-y-2">
+            <p className="text-sm">
+              {tapCount < 3 ? "Great start! Tap again to learn more!" :
+               tapCount < 10 ? "You're on a learning streak! Keep going!" :
+               tapCount < 25 ? "Wow! You're a learning machine!" :
+               "Amazing! You're officially a discovery master!"}
+            </p>
+            
+            {streak > 2 && (
+              <p className="text-sm font-bold">
+                🔥 {streak} in a row! You're on fire!
+              </p>
+            )}
+          </div>
+        )}
+        
+        {/* Instructions */}
+        <div className="rounded-xl p-6 w-full max-w-md">
+          <div className="text-center space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              <Star size={24} />
+              <h3 className="text-lg font-bold">How It Works</h3>
+            </div>
+            <div className="text-sm space-y-2">
+              <p>🎯 Tap the button for random discoveries</p>
+              <p>💡 Get simple facts, tips, questions & jokes</p>
+              <p>⚡ Tap quickly to build your streak</p>
+              <p>🎲 Every tap brings something new to learn!</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Refresh Button */}
+        {!isLoading && tapCount > 5 && (
+          <button
+            onClick={() => {
+              setCurrentContent('');
+              setTapCount(0);
+              setStreak(0);
+            }}
+            className="flex items-center gap-2 text-sm transition-colors"
+          >
+            <RefreshCw size={16} />
+            Reset Stats
+          </button>
+        )}
+        
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default RandomChaosGame;

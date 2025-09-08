@@ -114,16 +114,12 @@ export default function FindMistak() {
   const prompt =
     mode === "sentence"
       ? `topic ${randomKey} Give me ONLY two lines:\nFront: a concise sentence with 1–2 tricky mistakes in words and grammer.\nBack: the corrected version of that sentence.\nDo not add extra text.`
-      : `Topic: ${randomKey} word(no astrics) + meaning + example. 
+      : `Topic: ${randomKey} word [no astrics **]  meaning \n example. 
 Generate EXACTLY 2 lines, formatted as a clean flashcard:  
 
 Front: 📖 One simple English word (bold, capitalized).  
-Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"} + ✨ one short, natural example sentence.  
-
-⚠️ Rules:  
-- Keep it concise (max 10 words meaning, max 12 words sentence).  
-- Do NOT add extra commentary, explanation, quotes, or labels.  
-- Make sure it looks neat and learner-friendly.  
+Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"}  ✨ one short, natural example sentence.  
+ 
 `; 
 
   try {
@@ -201,7 +197,10 @@ Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"} + ✨ one short, 
   }
 };
   return (
-    <VStack minH="100vh" justify="center"  spacing={6} p={6}>
+    <VStack minH="100vh" justify="center"  spacing={6} p={6}> 
+      <Text fontSize="2xl" fontWeight="bold">
+        Find the Mistake Game
+      </Text>
       {/* Buttons to switch modes */}
       <HStack spacing={4}>
         <Button

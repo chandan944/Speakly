@@ -347,7 +347,7 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                       return (
                         <div key={`trans-${word}-${index}`} className="p-3 rounded-lg border border-gray-300 dark:border-gray-600">
                           <div className="font-semibold text-sm">{word}</div>
-                          <div className="text-xs mt-1 text-gray-700 dark:text-gray-300">{translation}</div>
+                          <div className="text-xs mt-1  dark:text-gray-300">{translation}</div>
                         </div>
                       );
                     })}
@@ -370,7 +370,7 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                         onClick={() => moveWordToArrangement(index)}
                       >
                         <div className="relative">
-                          <span className="inline-block px-4 py-3 rounded-xl hover:shadow transition">
+                          <span className="inline-block px-4 py-3 rounded- bg-blue-400 rounded-2xl hover:shadow transition">
                             {word}
                           </span>
                           {translation && (
@@ -405,7 +405,7 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                         onClick={() => moveWordToScrambled(index)}
                       >
                         <div className="relative">
-                          <span className="inline-block px-4 py-3 rounded-xl hover:shadow transition">
+                          <span className="inline-block px-4 py-3  bg-violet-400 rounded-2xl  hover:shadow transition">
                             {word}
                           </span>
                           {translation && (
@@ -426,10 +426,10 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
               {/* Check Button */}
               <div className="text-center">
                 <button
-                  className={`px-10 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
+                  className={`px-10 py-4 rounded-2xl font-bold bg-blue-400 text-lg transition-all duration-300 ${
                     gameState.userArrangement.length === 0
                       ? 'opacity-60 cursor-not-allowed'
-                      : 'hover:bg-gray-200 dark:hover:bg-gray-700 hover:-translate-y-1'
+                      : 'hover:bg-blue-500 dark:hover:bg-blue-500 hover:-translate-y-1'
                   }`}
                   onClick={checkAnswer}
                   disabled={gameState.userArrangement.length === 0}
@@ -463,7 +463,7 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                           </div>
                           {gameState.currentChapter < gameState.totalChapters ? (
                             <button
-                              className="px-8 py-4 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition font-bold text-lg"
+                              className="px-8 py-4 rounded-xl bg-blue-400 hover:bg-blue-500 dark:bg-blue-500 transition font-bold text-lg"
                               onClick={nextChapter}
                             >
                               🚀 Continue to Chapter {gameState.currentChapter + 1}
@@ -483,10 +483,6 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                       ) : (
                         <div className="space-y-4">
                           <p className="text-3xl">🤔 Not quite right...</p>
-                          <p className="text-lg">Try rearranging the words. The correct order will unlock the story!</p>
-                          <p className="text-gray-600 dark:text-gray-400">
-                            Hint: "{gameState.correctSentence}"
-                          </p>
                         </div>
                       )}
                     </div>
