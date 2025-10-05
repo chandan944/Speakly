@@ -72,7 +72,8 @@ dependencies {
 	// Authentication, Gmail And Validator dependencies
 
 
-
+	// https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44
+	implementation("com.cloudinary:cloudinary-http44:1.32.2")
 	implementation("com.sendgrid:sendgrid-java:4.10.3") // ✅ SendGrid SDK
 
 

@@ -1,4 +1,89 @@
+# # Logs
+# logs
+# *.log
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+# pnpm-debug.log*
+# lerna-debug.log*
+
+# node_modules
+# dist
+# dist-ssr
+# *.local
+
+# # Editor directories and files
+# .vscode/*
+# !.vscode/extensions.json
+# .idea
+# .DS_Store
+# *.suo
+# *.ntvs*
+# *.njsproj
+# *.sln
+# *.sw?
+
+
+# HELP.md
+# .gradle
+# build/
+# !gradle/wrapper/gradle-wrapper.jar
+# !**/src/main/**/build/
+# !**/src/test/**/build/
+
+# ### STS ###
+# .apt_generated
+# .classpath
+# .factorypath
+# .project
+# .settings
+# .springBeans
+# .sts4-cache
+# bin/
+# !**/src/main/**/bin/
+# !**/src/test/**/bin/
+
+# ### IntelliJ IDEA ###
+# .idea
+# *.iws
+# *.iml
+# *.ipr
+# out/
+# !**/src/main/**/out/
+# !**/src/test/**/out/
+
+# ### NetBeans ###
+# /nbproject/private/
+# /nbbuild/
+# /dist/
+# /nbdist/
+# /.nb-gradle/
+
+# ### VS Code ###
+# .vscode/
+# # Environment & secrets
+# .env
+# .env.local
+# .env.development
+# .env.production
+# backend/src/main/resources/application-secret.properties
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ------------------------------
 # Logs
+# ------------------------------
 logs
 *.log
 npm-debug.log*
@@ -7,15 +92,20 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# ------------------------------
+# Dependencies
+# ------------------------------
+node_modules/
+dist/
+dist-ssr/
 *.local
 
+# ------------------------------
 # Editor directories and files
+# ------------------------------
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
@@ -23,15 +113,19 @@ dist-ssr
 *.sln
 *.sw?
 
-
+# ------------------------------
+# Gradle / Build outputs
+# ------------------------------
 HELP.md
-.gradle
+.gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### STS ###
+# ------------------------------
+# STS / IntelliJ / NetBeans
+# ------------------------------
 .apt_generated
 .classpath
 .factorypath
@@ -40,30 +134,39 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+.nb-gradle/
+nbbuild/
+nbdist/
+nbproject/private/
+dist/
+nbdist/
 
-### VS Code ###
+# ------------------------------
+# VS Code
+# ------------------------------
 .vscode/
-# Environment & secrets
+
+# ------------------------------
+# Environment & Secret Files ⚠️
+# ------------------------------
 .env
+.env.*
+*.env
 .env.local
 .env.development
 .env.production
+application-secret.properties
 backend/src/main/resources/application-secret.properties
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env.development
+
+# ------------------------------
+# OS-specific junk
+# ------------------------------
+Thumbs.db

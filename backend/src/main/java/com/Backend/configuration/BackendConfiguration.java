@@ -7,6 +7,7 @@ import com.Backend.features.quizes.entity.Question;
 import com.Backend.features.quizes.entity.Quiz;
 import com.Backend.features.quizes.repository.QuestionRepository;
 import com.Backend.features.quizes.repository.QuizRepository;
+import com.cloudinary.Cloudinary;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,16 @@ public class BackendConfiguration {
             }
         };
     }
+
+    @Bean
+    public Cloudinary cloudinary() {
+        Map<String, String> config = new HashMap<>();
+        config.put("cloud_name", "talksyimages");
+        config.put("api_key", "936115345826783");
+        config.put("api_secret", "DBJoqxG0BaNe6T-V0zKaLpzPnzI");
+        return new Cloudinary(config);
+    }
+
 
     private List<QuizData> createGrammarQuizData() {
         List<QuizData> quizzes = new ArrayList<>();

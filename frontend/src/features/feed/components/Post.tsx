@@ -247,6 +247,8 @@ export function Post({ post, setPosts }: PostProps) {
     });
   };
 
+
+
   const editPost = async (data: FormData) => {
     await request<IPost>({
       endpoint: `/api/v1/feed/posts/${post.id}`,
@@ -375,7 +377,11 @@ export function Post({ post, setPosts }: PostProps) {
         {post.picture && (
           <Box mt={4} rounded="md" overflow="hidden">
             <Image
-              src={`${import.meta.env.VITE_API_URL}/api/v1/storage/${post.picture}`}
+             src={
+                  post.picture?.startsWith("http")
+                    ? post.picture
+                    : `${import.meta.env.VITE_API_URL}/api/v1/storage/${post.picture}`
+                }
               alt="Post image"
               objectFit="cover"
               width="100%"

@@ -21,7 +21,7 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("no-reply@linkdin.com" , "Speakly");
+        helper.setFrom("chandanprajapati6307@gmail.com" , "Speakly");
         helper.setTo(email);
         helper.setSubject(subject);
         helper.setText(content ,true);
