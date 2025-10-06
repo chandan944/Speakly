@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
 set -e
-chmod +x ./gradlew
+
+# Go into the backend directory
+cd backend
+
+# Give permission to gradlew
+chmod +x gradlew
+
+# Build the project
 ./gradlew clean build -x test
