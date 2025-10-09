@@ -1,0 +1,330 @@
+20:08:18.636 Running build in Washington, D.C., USA (East) – iad1
+20:08:18.637 Build machine configuration: 2 cores, 8 GB
+20:08:18.737 Cloning github.com/chandan944/Speakly (Branch: main, Commit: f9bda99)
+20:08:22.126 Previous build caches not available
+20:08:23.341 Cloning completed: 4.603s
+20:08:23.910 Running "vercel build"
+20:08:24.617 Vercel CLI 48.2.4
+20:08:26.729 Installing dependencies...
+20:08:34.583 
+20:08:34.583 added 455 packages in 7s
+20:08:34.584 
+20:08:34.584 82 packages are looking for funding
+20:08:34.584   run `npm fund` for details
+20:08:34.644 Running "npm run build"
+20:08:34.785 
+20:08:34.785 > frontend@0.0.0 build
+20:08:34.786 > tsc -b && vite build
+20:08:34.786 
+20:08:47.955 src/ai/feature/AI/AI.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:47.956 src/ai/feature/AI/AI.tsx(5,3): error TS6133: 'Volume2' is declared but its value is never read.
+20:08:47.956 src/ai/feature/AI/AI.tsx(11,3): error TS6133: 'RefreshCcw' is declared but its value is never read.
+20:08:47.956 src/ai/feature/AI/AI.tsx(65,38): error TS18046: 'err' is of type 'unknown'.
+20:08:47.957 src/ai/feature/AI/AI.tsx(126,29): error TS18046: 'err' is of type 'unknown'.
+20:08:47.957 src/ai/feature/AI/AI.tsx(133,21): error TS7006: Parameter 'text' implicitly has an 'any' type.
+20:08:47.957 src/ai/feature/LeaderBoard.tsx(13,3): error TS6133: 'Button' is declared but its value is never read.
+20:08:47.957 src/ai/feature/LeaderBoard.tsx(31,7): error TS6133: 'MedalIcon' is declared but its value is never read.
+20:08:47.957 src/ai/feature/quizes/QuizManager.tsx(18,3): error TS6133: 'Avatar' is declared but its value is never read.
+20:08:47.958 src/ai/feature/quizes/QuizManager.tsx(26,3): error TS6133: 'useColorModeValue' is declared but its value is never read.
+20:08:47.958 src/ai/feature/quizes/QuizManager.tsx(40,10): error TS6133: 'Gamepad' is declared but its value is never read.
+20:08:47.958 src/ai/feature/quizes/QuizManager.tsx(40,26): error TS6133: 'PartyPopper' is declared but its value is never read.
+20:08:47.958 src/ai/feature/quizes/QuizManager.tsx(70,10): error TS6133: 'isPlaying' is declared but its value is never read.
+20:08:47.958 src/ai/feature/quizes/QuizManager.tsx(259,9): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.959 src/ai/feature/quizes/QuizManager.tsx(739,32): error TS7053: Element implicitly has an 'any' type because expression of type '`option${string}`' can't be used to index type 'Question'.
+20:08:47.959 src/ai/feature/quizes/QuizManager.tsx(742,27): error TS7053: Element implicitly has an 'any' type because expression of type '`option${string}`' can't be used to index type 'Question'.
+20:08:47.959 src/ai/feature/quizes/QuizManager.tsx(834,25): error TS7053: Element implicitly has an 'any' type because expression of type '`option${string}`' can't be used to index type 'Question'.
+20:08:47.959 src/ai/feature/quizes/QuizManager.tsx(926,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.959   Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.961 src/ai/feature/sentense/Sentences.tsx(54,13): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.961 src/ai/feature/sentense/Sentences.tsx(115,7): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.962 src/ai/feature/sentense/Sentences.tsx(488,15): error TS2322: Type 'string' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>>'.
+20:08:47.963 src/ai/feature/sentense/Sentences.tsx(609,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.963   Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.963 src/ai/feature/speak/VoiceAssistant.tsx(3,3): error TS6133: 'Mic' is declared but its value is never read.
+20:08:47.964 src/ai/feature/speak/VoiceAssistant.tsx(7,3): error TS6133: 'VolumeX' is declared but its value is never read.
+20:08:47.964 src/ai/feature/speak/VoiceAssistant.tsx(10,3): error TS6133: 'Play' is declared but its value is never read.
+20:08:47.964 src/ai/feature/speak/VoiceAssistant.tsx(13,3): error TS6133: 'SpeakerIcon' is declared but its value is never read.
+20:08:47.965 src/ai/feature/speak/VoiceAssistant.tsx(14,3): error TS6133: 'VoteIcon' is declared but its value is never read.
+20:08:47.965 src/ai/feature/speak/VoiceAssistant.tsx(111,7): error TS6133: 'VolumeControl' is declared but its value is never read.
+20:08:47.965 src/ai/feature/speak/VoiceAssistant.tsx(266,9): error TS6133: 'handleSilenceTimeout' is declared but its value is never read.
+20:08:47.965 src/ai/feature/speak/VoiceAssistant.tsx(554,9): error TS2322: Type 'SpeechSynthesisVoice | undefined' is not assignable to type 'SpeechSynthesisVoice | null'.
+20:08:47.966   Type 'undefined' is not assignable to type 'SpeechSynthesisVoice | null'.
+20:08:47.966 src/ai/feature/speak/VoiceAssistant.tsx(595,9): error TS6133: 'handleVolumeChange' is declared but its value is never read.
+20:08:47.966 src/ai/feature/speak/VoiceAssistant.tsx(602,9): error TS6133: 'toggleMute' is declared but its value is never read.
+20:08:47.966 src/ai/feature/speak/VoiceAssistant.tsx(827,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.966   Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.967 src/ai/feature/story/StoryPage.tsx(173,9): error TS6133: 'isStoryOwner' is declared but its value is never read.
+20:08:47.970 src/ai/feature/story/StoryPage.tsx(931,27): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.970 src/ai/feature/story/StoryPage.tsx(1041,21): error TS2322: Type 'string | null' is not assignable to type 'ResponsiveValue<string | (string & {})> | undefined'.
+20:08:47.971   Type 'null' is not assignable to type 'ResponsiveValue<string | (string & {})> | undefined'.
+20:08:47.971 src/ai/feature/story/StoryPage.tsx(1199,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.971   Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(3,23): error TS6133: 'Play' is declared but its value is never read.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(3,29): error TS6133: 'SpeakerIcon' is declared but its value is never read.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(66,32): error TS7006: Parameter 'e' implicitly has an 'any' type.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(74,9): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(137,31): error TS7006: Parameter 'text' implicitly has an 'any' type.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(165,7): error TS2322: Type 'SpeechSynthesisUtterance' is not assignable to type 'null'.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(184,9): error TS2322: Type 'SpeechSynthesisVoice | undefined' is not assignable to type 'SpeechSynthesisVoice | null'.
+20:08:47.971   Type 'undefined' is not assignable to type 'SpeechSynthesisVoice | null'.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(214,27): error TS7006: Parameter 'text' implicitly has an 'any' type.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(215,26): error TS7006: Parameter 'str' implicitly has an 'any' type.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(547,17): error TS2322: Type 'Element | null' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>> | undefined'.
+20:08:47.971   Type 'null' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>> | undefined'.
+20:08:47.971 src/ai/feature/word/Meaning.tsx(575,14): error TS2322: Type '{ children: string; jsx: true; }' is not assignable to type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.971   Property 'jsx' does not exist on type 'DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>'.
+20:08:47.971 src/components/Notify/CountContext.tsx(184,21): error TS6133: 'arg0' is declared but its value is never read.
+20:08:47.971 src/components/Notify/CountContext.tsx(188,19): error TS6133: 'arg0' is declared but its value is never read.
+20:08:47.971 src/components/header/Navbar.tsx(30,31): error TS6133: 'Feather' is declared but its value is never read.
+20:08:47.971 src/components/header/Navbar.tsx(30,54): error TS6133: 'HeartIcon' is declared but its value is never read.
+20:08:47.971 src/components/header/Navbar.tsx(32,10): error TS6133: 'MdGames' is declared but its value is never read.
+20:08:47.971 src/components/header/Navbar.tsx(237,12): error TS18048: 'user.asks' is possibly 'undefined'.
+20:08:47.971 src/components/header/components/myProfile/MyProfile.tsx(14,3): error TS6133: 'Badge' is declared but its value is never read.
+20:08:47.972 src/components/header/components/myProfile/MyProfile.tsx(49,5): error TS2322: Type 'RefObject<null>' is not assignable to type 'RefObject<HTMLElement>'.
+20:08:47.972   Type 'null' is not assignable to type 'HTMLElement'.
+20:08:47.972 src/components/input/CustomInput.tsx(4,11): error TS2430: Interface 'CustomInputProps' incorrectly extends interface 'InputHTMLAttributes<HTMLInputElement>'.
+20:08:47.972   Types of property 'size' are incompatible.
+20:08:47.972     Type '"sm" | "md" | "lg" | undefined' is not assignable to type 'number | undefined'.
+20:08:47.972       Type 'string' is not assignable to type 'number'.
+20:08:47.972 src/components/notfound/NotFound.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(18,3): error TS6133: 'Menu' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(19,3): error TS6133: 'MenuButton' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(20,3): error TS6133: 'MenuList' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(21,3): error TS6133: 'MenuItem' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(32,3): error TS6133: 'Progress' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(33,3): error TS6133: 'Divider' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(36,3): error TS6133: 'Heading' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(40,3): error TS6133: 'SearchIcon' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(44,3): error TS6133: 'QuestionIcon' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(45,3): error TS6133: 'CheckIcon' is declared but its value is never read.
+20:08:47.972 src/components/notfound/NotFound.tsx(46,3): error TS6133: 'InfoIcon' is declared but its value is never read.
+20:08:47.972 src/components/ui/password-input.tsx(5,3): error TS2305: Module '"@chakra-ui/react"' has no exported member 'GroupProps'.
+20:08:47.972 src/components/ui/password-input.tsx(16,3): error TS2724: '"@chakra-ui/react"' has no exported member named 'mergeRefs'. Did you mean 'useMergeRefs'?
+20:08:47.972 src/components/ui/password-input.tsx(60,26): error TS2551: Property 'disabled' does not exist on type '{ color?: ResponsiveValue<"gray.800" | "gray.50" | "gray.700" | "gray.600" | "gray.400" | "gray.200" | Color | "current" | "whiteAlpha.50" | "whiteAlpha.100" | "whiteAlpha.200" | "whiteAlpha.300" | ... 183 more ... | "chakra-placeholder-color._dark"> | undefined; ... 731 more ...; isReadOnly?: boolean | undefined; }'. Did you mean '_disabled'?
+20:08:47.972 src/components/ui/password-input.tsx(62,22): error TS2551: Property 'disabled' does not exist on type '{ color?: ResponsiveValue<"gray.800" | "gray.50" | "gray.700" | "gray.600" | "gray.400" | "gray.200" | Color | "current" | "whiteAlpha.50" | "whiteAlpha.100" | "whiteAlpha.200" | "whiteAlpha.300" | ... 183 more ... | "chakra-placeholder-color._dark"> | undefined; ... 731 more ...; isReadOnly?: boolean | undefined; }'. Did you mean '_disabled'?
+20:08:47.972 src/components/ui/password-input.tsx(125,13): error TS2322: Type '{ key: number; height: "1"; flex: string; rounded: "sm"; "data-selected": string | undefined; layerStyle: string; colorPalette: string; _selected: { colorPalette: string; layerStyle: string; }; }' is not assignable to type 'IntrinsicAttributes & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "color" | ... 418 more ... | "as"> & { ...; } & Omit<...> & { ...; }'.
+20:08:47.972   Property 'colorPalette' does not exist on type 'IntrinsicAttributes & Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "color" | ... 418 more ... | "as"> & { ...; } & Omit<...> & { ...; }'.
+20:08:47.972 src/features/authentication/context/AuthenticationContextProvider.tsx(23,18): error TS2307: Cannot find module 'c:/Users/lenovo/Desktop/Speakly/frontend/src/features/network/components/connection/Connection' or its corresponding type declarations.
+20:08:47.972 src/features/authentication/pages/resetPassword/ResetPassword.tsx(14,29): error TS6133: 'MdPassword' is declared but its value is never read.
+20:08:47.972 src/features/feed/components/Post.tsx(34,1): error TS6133: 'Delete' is declared but its value is never read.
+20:08:47.973 src/features/feed/components/medal.tsx(30,23): error TS6133: 'MdPhotoCamera' is declared but its value is never read.
+20:08:47.973 src/features/feed/pages/Feed.tsx(110,30): error TS2554: Expected 1 arguments, but got 0.
+20:08:47.973 src/features/feed/pages/Notification.tsx(55,6): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+20:08:47.973 src/features/feed/pages/Notification.tsx(416,21): error TS2322: Type 'User | null' is not assignable to type 'User'.
+20:08:47.973   Type 'null' is not assignable to type 'User'.
+20:08:47.973 src/features/feed/pages/Notification.tsx(538,21): error TS2322: Type 'User | null' is not assignable to type 'User'.
+20:08:47.973   Type 'null' is not assignable to type 'User'.
+20:08:47.973 src/features/network/components/connection/Connection.tsx(19,13): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+20:08:47.973 src/features/network/pages/Invitation.tsx(19,3): error TS6133: 'Divider' is declared but its value is never read.
+20:08:47.973 src/features/profile/components/About.tsx(32,1): error TS6133: 'TbPoint' is declared but its value is never read.
+20:08:47.973 src/features/profile/components/About.tsx(36,13): error TS1294: This syntax is not allowed when 'erasableSyntaxOnly' is enabled.
+20:08:47.973 src/features/profile/components/About.tsx(241,33): error TS2339: Property 'message' does not exist on type 'string'.
+20:08:47.973 src/features/profile/pages/Profile.tsx(18,10): error TS6133: 'connexions' is declared but its value is never read.
+20:08:47.973 src/games/ChaoseButton.tsx(143,25): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ fact: string; tip: string; question: string; joke: string; }'.
+20:08:47.973   No index signature with a parameter of type 'string' was found on type '{ fact: string; tip: string; question: string; joke: string; }'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(19,3): error TS6133: 'Divider' is declared but its value is never read.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(83,32): error TS2339: Property 'wordObj' does not exist on type '{}'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(83,41): error TS2339: Property 'index' does not exist on type '{}'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(83,48): error TS2339: Property 'flipped' does not exist on type '{}'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(83,57): error TS2339: Property 'disabled' does not exist on type '{}'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(83,67): error TS2339: Property 'onSelect' does not exist on type '{}'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(89,9): error TS6133: 'textColor' is declared but its value is never read.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(166,21): error TS7031: Binding element 'active' implicitly has an 'any' type.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(224,25): error TS7006: Parameter 'text' implicitly has an 'any' type.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(226,21): error TS7006: Parameter 'tag' implicitly has an 'any' type.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(230,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(241,9): error TS2339: Property 'explanation' does not exist on type '{ word: any; meaning: any; }'.
+20:08:47.973 src/games/FlipGame/Flip/CardFlip.tsx(275,22): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: { isReal: boolean; word: any; meaning: any; }[]; ... 4 more ...; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:47.973   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: { isReal: boolean; word: any; meaning: any; }[]; ... 4 more ...; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:47.973     Call signature return types '{ words: { isReal: boolean; word: any; meaning: any; }[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:47.973       The types of 'words' are incompatible between these types.
+20:08:47.973         Type '{ isReal: boolean; word: any; meaning: any; }[]' is not assignable to type 'never[]'.
+20:08:47.974           Type '{ isReal: boolean; word: any; meaning: any; }' is not assignable to type 'never'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(283,18): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ Easy: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { word: string; meaning: string; isReal: boolean; explanation: string; })[]; Medium: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { ...; })[]; Hard: ({ ...; } | { ...; })[]; }'.
+20:08:47.974   No index signature with a parameter of type 'string' was found on type '{ Easy: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { word: string; meaning: string; isReal: boolean; explanation: string; })[]; Medium: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { ...; })[]; Hard: ({ ...; } | { ...; })[]; }'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(285,20): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:47.974   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:47.974     Call signature return types '{ words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:47.974       The types of 'words' are incompatible between these types.
+20:08:47.974         Type 'any[]' is not assignable to type 'never[]'.
+20:08:47.974           Type 'any' is not assignable to type 'never'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(292,29): error TS7006: Parameter 'selectedWord' implicitly has an 'any' type.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(292,43): error TS6133: 'idx' is declared but its value is never read.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(292,43): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(294,40): error TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{}'.
+20:08:47.974   No index signature with a parameter of type 'number' was found on type '{}'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(302,18): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:47.974   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:47.974     Call signature return types '{ gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:47.974       The types of 'gameResult' are incompatible between these types.
+20:08:47.974         Type 'string' is not assignable to type 'null'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(320,22): error TS7006: Parameter 'difficulty' implicitly has an 'any' type.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(489,21): error TS2322: Type '{ wordObj: never; index: number; flipped: boolean; disabled: boolean; onSelect: (selectedWord: any, idx: any) => void; }' is not assignable to type 'IntrinsicAttributes & object'.
+20:08:47.974   Property 'wordObj' does not exist on type 'IntrinsicAttributes & object'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(491,32): error TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{}'.
+20:08:47.974   No index signature with a parameter of type 'number' was found on type '{}'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(520,76): error TS2339: Property 'word' does not exist on type 'never'.
+20:08:47.974 src/games/FlipGame/Flip/CardFlip.tsx(521,62): error TS2339: Property 'word' does not exist on type 'never'.
+20:08:47.974 src/games/FlipGame/arrange/ArrangeSentence.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:47.974 src/games/FlipGame/arrange/ArrangeSentence.tsx(51,10): error TS6133: 'showTranslation' is declared but its value is never read.
+20:08:47.974 src/games/FlipGame/arrange/ArrangeSentence.tsx(51,27): error TS6133: 'setShowTranslation' is declared but its value is never read.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(63,11): error TS6133: 'langName' is declared but its value is never read.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(85,35): error TS7006: Parameter 'l' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(87,38): error TS7006: Parameter 'l' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(89,32): error TS7006: Parameter 'l' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(92,36): error TS7006: Parameter 'l' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(95,38): error TS7006: Parameter 'pair' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(98,13): error TS7053: Element implicitly has an 'any' type because expression of type 'any' can't be used to index type '{}'.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(106,20): error TS2345: Argument of type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }>'.
+20:08:47.975   Type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to type '(prevState: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }'.
+20:08:47.975     Call signature return types '{ correctSentence: any; nativeTranslation: any; wordTranslations: {}; scrambledWords: any[]; userArrangement: never[]; storyText: any; isCorrect: null; currentChapter: number; theme: { name: string; keywords: string[]; }; totalChapters: number; score: number; }' and '{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }' are incompatible.
+20:08:47.975       The types of 'scrambledWords' are incompatible between these types.
+20:08:47.975         Type 'any[]' is not assignable to type 'never[]'.
+20:08:47.975           Type 'any' is not assignable to type 'never'.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(138,20): error TS2345: Argument of type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }>'.
+20:08:47.975   Type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to type '(prevState: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }'.
+20:08:47.975     Call signature return types '{ correctSentence: string; nativeTranslation: string; wordTranslations: { The: string; brave: string; knight: string; heroes: string; ancient: string; mysterious: string; magical: string; powerful: string; adventure: string; }; ... 7 more ...; score: number; }' and '{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }' are incompatible.
+20:08:47.975       The types of 'scrambledWords' are incompatible between these types.
+20:08:47.975         Type 'string[]' is not assignable to type 'never[]'.
+20:08:47.975           Type 'string' is not assignable to type 'never'.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(155,34): error TS7006: Parameter 'wordIndex' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(164,32): error TS7006: Parameter 'wordIndex' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(178,18): error TS2345: Argument of type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }>'.
+20:08:47.975   Type '(prev: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }' is not assignable to type '(prevState: { currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }) => { ...; }'.
+20:08:47.975     Call signature return types '{ isCorrect: boolean; currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; score: number; theme: { ...; }; }' and '{ currentChapter: number; totalChapters: number; correctSentence: string; nativeTranslation: string; wordTranslations: {}; scrambledWords: never[]; userArrangement: never[]; storyText: string; isCorrect: null; score: number; theme: { ...; }; }' are incompatible.
+20:08:47.975       The types of 'isCorrect' are incompatible between these types.
+20:08:47.975         Type 'boolean' is not assignable to type 'null'.
+20:08:47.975 src/games/FlipGame/arrange/ArrangeSentence.tsx(196,22): error TS7006: Parameter 'selectedTheme' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/fill/FillTheWord.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:47.975 src/games/FlipGame/fill/FillTheWord.tsx(130,45): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/fill/FillTheWord.tsx(130,73): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/fill/FillTheWord.tsx(146,38): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:47.975 src/games/FlipGame/fill/FillTheWord.tsx(151,48): error TS7006: Parameter 'part' implicitly has an 'any' type.
+20:08:47.993 src/games/FlipGame/fill/FillTheWord.tsx(200,22): error TS7006: Parameter 'sentence' implicitly has an 'any' type.
+20:08:47.994 src/games/FlipGame/fill/FillTheWord.tsx(200,32): error TS7006: Parameter 'words' implicitly has an 'any' type.
+20:08:47.994 src/games/FlipGame/fill/FillTheWord.tsx(206,20): error TS7006: Parameter 'wordData' implicitly has an 'any' type.
+20:08:47.994 src/games/FlipGame/fill/FillTheWord.tsx(206,30): error TS7006: Parameter 'index' implicitly has an 'any' type.
+20:08:47.994 src/games/FlipGame/fill/FillTheWord.tsx(212,20): error TS2345: Argument of type 'any[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+20:08:47.994   Type 'any[]' is not assignable to type 'never[]'.
+20:08:47.995     Type 'any' is not assignable to type 'never'.
+20:08:47.995 src/games/FlipGame/fill/FillTheWord.tsx(218,32): error TS7006: Parameter 'blankIndex' implicitly has an 'any' type.
+20:08:47.995 src/games/FlipGame/fill/FillTheWord.tsx(218,44): error TS7006: Parameter 'selectedWord' implicitly has an 'any' type.
+20:08:47.995 src/games/FlipGame/fill/FillTheWord.tsx(222,5): error TS2322: Type 'any' is not assignable to type 'never'.
+20:08:47.995 src/games/FlipGame/fill/FillTheWord.tsx(232,32): error TS2339: Property 'toLowerCase' does not exist on type 'never'.
+20:08:47.995 src/games/FlipGame/fill/FillTheWord.tsx(232,59): error TS2339: Property 'originalWord' does not exist on type 'never'.
+20:08:47.996 src/games/FlipGame/fill/FillTheWord.tsx(235,33): error TS2339: Property 'originalWord' does not exist on type 'never'.
+20:08:47.996 src/games/FlipGame/fill/FillTheWord.tsx(236,28): error TS2339: Property 'type' does not exist on type 'never'.
+20:08:47.996 src/games/FlipGame/fill/FillTheWord.tsx(238,30): error TS2339: Property 'options' does not exist on type 'never'.
+20:08:47.996 src/games/FlipGame/fill/FillTheWord.tsx(242,17): error TS2345: Argument of type '{ userAnswer: never; correctAnswer: any; wordType: any; isCorrect: boolean; allOptions: any; }[]' is not assignable to parameter of type 'SetStateAction<never[]>'.
+20:08:47.996   Type '{ userAnswer: never; correctAnswer: any; wordType: any; isCorrect: boolean; allOptions: any; }[]' is not assignable to type 'never[]'.
+20:08:47.996     Type '{ userAnswer: never; correctAnswer: any; wordType: any; isCorrect: boolean; allOptions: any; }' is not assignable to type 'never'.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(261,46): error TS2339: Property 'position' does not exist on type 'never'.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(271,117): error TS2339: Property 'position' does not exist on type 'never'.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(356,35): error TS2339: Property 'options' does not exist on type 'never'.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(356,48): error TS7006: Parameter 'option' implicitly has an 'any' type.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(356,56): error TS7006: Parameter 'optionIndex' implicitly has an 'any' type.
+20:08:47.997 src/games/FlipGame/fill/FillTheWord.tsx(420,32): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(428,36): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(436,75): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(437,40): error TS2339: Property 'userAnswer' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(441,34): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(443,49): error TS2339: Property 'correctAnswer' does not exist on type 'never'.
+20:08:47.998 src/games/FlipGame/fill/FillTheWord.tsx(447,32): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.999 src/games/FlipGame/fill/FillTheWord.tsx(449,90): error TS2339: Property 'allOptions' does not exist on type 'never'.
+20:08:47.999 src/games/FlipGame/fill/FillTheWord.tsx(460,44): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.999 src/games/FlipGame/fill/FillTheWord.tsx(465,47): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.999 src/games/FlipGame/fill/FillTheWord.tsx(467,64): error TS2339: Property 'isCorrect' does not exist on type 'never'.
+20:08:47.999 src/games/FlipGame/find/FindMistek.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:48.005 src/games/FlipGame/find/FindMistek.tsx(27,33): error TS7006: Parameter 'original' implicitly has an 'any' type.
+20:08:48.006 src/games/FlipGame/find/FindMistek.tsx(27,43): error TS7006: Parameter 'corrected' implicitly has an 'any' type.
+20:08:48.006 src/games/FlipGame/find/FindMistek.tsx(33,32): error TS7006: Parameter 'word' implicitly has an 'any' type.
+20:08:48.006 src/games/FlipGame/find/FindMistek.tsx(33,38): error TS7006: Parameter 'index' implicitly has an 'any' type.
+20:08:48.006 src/games/FlipGame/find/FindMistek.tsx(153,13): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:48.007 src/games/FlipGame/find/FindMistek.tsx(154,16): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:48.007 src/games/FlipGame/find/FindMistek.tsx(157,35): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:48.007 src/games/FlipGame/find/FindMistek.tsx(158,34): error TS7006: Parameter 'line' implicitly has an 'any' type.
+20:08:48.007 src/games/FlipGame/guess/GuessFakeWord.tsx(20,3): error TS6133: 'Divider' is declared but its value is never read.
+20:08:48.007 src/games/FlipGame/guess/GuessFakeWord.tsx(84,32): error TS2339: Property 'wordObj' does not exist on type '{}'.
+20:08:48.009 src/games/FlipGame/guess/GuessFakeWord.tsx(84,41): error TS2339: Property 'index' does not exist on type '{}'.
+20:08:48.009 src/games/FlipGame/guess/GuessFakeWord.tsx(84,48): error TS2339: Property 'flipped' does not exist on type '{}'.
+20:08:48.009 src/games/FlipGame/guess/GuessFakeWord.tsx(84,57): error TS2339: Property 'disabled' does not exist on type '{}'.
+20:08:48.009 src/games/FlipGame/guess/GuessFakeWord.tsx(84,67): error TS2339: Property 'onSelect' does not exist on type '{}'.
+20:08:48.009 src/games/FlipGame/guess/GuessFakeWord.tsx(167,21): error TS7031: Binding element 'active' implicitly has an 'any' type.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(202,9): error TS6133: 'colorMode' is declared but its value is never read.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(225,25): error TS7006: Parameter 'text' implicitly has an 'any' type.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(227,21): error TS7006: Parameter 'tag' implicitly has an 'any' type.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(231,41): error TS7006: Parameter 's' implicitly has an 'any' type.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(242,9): error TS2339: Property 'explanation' does not exist on type '{ word: any; meaning: any; }'.
+20:08:48.010 src/games/FlipGame/guess/GuessFakeWord.tsx(276,22): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: { isReal: boolean; word: any; meaning: any; }[]; ... 4 more ...; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:48.012   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: { isReal: boolean; word: any; meaning: any; }[]; ... 4 more ...; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:48.012     Call signature return types '{ words: { isReal: boolean; word: any; meaning: any; }[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:48.012       The types of 'words' are incompatible between these types.
+20:08:48.012         Type '{ isReal: boolean; word: any; meaning: any; }[]' is not assignable to type 'never[]'.
+20:08:48.013           Type '{ isReal: boolean; word: any; meaning: any; }' is not assignable to type 'never'.
+20:08:48.013 src/games/FlipGame/guess/GuessFakeWord.tsx(284,18): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ Easy: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { word: string; meaning: string; isReal: boolean; explanation: string; })[]; Medium: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { ...; })[]; Hard: ({ ...; } | { ...; })[]; }'.
+20:08:48.014   No index signature with a parameter of type 'string' was found on type '{ Easy: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { word: string; meaning: string; isReal: boolean; explanation: string; })[]; Medium: ({ word: string; meaning: string; isReal: boolean; explanation?: undefined; } | { ...; })[]; Hard: ({ ...; } | { ...; })[]; }'.
+20:08:48.014 src/games/FlipGame/guess/GuessFakeWord.tsx(286,20): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:48.015   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:48.016     Call signature return types '{ words: any[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:48.016       The types of 'words' are incompatible between these types.
+20:08:48.016         Type 'any[]' is not assignable to type 'never[]'.
+20:08:48.016           Type 'any' is not assignable to type 'never'.
+20:08:48.016 src/games/FlipGame/guess/GuessFakeWord.tsx(293,29): error TS7006: Parameter 'selectedWord' implicitly has an 'any' type.
+20:08:48.017 src/games/FlipGame/guess/GuessFakeWord.tsx(293,43): error TS6133: 'idx' is declared but its value is never read.
+20:08:48.017 src/games/FlipGame/guess/GuessFakeWord.tsx(293,43): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+20:08:48.017 src/games/FlipGame/guess/GuessFakeWord.tsx(295,40): error TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{}'.
+20:08:48.017   No index signature with a parameter of type 'number' was found on type '{}'.
+20:08:48.017 src/games/FlipGame/guess/GuessFakeWord.tsx(303,18): error TS2345: Argument of type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { ...; }; }' is not assignable to parameter of type 'SetStateAction<{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }>'.
+20:08:48.019   Type '(prev: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { ...; }; }' is not assignable to type '(prevState: { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }) => { words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { ...; }; }'.
+20:08:48.019     Call signature return types '{ gameResult: string; score: number; words: never[]; selectedWord: null; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' and '{ words: never[]; selectedWord: null; gameResult: null; score: number; round: number; difficulty: { name: string; label: string; score: number; desc: string; }; }' are incompatible.
+20:08:48.019       The types of 'gameResult' are incompatible between these types.
+20:08:48.019         Type 'string' is not assignable to type 'null'.
+20:08:48.019 src/games/FlipGame/guess/GuessFakeWord.tsx(321,22): error TS7006: Parameter 'difficulty' implicitly has an 'any' type.
+20:08:48.020 src/games/FlipGame/guess/GuessFakeWord.tsx(490,21): error TS2322: Type '{ wordObj: never; index: number; flipped: boolean; disabled: boolean; onSelect: (selectedWord: any, idx: any) => void; }' is not assignable to type 'IntrinsicAttributes & object'.
+20:08:48.020   Property 'wordObj' does not exist on type 'IntrinsicAttributes & object'.
+20:08:48.020 src/games/FlipGame/guess/GuessFakeWord.tsx(492,32): error TS7053: Element implicitly has an 'any' type because expression of type 'number' can't be used to index type '{}'.
+20:08:48.020   No index signature with a parameter of type 'number' was found on type '{}'.
+20:08:48.020 src/games/FlipGame/guess/GuessFakeWord.tsx(521,76): error TS2339: Property 'word' does not exist on type 'never'.
+20:08:48.021 src/games/FlipGame/guess/GuessFakeWord.tsx(522,62): error TS2339: Property 'word' does not exist on type 'never'.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(1,27): error TS6133: 'useEffect' is declared but its value is never read.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(151,20): error TS7006: Parameter 'str' implicitly has an 'any' type.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(157,23): error TS7006: Parameter 'userInput' implicitly has an 'any' type.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(157,34): error TS7006: Parameter 'correctAnswer' implicitly has an 'any' type.
+20:08:48.021 src/games/FlipGame/guess/GuessWord.tsx(179,30): error TS7006: Parameter 'str1' implicitly has an 'any' type.
+20:08:48.022 src/games/FlipGame/guess/GuessWord.tsx(179,36): error TS7006: Parameter 'str2' implicitly has an 'any' type.
+20:08:48.022 src/games/FlipGame/guess/GuessWord.tsx(182,34): error TS2554: Expected 1-3 arguments, but got 0.
+20:08:48.022 src/games/FlipGame/guess/GuessWord.tsx(222,22): error TS7006: Parameter 'type' implicitly has an 'any' type.
+20:08:48.022 src/games/FlipGame/guess/GuessWord.tsx(235,39): error TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+20:08:48.022 src/games/FlipGame/guess/GuessWord.tsx(248,18): error TS2345: Argument of type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }>'.
+20:08:48.023   Type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to type '(prevState: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }'.
+20:08:48.024     Call signature return types '{ currentPuzzle: { emojis: string[]; answer: string; hint: string; difficulty: string; }; usedPuzzles: string[]; userGuess: string; gameResult: null; showAnswer: false; score: number; streak: number; bestStreak: number; round: number; difficulty: string; }' and '{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }' are incompatible.
+20:08:48.025       The types of 'currentPuzzle' are incompatible between these types.
+20:08:48.026         Type '{ emojis: string[]; answer: string; hint: string; difficulty: string; }' is not assignable to type 'null'.
+20:08:48.026 src/games/FlipGame/guess/GuessWord.tsx(263,61): error TS2339: Property 'answer' does not exist on type 'never'.
+20:08:48.026 src/games/FlipGame/guess/GuessWord.tsx(269,22): error TS2339: Property 'difficulty' does not exist on type 'never'.
+20:08:48.026 src/games/FlipGame/guess/GuessWord.tsx(270,22): error TS2339: Property 'difficulty' does not exist on type 'never'.
+20:08:48.027 src/games/FlipGame/guess/GuessWord.tsx(272,18): error TS2345: Argument of type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }>'.
+20:08:48.028   Type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to type '(prevState: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }'.
+20:08:48.028     Call signature return types '{ gameResult: string; score: number; streak: number; bestStreak: number; currentPuzzle: null; userGuess: string; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }' and '{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }' are incompatible.
+20:08:48.029       The types of 'gameResult' are incompatible between these types.
+20:08:48.029         Type 'string' is not assignable to type 'null'.
+20:08:48.029 src/games/FlipGame/guess/GuessWord.tsx(298,18): error TS2345: Argument of type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to parameter of type 'SetStateAction<{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }>'.
+20:08:48.030   Type '(prev: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }' is not assignable to type '(prevState: { currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }) => { ...; }'.
+20:08:48.031     Call signature return types '{ showAnswer: true; gameResult: string; streak: number; currentPuzzle: null; userGuess: string; score: number; bestStreak: number; round: number; difficulty: string; usedPuzzles: never[]; }' and '{ currentPuzzle: null; userGuess: string; gameResult: null; score: number; streak: number; bestStreak: number; round: number; showAnswer: boolean; difficulty: string; usedPuzzles: never[]; }' are incompatible.
+20:08:48.032       The types of 'gameResult' are incompatible between these types.
+20:08:48.032         Type 'string' is not assignable to type 'null'.
+20:08:48.032 src/games/FlipGame/guess/GuessWord.tsx(342,91): error TS2339: Property 'answer' does not exist on type 'never'.
+20:08:48.032 src/games/FlipGame/guess/GuessWord.tsx(481,44): error TS2339: Property 'emojis' does not exist on type 'never'.
+20:08:48.032 src/games/FlipGame/guess/GuessWord.tsx(492,44): error TS2339: Property 'emojis' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(501,42): error TS2339: Property 'hint' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(513,48): error TS2339: Property 'answer' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(540,62): error TS2339: Property 'answer' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(595,51): error TS2339: Property 'difficulty' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(596,52): error TS2339: Property 'difficulty' does not exist on type 'never'.
+20:08:48.033 src/games/FlipGame/guess/GuessWord.tsx(602,50): error TS2339: Property 'answer' does not exist on type 'never'.
+20:08:48.034 src/utils/connectionUtils.ts(56,51): error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+20:08:48.034 src/utils/connectionUtils.ts(73,29): error TS2552: Cannot find name 'Status'. Did you mean 'status'?
+20:08:48.034 src/utils/connectionUtils.ts(77,29): error TS2552: Cannot find name 'Status'. Did you mean 'status'?
+20:08:48.034 src/utils/connectionUtils.ts(79,9): error TS2367: This comparison appears to be unintentional because the types 'string' and 'number' have no overlap.
+20:08:48.282 Error: Command "npm run build" exited with 2

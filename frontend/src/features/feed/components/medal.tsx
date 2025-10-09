@@ -27,7 +27,8 @@ import {
   type FormEvent,
   type SetStateAction,
 } from "react";
-import { MdAddAPhoto, MdPhotoCamera } from "react-icons/md";
+
+import { MdAddAPhoto } from "react-icons/md";
 
 interface IPostingMadalProps {
   showModal: boolean;

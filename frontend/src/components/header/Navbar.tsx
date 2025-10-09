@@ -27,9 +27,9 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
 import { FaHeartCircleExclamation } from "react-icons/fa6";
 import Meaning from "../../ai/feature/word/Meaning";
-import { BellRing, BookAIcon, Feather, Gamepad2Icon, HeartIcon, Home, Trophy, Users } from "lucide-react";
+import { BellRing, BookAIcon, Gamepad2Icon, Home, Trophy, Users } from "lucide-react";
 import { BiUserVoice } from "react-icons/bi";
-import { MdGames, MdOutlineQuiz } from "react-icons/md";
+import { MdOutlineQuiz } from "react-icons/md";
 import { useAuthentication } from "../../features/authentication/context/AuthenticationContextProvider";
 
 const Navbar = () => {

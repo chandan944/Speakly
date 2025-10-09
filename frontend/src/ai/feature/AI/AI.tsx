@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Send,
   RefreshCw,
-  Volume2,
+
   Star,
   Target,
   BookOpen,
   CheckCircle2,
   ArrowRight,
-  RefreshCcw,
+
   RefreshCcwDotIcon,
 } from "lucide-react";
 
@@ -62,7 +62,7 @@ const AI = () => {
       }
     } catch (err) {
       console.error("💥 Generate sentence error:", err);
-      setGeneratedSentence(`Error: ${err.message}`);
+      setGeneratedSentence(`try again`);
     } finally {
       setLoading(false);
       console.log("🏁 Generate sentence process completed");
@@ -123,14 +123,14 @@ ${userTranslation}
       }
     } catch (err) {
       console.error("💥 Feedback error:", err);
-      setFeedback(`Error: ${err.message}`);
+      setFeedback(`try again`);
     } finally {
       setFeedbackLoading(false);
       console.log("🏁 Feedback process completed");
     }
   };
 
-const formatText = (text) => {
+const formatText = (text: string) => {
   if (!text) return "";
 
   return text

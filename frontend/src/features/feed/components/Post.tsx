@@ -31,7 +31,6 @@ import { TimeAgo } from "../TimeAgo";
 import { FcLike ,FcLikePlaceholder} from "react-icons/fc";
 import { FaComments, FaRegCommentDots } from "react-icons/fa";
 import { CloseIcon, EditIcon } from "@chakra-ui/icons";
-import { Delete } from "lucide-react";
 import { LuSend } from "react-icons/lu";
 import { FiTrash } from "react-icons/fi";
 

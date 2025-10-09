@@ -15,7 +15,7 @@ import {
   ModalBody,
   useDisclosure,
   useToast,
-  Avatar,
+
   Alert,
   AlertIcon,
   Spinner,
@@ -23,7 +23,7 @@ import {
   WrapItem,
   IconButton,
   Select,
-  useColorModeValue,
+
   Card,
   CardBody,
   CardFooter,
@@ -37,7 +37,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import { Gamepad, Heart, PartyPopper, PlayIcon, Send } from "lucide-react";
+import { Heart, PlayIcon, Send } from "lucide-react";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
 import { MdDoNotTouch } from "react-icons/md";
 import Meaning from "../word/Meaning";
@@ -67,7 +67,7 @@ const API_BASE = `${API_KEY}/api/quizzes`;
 
 export default function QuizApp() {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [, setIsPlaying] = useState(false);
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -145,6 +145,7 @@ export default function QuizApp() {
       const data = await res.json();
       const quizArray = Array.isArray(data) ? data : [data];
       setQuizzes(quizArray.filter((q) => q));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("Failed to load quizzes. Check your connection.");
     } finally {
@@ -204,6 +205,7 @@ export default function QuizApp() {
         const error = await res.text();
         toast({ title: "Create failed", description: error, status: "error" });
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast({ title: "Network error", status: "error" });
     }
@@ -248,6 +250,7 @@ export default function QuizApp() {
       } else {
         toast({ title: "Delete failed", status: "error" });
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast({ title: "Network error", status: "error" });
     }

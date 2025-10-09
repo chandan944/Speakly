@@ -1,24 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
-  Mic,
   StopCircle,
   RefreshCw,
-  Volume2,
-  VolumeX,
   MessageSquare,
   Send,
-  Play,
   Pause,
-  VolumeOff,
-  SpeakerIcon,
-  VoteIcon,
   Volume1Icon,
   Speech,
 } from "lucide-react";
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 
 // Mock authentication context for demo
-
 
 const usePageTitle = (title: string) => {
   useEffect(() => {
@@ -108,43 +102,6 @@ const Toast = ({
 };
 
 // Volume Control Component
-const VolumeControl = ({
-  volume,
-  onChange,
-  isMuted,
-  onMuteToggle,
-}: {
-  volume: number;
-  onChange: (volume: number) => void;
-  isMuted: boolean;
-  onMuteToggle: () => void;
-}) => {
-  return (
-    <div className="flex items-center space-x-3 bg-gray-50 rounded-lg p-3">
-      <button
-        onClick={onMuteToggle}
-        className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-      >
-        {isMuted ? <VolumeOff size={20} /> : <Volume2 size={20} />}
-      </button>
-      <div className="flex items-center space-x-2 flex-1">
-        <span className="text-sm text-gray-600 min-w-[30px]">Vol:</span>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={isMuted ? 0 : volume}
-          onChange={(e) => onChange(parseInt(e.target.value))}
-          className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-          disabled={isMuted}
-        />
-        <span className="text-sm text-gray-600 min-w-[35px]">
-          {isMuted ? "0%" : `${volume}%`}
-        </span>
-      </div>
-    </div>
-  );
-};
 
 // Real-time Speech Display Component
 const RealTimeSpeech = ({
@@ -263,16 +220,6 @@ const VoiceAssistant = () => {
   };
 
   // Auto-stop after silence
-  const handleSilenceTimeout = useCallback(() => {
-    if (finalTranscript.trim()) {
-      setIsListening(false);
-      if (recognitionRef.current) {
-        isManualStopRef.current = true;
-        recognitionRef.current.stop();
-      }
-      showToast("🔇 Auto-stopped after silence", "info");
-    }
-  }, [finalTranscript]);
 
   // Get feedback from Gemini
   const getFeedbackFromGemini = useCallback(
@@ -282,7 +229,7 @@ const VoiceAssistant = () => {
       setIsProcessing(true);
       setHasError(false);
 
-const prompt = `
+      const prompt = `
 Reply like my coolest friend using ${user?.nativeLanguage} + simple English.  
 
 🌍 Language Mix:  
@@ -306,7 +253,7 @@ Reply like my coolest friend using ${user?.nativeLanguage} + simple English.
 Here’s what I said: ${text}  
 `;
 
-console.log("Prompt "+prompt);
+      console.log("Prompt " + prompt);
       try {
         const response = await fetch(GEMINI_URL, {
           method: "POST",
@@ -592,19 +539,6 @@ console.log("Prompt "+prompt);
   };
 
   // Volume control handlers
-  const handleVolumeChange = (newVolume: number) => {
-    setVolume(newVolume);
-    if (newVolume > 0 && isMuted) {
-      setIsMuted(false);
-    }
-  };
-
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-    if (isSpeaking && !isMuted) {
-      stopSpeaking();
-    }
-  };
 
   // Clear everything - IMPROVED
   const clearAll = () => {
@@ -662,7 +596,7 @@ console.log("Prompt "+prompt);
           {/* Header */}
           <div className="flex flex-col items-center space-y-3">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-green-500 to-lime-500 flex items-center justify-center">
-              <MessageSquare size={32}  />
+              <MessageSquare size={32} />
             </div>
             <h1 className="text-3xl font-bold text-center ">
               🎤 Enhanced English Feedback Assistant
@@ -736,7 +670,6 @@ console.log("Prompt "+prompt);
               />
 
               {/* Volume Control */}
-             
 
               {/* Editable Transcript */}
               {transcript && (

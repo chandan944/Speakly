@@ -160,6 +160,8 @@ nbdist/
 .env.development
 .env.production
 application-secret.properties
+# Ignore properties with secrets
+backend/src/main/resources/application.properties
 backend/src/main/resources/application-secret.properties
 frontend/.env
 frontend/.env.local

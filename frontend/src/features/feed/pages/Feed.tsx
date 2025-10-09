@@ -107,7 +107,7 @@ export function Feed() {
 
   const toast = useToast();
   const ws = useWebSocket();
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>();
+const debounceTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Constants
   const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes

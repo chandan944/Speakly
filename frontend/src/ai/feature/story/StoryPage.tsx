@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import { useState, useEffect } from "react";
 import {
   Camera,
@@ -145,14 +147,6 @@ const StoryPage = () => {
   const token = localStorage.getItem("token");
 
   // Mock user - in real app, get from authentication context
-  const currentUser: User = JSON.parse(
-    localStorage.getItem("user") || "{}"
-  ) || {
-    id: 1,
-    firstName: "Guest",
-    lastName: "",
-    email: "guest@example.com",
-  };
 
   usePageTitle("Stories");
   // Admin email restriction
@@ -170,9 +164,6 @@ const API = import.meta.env.VITE_API_URL
   };
 
   // Check if current user is story owner
-  const isStoryOwner = (story: Story) => {
-    return story.user.id === currentUser.id;
-  };
 
   // Show admin restriction message
   const showAdminRestriction = () => {
@@ -1038,7 +1029,7 @@ const API = import.meta.env.VITE_API_URL
                 {getImageUrl(activeStory) && (
                   <Box
                     h="300px"
-                    bgImg={getImageUrl(activeStory)}
+                    bgImage={getImageUrl(activeStory)}
                     bgSize="cover"
                     bgPosition="center"
                     borderRadius="xl"

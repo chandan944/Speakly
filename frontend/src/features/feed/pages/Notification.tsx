@@ -52,10 +52,7 @@ import {
 } from "react-icons/fa";
 import { useCount } from "../../../components/Notify/CountContext";
 
-enum INotificationType {
-  LIKE = "LIKE",
-  COMMENT = "COMMENT",
-}
+type INotificationType = 'LIKE' | 'COMMENT';
 
 export interface Notification {
   id: number;
@@ -413,7 +410,7 @@ export function Notifications() {
                 <Box key={`mobile-${notification.id}`}>
                   <NotificationItem
                     notification={notification}
-                    user={user}
+                    user={user!}
                     setNotifications={setNotifications}
                     isMobile={true}
                   />
@@ -453,10 +450,12 @@ export function Notifications() {
           boxShadow="xl"
           overflow="hidden"
           border="1px solid"
+          // eslint-disable-next-line react-hooks/rules-of-hooks
           borderColor={useColorModeValue("gray.100", "gray.700")}
         >
           <Box
             p={headerPadding}
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             bgGradient={useColorModeValue(
               "linear(to-r, #38A169, #68D391)", // light mode: green to light green
               "linear(to-r, #2F855A, #48BB78)" // dark mode: deep green to mint green

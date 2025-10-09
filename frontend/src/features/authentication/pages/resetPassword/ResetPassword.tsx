@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CustomInput } from "../../../../components/input/CustomInput";
 import { CustomButton } from "../../../../components/button/CustomButton";
-import { MdOutlinePassword, MdPassword } from "react-icons/md";
+import { MdOutlinePassword } from "react-icons/md";
 
 function ResetPassword() {
   const [emailSent, setEmailSent] = useState(false);

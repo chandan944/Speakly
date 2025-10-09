@@ -3,7 +3,7 @@
  // Adjust path
 
 import type { User } from "../features/authentication/context/AuthenticationContextProvider";
-import type { IConnection } from "../features/network/components/connection/Connection";
+import { Status, type IConnection } from "../features/network/components/connection/Connection";
 
 // Define the possible UI states for a connection relationship
 // These names are chosen to be descriptive for the UI logic in About.tsx

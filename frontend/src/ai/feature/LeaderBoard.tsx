@@ -10,10 +10,9 @@ import {
   Badge,
   IconButton,
   useColorModeValue,
-  Button,
-} from "@chakra-ui/react";
+ } from "@chakra-ui/react";
 import {
-  MdEmojiEvents, // 1st
+
   MdOutlineFlag, // 2nd
   MdPeopleOutline, // 3rd
 } from "react-icons/md";
@@ -28,12 +27,6 @@ import { TrophyIcon, CoinsIcon, Star, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Medal Icon
-const MedalIcon = ({ rank }: { rank: number }) => {
-  if (rank === 1) return <MdEmojiEvents fontSize="1.5em" color="gold" />;
-  if (rank === 2) return <MdOutlineFlag fontSize="1.5em" color="#C0C0C0" />;
-  if (rank === 3) return <MdPeopleOutline fontSize="1.5em" color="#CD7F32" />;
-  return null;
-};
 
 // Medal background
 const getMedalBg = (rank: number) => {
@@ -126,10 +119,12 @@ export function Leaderboard() {
                 p={3}
                 borderWidth="1px"
                 borderRadius="lg"
+                // eslint-disable-next-line react-hooks/rules-of-hooks
                 bg={useColorModeValue(
                   isTop3 ? "white" : "gray.50",
                   isTop3 ? "gray.700" : "gray.800"
                 )}
+                // eslint-disable-next-line react-hooks/rules-of-hooks
                 borderColor={useColorModeValue("gray.200", "gray.600")}
                 shadow="sm"
                 _hover={{ shadow: "md", transform: "scale(1.005)" }}
