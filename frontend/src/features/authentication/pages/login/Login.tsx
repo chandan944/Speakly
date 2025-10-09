@@ -134,7 +134,7 @@ const Login = () => {
               <FormLabel>Email</FormLabel>
               <Input
                 name="email"
-                placeholder="m@example.com"
+                placeholder="Enter your email..."
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}
               />
@@ -145,7 +145,7 @@ const Login = () => {
               <FormLabel>Password</FormLabel>
               <Input
                 name="password"
-                
+                placeholder="Enter your password..."
                 type="password"
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}

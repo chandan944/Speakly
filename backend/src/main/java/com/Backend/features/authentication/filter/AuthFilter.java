@@ -34,7 +34,7 @@ public class AuthFilter extends HttpFilter {
 
     @Override
     protected void doFilter(HttpServletRequest request , HttpServletResponse response , FilterChain chain) throws ServletException, IOException {
-        response.addHeader("Access-Control-Allow-Origin","http://localhost:5173");
+        response.addHeader("Access-Control-Allow-Origin","https://speakly-weld.vercel.app");
         response.addHeader("Access-Control-Allow-Methods","GET,POST,PUT,DELETE,OPTIONS");
         response.addHeader("Access-Control-Allow-Headers","Content-Type,Authorization");
 

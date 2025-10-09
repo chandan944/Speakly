@@ -118,7 +118,7 @@ const toast = useToast();
               <FormLabel>Email</FormLabel>
               <Input
                 name="email"
-                placeholder="m@example.com"
+                placeholder="Enter your email..."
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}
               />
@@ -129,7 +129,7 @@ const toast = useToast();
               <Input
                 name="password"
                 type="password"
-                
+                placeholder="Enter your password..."
                 bg={inputBg}
                 _placeholder={{ color: "gray.500" }}
               />

@@ -164,13 +164,13 @@ const toast = useToast();
                 key="code"
                 name="code"
                 type="text"
-                placeholder="Verification Code"
+                placeholder="Enter Verification Code"
               />
               <CustomInput
                 key="password"
                 name="password"
                 type="password"
-                placeholder="New Password"
+                placeholder="Create New Password"
               />
               {errorMessage && (
                 <Text color="red.400" fontSize="sm">
