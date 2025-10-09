@@ -1,30 +1,30 @@
-# =========================
+# ============================
 # 🏗️ Stage 1: Build the app
-# =========================
-FROM gradle:8.8-jdk23 AS builder
+# ============================
+FROM gradle:8.8-jdk21 AS builder
 
 # Set working directory inside container
 WORKDIR /app
 
-# Copy everything
+# Copy all project files
 COPY . .
 
-# Build the app (skip tests for faster build)
-RUN gradle clean build -x test
+# Build the Spring Boot jar (skip tests for faster build)
+RUN gradle clean bootJar -x test
 
-# =========================
+# ============================
 # 🚀 Stage 2: Run the app
-# =========================
-FROM eclipse-temurin:23-jdk-alpine
+# ============================
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy only the jar file from build stage
+# Copy jar from the build stage
 COPY --from=builder /app/build/libs/Backend-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the port your Spring Boot app runs on
+# Expose the app port
 EXPOSE 8080
 
-# Run the jar
+# Run the jar file
 ENTRYPOINT ["java", "-jar", "app.jar"]
