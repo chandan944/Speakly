@@ -1,21 +1,33 @@
 # ============================
 # 🏗️ Stage 1: Build the app
 # ============================
-FROM gradle:8.8-jdk21 AS builder
+FROM gradle:8.8-jdk23 AS builder
 
 # Set working directory inside container
 WORKDIR /app
 
-# Copy all project files
-COPY . .
+# Copy gradle wrapper files first (for better caching)
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+
+# Make gradlew executable
+RUN chmod +x ./gradlew
+
+# Download dependencies (this layer will be cached)
+RUN ./gradlew dependencies --no-daemon || true
+
+# Copy source code
+COPY src src
 
 # Build the Spring Boot jar (skip tests for faster build)
-RUN gradle clean bootJar -x test
+RUN ./gradlew clean bootJar -x test --no-daemon
 
 # ============================
 # 🚀 Stage 2: Run the app
 # ============================
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:23-jdk-alpine
 
 # Set working directory
 WORKDIR /app
