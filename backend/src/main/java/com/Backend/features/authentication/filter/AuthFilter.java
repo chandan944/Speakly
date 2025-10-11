@@ -32,42 +32,59 @@ public class AuthFilter extends HttpFilter {
         this.authService = authService;
     }
 
+
     @Override
-    protected void doFilter(HttpServletRequest request , HttpServletResponse response , FilterChain chain) throws ServletException, IOException {
-        response.addHeader("Access-Control-Allow-Origin","https://speakly-chandans-projects-6abbd979.vercel.app");
-        response.addHeader("Access-Control-Allow-Methods","GET,POST,PUT,DELETE,OPTIONS");
-        response.addHeader("Access-Control-Allow-Headers","Content-Type,Authorization");
+    protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
-        if("Options".equalsIgnoreCase(request.getMethod())){
-           response.setStatus(HttpServletResponse.SC_OK);
-           return;
+        // ✅ Allow multiple frontend URLs dynamically
+        String origin = request.getHeader("Origin");
+        if (origin != null && (
+                origin.equals("https://speakly-weld.vercel.app") ||       // ✅ new frontend
+                        origin.equals("https://speakly-chandans-projects-6abbd979.vercel.app") || // old frontend
+                        origin.equals("http://localhost:3000")                    // ✅ local development
+        )) {
+            response.addHeader("Access-Control-Allow-Origin", origin);
         }
 
+        // ✅ Common headers
+        response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        response.addHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+
+        // ✅ Handle preflight request (OPTIONS)
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
+        // ✅ Skip auth for unsecured endpoints
         String path = request.getRequestURI();
-
-        if(unsecuredEndpoints.contains(path) || path.startsWith("/api/v1/authentication/oauth") || path.startsWith("/api/v1/storage")){
-           chain.doFilter(request,response);
-           return;
+        if (unsecuredEndpoints.contains(path)
+                || path.startsWith("/api/v1/authentication/oauth")
+                || path.startsWith("/api/v1/storage")) {
+            chain.doFilter(request, response);
+            return;
         }
-        try{
-            String authorization = request.getHeader("Authorization");
 
-            if(authorization ==null || !authorization.startsWith("Bearer ")){
+        try {
+            String authorization = request.getHeader("Authorization");
+            if (authorization == null || !authorization.startsWith("Bearer ")) {
                 throw new ServletException("Token missing");
             }
 
             String token = authorization.substring(7);
-
-            if(jsonWebToken.isTokenExpired(token)){
+            if (jsonWebToken.isTokenExpired(token)) {
                 throw new ServletException("Token Expired");
             }
 
             String email = jsonWebToken.getEmailFromToken(token);
             User user = authService.getUser(email);
-            request.setAttribute("authenticatedUser",user);
-            chain.doFilter(request,response);
-        }catch (Exception e) {
-            // ❌ Any error = block the request with 401 Unauthorized
+            request.setAttribute("authenticatedUser", user);
+
+            chain.doFilter(request, response);
+
+        } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"message\": \"Invalid authentication token, or token missing.\"}");
