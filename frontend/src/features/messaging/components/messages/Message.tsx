@@ -115,7 +115,7 @@ export function Message({ message, user }: IMessageProps) {
         whiteSpace="pre-wrap"
         color={isSent ? sentText : receivedText}
         fontSize="sm"
-        lineHeight="1.5"
+        lineHeight="0.8"
       >
         {message.content}
       </Text>
@@ -134,11 +134,11 @@ export function Message({ message, user }: IMessageProps) {
           hasArrow
         >
           <Text
-            fontSize="xs"
+            fontSize="2px"
             color={timestampColor}
             _hover={{ color: timestampHover }}
             cursor="help"
-            fontWeight="medium"
+            
           >
             
             <TimeAgo date={message.createdAt} />

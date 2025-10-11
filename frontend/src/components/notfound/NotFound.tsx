@@ -15,10 +15,6 @@ import {
   Grid,
   GridItem,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -29,21 +25,18 @@ import {
   ModalCloseButton,
   FormControl,
   FormLabel,
-  Progress,
-  Divider,
+
   Container,
   SimpleGrid,
-  Heading,
+
   extendTheme
 } from '@chakra-ui/react';
 import {
-  SearchIcon,
+
   BellIcon,
   ChatIcon,
   StarIcon,
-  QuestionIcon,
-  CheckIcon,
-  InfoIcon
+
 } from '@chakra-ui/icons';
 
 // Custom theme with green primary color

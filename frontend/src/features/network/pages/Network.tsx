@@ -236,7 +236,7 @@ export function Network() {
                       });
                     }}
                   >
-                    +<FaUserFriends />
+                    + <FaUserFriends />
                   </Button>
                 </Flex>
               ))}

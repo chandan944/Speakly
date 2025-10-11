@@ -27,7 +27,14 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { useCount } from "../Notify/CountContext";
 import { FaHeartCircleExclamation } from "react-icons/fa6";
 import Meaning from "../../ai/feature/word/Meaning";
-import { BellRing, BookAIcon, Gamepad2Icon, Home, Trophy, Users } from "lucide-react";
+import {
+  BellRing,
+  BookAIcon,
+  Gamepad2Icon,
+  Home,
+  Trophy,
+  Users,
+} from "lucide-react";
 import { BiUserVoice } from "react-icons/bi";
 import { MdOutlineQuiz } from "react-icons/md";
 import { useAuthentication } from "../../features/authentication/context/AuthenticationContextProvider";
@@ -35,9 +42,9 @@ import { useAuthentication } from "../../features/authentication/context/Authent
 const Navbar = () => {
   const { colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-     const auth = useAuthentication(); // get the whole object first
-     const user = auth?.user;
-  
+  const auth = useAuthentication(); // get the whole object first
+  const user = auth?.user;
+
   // const location = useLocation();
 
   // 🎯 Notification count from context
@@ -93,8 +100,14 @@ const Navbar = () => {
   // 📦 Sidebar links + badges
   console.log("from navebar", messageCount);
   const navItems = [
-    { icon: <Home size={"17px"}/>, label: "Home", link: "/", showCount: false, count: 0 },
- 
+    {
+      icon: <Home size={"17px"} />,
+      label: "Home",
+      link: "/",
+      showCount: false,
+      count: 0,
+    },
+
     {
       icon: <TbMessageChatbot size={"17px"} />,
       label: "Messages",
@@ -103,58 +116,56 @@ const Navbar = () => {
       count: messageCount, // Use messageCount from context
     },
     {
-      icon: <Users size={"17px"}/>,
+      icon: <Users size={"17px"} />,
       label: "Learners",
       link: "/network",
       showCount: true,
       count: RecievedConnection,
     },
     {
-      icon: <BellRing size={"17px"}/>,
+      icon: <BellRing size={"17px"} />,
       label: "Notification",
       link: "/notification",
       showCount: true,
       count: notificationCount,
     },
 
-        {
-      icon: <Gamepad2Icon size={"17px"}/>,
+    {
+      icon: <Gamepad2Icon size={"17px"} />,
       label: "Games",
       link: "/games",
       showCount: false,
       count: 0,
     },
 
-  
-          {
-      icon: <BookAIcon size={"17px"}/>,
+    {
+      icon: <BookAIcon size={"17px"} />,
       label: "Story",
       link: "/stories",
       showCount: false,
       count: 0,
     },
-              {
-      icon: <BiUserVoice size={"19px"}/>,
+    {
+      icon: <BiUserVoice size={"19px"} />,
       label: "Speak",
       link: "/speak",
       showCount: false,
       count: 0,
     },
-                {
-      icon: <MdOutlineQuiz size={"19px"}/>,
+    {
+      icon: <MdOutlineQuiz size={"19px"} />,
       label: "Quiz",
       link: "/quizes",
       showCount: false,
       count: 0,
     },
-          {
-      icon: <Trophy size={"17px"}/>,
+    {
+      icon: <Trophy size={"17px"} />,
       label: "Leaderboard",
       link: "/leader",
       showCount: false,
       count: 0,
     },
-   
   ];
 
   // 🛠 Badge component
@@ -214,12 +225,12 @@ const Navbar = () => {
           <Search />
         </Box>
 
-        <HStack  display={{ base: "none", md: "flex" }} flexShrink={0}>
+        <HStack display={{ base: "none", md: "flex" }} flexShrink={0}>
           {navItems.map((item, i) => (
             <Box key={i} position="relative">
               {item.showCount && <CountBadge count={item.count} />}
               <Button
-               size={"xs"}
+                size={"xs"}
                 as={RouterLink}
                 to={item.link}
                 leftIcon={item.icon}
@@ -232,34 +243,32 @@ const Navbar = () => {
             </Box>
           ))}
 
-
-
           {user?.asks > 10 ? (
             <Box position="relative">
               <Button
                 size={"17px"}
                 as={RouterLink}
-               marginRight={3}
+                marginRight={3}
                 leftIcon={<GiCentaurHeart fill="#5CFF5C" size={"17px"} />}
                 variant="ghost"
-                
               >
                 {user?.asks || 0}
               </Button>
             </Box>
-          ): (          <Box  position="relative">
-             
+          ) : (
+            <Box position="relative">
               <Button
-             marginRight={3}
-              size={"xs"}
-                leftIcon={<FaHeartCircleExclamation fill="#FF5C5C" size={"17px"} />}
+                marginRight={3}
+                size={"xs"}
+                leftIcon={
+                  <FaHeartCircleExclamation fill="#FF5C5C" size={"17px"} />
+                }
                 variant="ghost"
-              
               >
                 {user?.asks || 0}
               </Button>
-            </Box>)}
-
+            </Box>
+          )}
         </HStack>
 
         <Flex align="center">
@@ -278,15 +287,15 @@ const Navbar = () => {
       <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent
-          mt="2rem"
+          mt="3.6rem"
           mr={1}
           borderRadius={5}
           maxW="11rem"
-          maxH={"40rem"}
+          maxH={"30rem"}
         >
           <DrawerCloseButton />
           <DrawerBody mt={5}>
-            <VStack align="start" spacing={4}>
+            <VStack align="start" spacing={2}>
               {navItems.map((item, i) => (
                 <Box key={i} position="relative" w="full">
                   {item.showCount && <CountBadge count={item.count} />}
@@ -300,7 +309,7 @@ const Navbar = () => {
                     onClick={onClose}
                     _hover={{ color: "teal.500" }}
                   >
-                    {item.label}  
+                    {item.label}
                   </Button>
                 </Box>
               ))}
@@ -310,11 +319,11 @@ const Navbar = () => {
       </Drawer>
       <Box
         position="absolute"
-        top="9.4rem"
-        left="-2"
+        top="6.4rem"
+      
         bg={colorMode === "light" ? "white" : "gray.800"}
         borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
-        borderWidth="1px"
+       
         borderStyle="solid"
         padding={"1px"}
         borderTopRightRadius="md"

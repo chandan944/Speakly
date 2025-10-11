@@ -167,7 +167,7 @@ export function Conversation() {
 
   return (
     <Box
-      h="100vh"
+      h="92vh"
       bg={bgColor}
       display="flex"
       flexDirection="column"
@@ -203,7 +203,7 @@ export function Conversation() {
                   />
                 </Button>
                 <VStack align="start" spacing={0}>
-                  <Text fontWeight="semibold" fontSize="md">
+                  <Text fontFamily='cursive' fontWeight="semibold" fontSize="md">
                     {conversationUserToDisplay?.firstName}{" "}
                     {conversationUserToDisplay?.lastName}
                   </Text>

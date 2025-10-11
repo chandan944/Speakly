@@ -550,12 +550,12 @@ const API = import.meta.env.VITE_API_URL
         <HStack>
           <Star size={28} className="text-purple-500 animate-spin-slow" />
           <Text
-            fontSize="3xl"
+            fontSize="2xl"
             fontWeight="bold"
             bgGradient="linear(to-r, purple.600, pink.600, blue.600)"
             bgClip="text"
           >
-            Stories
+          Hi Reader
           </Text>
         </HStack>
 
@@ -582,14 +582,7 @@ const API = import.meta.env.VITE_API_URL
     <Smile size={32} color="#f59e0b" /> {/* Bright yellow smile */}
   </Box>
 
-  <VStack align="start" spacing={0}>
-    <Text fontSize="md" fontWeight="bold" color="orange.500">
-      Energy Boost! ⚡
-    </Text>
-    <Text fontSize="sm" color="gray.500">
-      Your next chapter is just around the corner!
-    </Text>
-  </VStack>
+ 
 </HStack>
 
         )}

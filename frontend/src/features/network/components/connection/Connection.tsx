@@ -182,6 +182,7 @@ export function Connection({
             <Button
               size="md"
               colorScheme="red"
+              marginLeft={12}
               leftIcon={<FaTrash />}
               onClick={() => {
                 console.log("Delete (Remove Connection) button clicked. Connection ID:", connection.id);
@@ -199,7 +200,7 @@ export function Connection({
                   },
                 });
               }}
-              px={6}
+              px={5}
             >
               Remove
             </Button>

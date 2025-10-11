@@ -23,6 +23,7 @@ import {
 import { useAuthentication } from "../../../features/authentication/context/AuthenticationContextProvider";
 import { usePageTitle } from "../../../hook/usePageTitle";
 import { useCount } from "../../../components/Notify/CountContext";
+import { color } from "framer-motion";
 
 const Sentence = () => {
   const { user } = useAuthentication();
@@ -134,8 +135,7 @@ Respond **strictly in the following format** (no extra text, no missing sections
 **Score:** [percent]%  
 🛠️ **Fixes:** [Clearly explain what is wrong or could be improved in the user's translation — short but specific]  
 💡 **Better Version:** [natural-sounding translation]  
-📘 **Tip:** [1 short, practical language-learning tip related to the mistake]  
-💖 **Encouragement:** [1 sentence motivating the user, friendly tone]  
+📘 **Tip:** [1 short, practical language-learning tip related to the mistake or grammer rule realted to this type of sentence .]  
 
 Original:  
 ${generatedSentence}  
@@ -518,8 +518,8 @@ ${userTranslation}
                     <Text fontSize="sm">Your {nativeLang} Sentence</Text>
                   </HStack>
                 </Badge>
-                <Text fontSize="sm" color="gray.500">
-                  Level: {difficulty}
+                <Text fontSize="sm" color="blue.300" fontWeight="bold">
+                 {difficulty}
                 </Text>
               </HStack>
               <Text fontSize="lg" fontWeight="medium" color="blue.800">

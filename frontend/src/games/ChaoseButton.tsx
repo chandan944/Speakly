@@ -162,9 +162,7 @@ return (
           <h1 className="text-4xl md:text-5xl font-bold animate-pulse">
             🎲 Random Discovery
           </h1>
-          <p className="text-lg max-w-md">
-            Tap the button for instant learning! Get facts, tips, questions, and light humor!
-          </p>
+          
         </div>
         
         {/* Stats */}
