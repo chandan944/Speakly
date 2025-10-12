@@ -319,7 +319,7 @@ const Navbar = () => {
       </Drawer>
       <Box
         position="absolute"
-        top="8.4rem"
+        top="9.4rem"
       
         bg={colorMode === "light" ? "white" : "gray.800"}
         borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
