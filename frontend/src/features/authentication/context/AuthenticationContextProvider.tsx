@@ -63,6 +63,7 @@ export function AuthenticationContextProvider() {
   const [isLoading, setIsLoading] = useState(true);
   const toast = useToast();
   const isOnAuthPage =
+   location.pathname === "/authentication/info" ||
     location.pathname === "/authentication/login" ||
     location.pathname === "/authentication/signup" ||
     location.pathname === "/authentication/request-password-reset";
@@ -149,14 +150,41 @@ export function AuthenticationContextProvider() {
 
   if (isLoading) return <LoadingSpinner />;
 
-  if (!isLoading && !user && !isOnAuthPage) {
-    return (
-      <Navigate
-        to="/authentication/login"
-        state={{ from: location.pathname }}
-      />
-    );
-  }
+// if (!user && !isOnAuthPage && location.pathname !== "/authentication/info") {
+//   return <Navigate to="/authentication/info" />;
+// }
+
+
+
+//   if (!isLoading && !user && !isOnAuthPage) {
+//     return (
+//       <Navigate
+//         to="/authentication/login"
+//         state={{ from: location.pathname }}
+//       />
+//     );
+//   }
+
+// 🧭 Step 1: Redirect first-time visitors to /authentication/info
+if (!isLoading && !user && !isOnAuthPage && location.pathname !== "/authentication/info") {
+  return <Navigate to="/authentication/info" />;
+}
+
+// 🧭 Step 2: Redirect only if they’re already coming from /authentication/info
+if (
+  !isLoading &&
+  !user &&
+  !isOnAuthPage &&
+  location.pathname === "/authentication/info"
+) {
+  return (
+    <Navigate
+      to="/authentication/info"
+      state={{ from: location.pathname }}
+    />
+  );
+}
+
 
   if (
     user &&

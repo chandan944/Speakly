@@ -43,6 +43,7 @@ import FindMistak from "./games/FlipGame/find/FindMistek";
 import EmojiPuzzleGame from "./games/FlipGame/guess/GuessWord";
 import RandomChaosGame from "./games/ChaoseButton";
 import GuessFakeWordGame from "./games/FlipGame/Flip/CardFlip";
+import InfoPage from "./features/authentication/pages/infoPage/InfoPage";
 // import Conversation from "./features/messaging/pages/Conversation";
 
 const router = createBrowserRouter([
@@ -117,23 +118,23 @@ const router = createBrowserRouter([
             path: "arrange",
             element: <SentenceBuilderQuest />,
           },
-           {
+          {
             path: "fillintheblank",
             element: <FillBlankGame />,
           },
-           {
+          {
             path: "findmsitek",
             element: <FindMistak />,
           },
-           {
+          {
             path: "emojipuzzlegame",
             element: <EmojiPuzzleGame />,
           },
-           {
+          {
             path: "randomchaosgame",
             element: <RandomChaosGame />,
           },
-           {
+          {
             path: "fakeword",
             element: <GuessFakeWordGame />,
           },
@@ -155,7 +156,12 @@ const router = createBrowserRouter([
       {
         path: "authentication",
         element: <AuthenticationLayout />,
+
         children: [
+          {
+            path: "info", // ✅ this becomes /authentication/info
+            element: <InfoPage />, // your intro page
+          },
           {
             path: "login",
             element: <Login />,
