@@ -30,14 +30,14 @@ const Signin = () => {
   const textColor = useColorModeValue("gray.800", "white");
   const mutedText = useColorModeValue("gray.600", "gray.400");
   const borderColor = useColorModeValue("gray.200", "gray.600");
-const toast = useToast();
+  const toast = useToast();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { signup } = useAuthentication();
   const navigate = useNavigate();
   usePageTitle("Signup");
-  const {  startOauth } = useOauth("signup");
+  const { startOauth } = useOauth("signup");
 
   const doSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,11 +49,11 @@ const toast = useToast();
 
     try {
       await signup(email, password);
-    toast({
-     title:" Signup Successfuly!"
-    });
+      toast({
+        title: " Signup Successfuly!",
+      });
       navigate("/"); // 🚀 Success
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const raw = error?.message || "Unknown error";
       const friendly = extractSpringErrorMessage(raw);
@@ -85,10 +85,10 @@ const toast = useToast();
       >
         <Box mb={6}>
           <Text fontSize="2xl" fontWeight="bold">
-            Create an account
+            Let’s get started! 🎉
           </Text>
           <Text fontSize="sm" color={mutedText}>
-            Enter your email below to create your account
+            SignIn using Google and start learning with fun
           </Text>
         </Box>
 
@@ -102,7 +102,6 @@ const toast = useToast();
             Google
           </Button>
         </Stack>
-      
 
         <Box display="flex" alignItems="center" my={4}>
           <Divider />
@@ -138,7 +137,13 @@ const toast = useToast();
               )}
             </FormControl>
 
-            <Button colorScheme="green" mt={4} type="submit" w="full" isLoading={isLoading}>
+            <Button
+              colorScheme="green"
+              mt={4}
+              type="submit"
+              w="full"
+              isLoading={isLoading}
+            >
               Create account
             </Button>
 

@@ -124,57 +124,6 @@ export function Notifications() {
     loadNotifications();
   }, [fetchNotifications, toast]);
 
-  // Polling for new notifications with better logic
-  // useEffect(() => {
-  //   if (isLoading) return; // Don't poll while initial loading
-
-  //   const pollInterval = isMobile ? 60000 : 30000; // 60s mobile, 30s desktop
-
-  //   const interval = setInterval(async () => {
-  //     // Only poll if document is visible
-  //     if (document.hidden) return;
-
-  //     console.log("🔄 Polling for new notifications...");
-
-  //     try {
-  //       const fetchedNotifications = await fetchNotifications();
-
-  //       // Check for new notifications
-  //       const newNotifications = fetchedNotifications.filter(
-  //         (newNotif) =>
-  //           !notifications.some((existing) => existing.id === newNotif.id)
-  //       );
-
-  //       if (newNotifications.length > 0) {
-  //         console.log("🆕 New notifications found:", newNotifications);
-  //         setNotifications(fetchedNotifications);
-
-  //         // Show toast for new notifications
-  //         newNotifications.forEach((notif) => {
-  //           toast({
-  //             title: "New notification",
-  //             description: `${notif.sender?.firstName} ${
-  //               notif.type === INotificationType.LIKE
-  //                 ? "liked"
-  //                 : "commented on"
-  //             } your post`,
-  //             status: "info",
-  //             duration: 4000,
-  //             isClosable: true,
-  //           });
-  //         });
-  //       } else {
-  //         // Update notifications even if no new ones (in case of read status changes)
-  //         setNotifications(fetchedNotifications);
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Polling error:", error);
-  //     }
-  //   }, pollInterval);
-
-  //   return () => clearInterval(interval);
-  // }, [notifications, toast, isMobile, isLoading, fetchNotifications]);
-
   // Update count whenever notifications change
   useEffect(() => {
     const unreadCount = notifications.filter((n) => !n.read).length;
@@ -226,7 +175,6 @@ export function Notifications() {
         duration: 2000,
         isClosable: true,
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         title: "Error marking notifications as read",
@@ -241,7 +189,7 @@ export function Notifications() {
     filter === "all" ? notifications : notifications.filter((n) => !n.read);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
-  // setCount(unreadCount);
+
   const MobileFilterMenu = () => (
     <Menu>
       <MenuButton
@@ -265,12 +213,11 @@ export function Notifications() {
     <HStack
       spacing={2}
       sx={{
-        // Hide scrollbar but keep functionality
         "&::-webkit-scrollbar": {
-          display: "none", // Safari and Chrome
+          display: "none",
         },
-        "-ms-overflow-style": "none", // IE and Edge
-        "scrollbar-width": "none", // Firefox
+        "-ms-overflow-style": "none",
+        "scrollbar-width": "none",
       }}
     >
       <Button
@@ -297,20 +244,17 @@ export function Notifications() {
     return (
       <Container maxW="100%" p={containerPadding} minH="100vh">
         <Box
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           bg={useColorModeValue("white", "gray.800")}
           borderRadius="xl"
           boxShadow="lg"
           overflow="hidden"
           border="1px solid"
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           borderColor={useColorModeValue("gray.100", "gray.700")}
           minH="calc(100vh - 32px)"
         >
           {/* Mobile Header */}
           <Box
             p={headerPadding}
-            // eslint-disable-next-line react-hooks/rules-of-hooks
             bgGradient={useColorModeValue(
               "linear(to-r, blue.500, purple.500)",
               "linear(to-r, blue.600, purple.600)"
@@ -372,7 +316,6 @@ export function Notifications() {
                 background: "transparent",
               },
               "&::-webkit-scrollbar-thumb": {
-                // eslint-disable-next-line react-hooks/rules-of-hooks
                 background: useColorModeValue("#CBD5E0", "#4A5568"),
                 borderRadius: "2px",
               },
@@ -434,7 +377,6 @@ export function Notifications() {
       p={containerPadding}
       w="100%"
       minH="100vh"
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       bg={useColorModeValue("gray.50", "gray.900")}
     >
       <GridItem>
@@ -450,15 +392,13 @@ export function Notifications() {
           boxShadow="xl"
           overflow="hidden"
           border="1px solid"
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           borderColor={useColorModeValue("gray.100", "gray.700")}
         >
           <Box
             p={headerPadding}
-            // eslint-disable-next-line react-hooks/rules-of-hooks
             bgGradient={useColorModeValue(
-              "linear(to-r, #38A169, #68D391)", // light mode: green to light green
-              "linear(to-r, #2F855A, #48BB78)" // dark mode: deep green to mint green
+              "linear(to-r, #38A169, #68D391)",
+              "linear(to-r, #2F855A, #48BB78)"
             )}
             color="white"
           >
@@ -600,7 +540,8 @@ function NotificationItem({
   };
 
   const getNotificationIcon = () => {
-    if (notification.type === INotificationType.LIKE) {
+    // Fix: Compare with string literal instead of INotificationType enum
+    if (notification.type === 'LIKE') {
       return <FaHeart color="#e53e3e" size={iconSize} />;
     }
     return <FaComment color="#3182ce" size={iconSize} />;
@@ -624,10 +565,8 @@ function NotificationItem({
             {name}
           </Text>{" "}
           <Text as="span" color={useColorModeValue("gray.600", "gray.300")}>
-            {notification.type === INotificationType.LIKE
-              ? "liked"
-              : "commented on"}{" "}
-            your post
+            {/* Fix: Compare with string literal */}
+            {notification.type === 'LIKE' ? "liked" : "commented on"} your post
           </Text>
         </Text>
       );
@@ -643,10 +582,8 @@ function NotificationItem({
           You
         </Text>{" "}
         <Text as="span" color={useColorModeValue("gray.600", "gray.300")}>
-          {notification.type === INotificationType.LIKE
-            ? "liked"
-            : "commented on"}{" "}
-          someone's post
+          {/* Fix: Compare with string literal */}
+          {notification.type === 'LIKE' ? "liked" : "commented on"} someone's post
         </Text>
       </Text>
     );

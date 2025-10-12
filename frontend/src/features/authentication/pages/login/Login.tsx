@@ -7,18 +7,16 @@ import {
   Input,
   Stack,
   Text,
- 
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import { useState, type FormEvent } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useOauth } from "../../../../hook/useOauth";
 import { usePageTitle } from "../../../../hook/usePageTitle";
 import { useAuthentication } from "../../context/AuthenticationContextProvider";
 import { LoadingSpinner } from "../../../../components/loader/LoadingSpinner";
-
 
 const Login = () => {
   // 🌗 Color mode based values
@@ -35,7 +33,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   // 🧭 Tells us from which page the user came before redirecting to login
-  
 
   // 🚀 Lets us redirect the user after successful login
   const navigate = useNavigate();
@@ -53,9 +50,9 @@ const Login = () => {
     try {
       await login(email, password);
       toast({
-        title:"login Succesfully ☺"
-      })
-      
+        title: "login Succesfully ☺",
+      });
+
       navigate("/");
     } catch (e) {
       // 🧠 Catch error with meaningful message
@@ -96,10 +93,10 @@ const Login = () => {
         {/* 🧠 Heading */}
         <Box mb={6}>
           <Text fontSize="2xl" fontWeight="bold">
-            Let's learn with fun
+            Welcome back 👋
           </Text>
           <Text fontSize="sm" color={mutedText}>
-            Enter your email below to create your account
+            Sign in easily with your Google account
           </Text>
         </Box>
 
@@ -115,7 +112,6 @@ const Login = () => {
           >
             Google
           </Button>
-          
         </Stack>
 
         {/* 🧱 Divider */}
@@ -140,31 +136,33 @@ const Login = () => {
               />
             </FormControl>
 
-<Box>
+            <Box>
               <FormControl>
-              <FormLabel>Password</FormLabel>
-              <Input
-                name="password"
-                placeholder="Enter your password..."
-                type="password"
-                bg={inputBg}
-                _placeholder={{ color: "gray.500" }}
-              />
-            </FormControl>
-            <Link to="/authentication/request-password-reset">
-              <Text className="text-green-600 font-bold">Forget Password?</Text>
-            </Link>
-</Box>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  name="password"
+                  placeholder="Enter your password..."
+                  type="password"
+                  bg={inputBg}
+                  _placeholder={{ color: "gray.500" }}
+                />
+              </FormControl>
+              <Link to="/authentication/request-password-reset">
+                <Text className="text-green-600 font-bold">
+                  Forget Password?
+                </Text>
+              </Link>
+            </Box>
             {errorMessage && <p className="text-red-700">{errorMessage}</p>}
             <Button colorScheme="green" mt={4} type="submit" w="full">
-              {isLoading ? "Logging in..." : "Sign in"}
+              {isLoading ? "Logging in..." : "Log In"}
             </Button>
             <Box>
               <Text fontSize="sm" color={mutedText}>
                 New to Speakly?{" "}
                 <Link to="/authentication/signup">
                   <Text as="span" color="green.400" fontWeight="medium">
-                    Signup
+                   Login
                   </Text>
                 </Link>
               </Text>

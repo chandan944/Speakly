@@ -42,7 +42,7 @@ public class AuthFilter extends HttpFilter {
         if (origin != null && (
                 origin.equals("https://speakly-weld.vercel.app") ||       // ✅ new frontend
                         origin.equals("https://speakly-chandans-projects-6abbd979.vercel.app") || // old frontend
-                        origin.equals("http://localhost:3000")                    // ✅ local development
+                        origin.equals("http://localhost:5173")                    // ✅ local development
         )) {
             response.addHeader("Access-Control-Allow-Origin", origin);
         }
