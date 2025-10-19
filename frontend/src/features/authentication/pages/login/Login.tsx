@@ -162,7 +162,7 @@ const Login = () => {
                 New to Speakly?{" "}
                 <Link to="/authentication/signup">
                   <Text as="span" color="green.400" fontWeight="medium">
-                   Login
+                   SignIn
                   </Text>
                 </Link>
               </Text>

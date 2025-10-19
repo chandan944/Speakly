@@ -799,7 +799,7 @@ export default function QuizApp() {
         <ModalOverlay />
         <ModalContent  borderRadius="2xl">
          
-          <ModalCloseButton />
+          <Box margin={4}><ModalCloseButton /></Box>
           <ModalBody>
             {currentQuiz && (
               <VStack spacing={6}>

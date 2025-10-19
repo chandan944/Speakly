@@ -140,7 +140,7 @@ const Navbar = () => {
 
     {
       icon: <BookAIcon size={"17px"} />,
-      label: "Story",
+      label: "Librery",
       link: "/stories",
       showCount: false,
       count: 0,

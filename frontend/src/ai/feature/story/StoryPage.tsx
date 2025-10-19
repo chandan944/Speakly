@@ -1042,9 +1042,7 @@ const API = import.meta.env.VITE_API_URL
                 {/* ✅ ONLY CHANGE: Replaced Text with StoryFormatter */}
                 <StoryFormatter content={activeStory.content} />
 
-                <Text fontSize="sm">
-                  By {activeStory.user.firstName} {activeStory.user.lastName}
-                </Text>
+                
 
                 {/* Emoji Reactions */}
                 <HStack spacing={3} justify="center" width="100%" mt={4}>

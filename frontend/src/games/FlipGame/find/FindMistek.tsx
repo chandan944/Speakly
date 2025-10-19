@@ -201,6 +201,7 @@ Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"}  ✨ one short, n
       <Text fontSize="2xl" fontWeight="bold">
         Find the Mistake Game
       </Text>
+      
       {/* Buttons to switch modes */}
       <HStack spacing={4}>
         <Button
@@ -218,7 +219,9 @@ Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"}  ✨ one short, n
           Vocab
         </Button>
       </HStack>
-
+ <Text fontSize="xl" fontWeight="bold">
+       Flip the card 😊
+      </Text>
       {/* Flip Card */}
       <MotionBox
         w="300px"
@@ -298,7 +301,7 @@ Back: 🌍 Its meaning in ${user?.nativeLanguage || "English"}  ✨ one short, n
         onClick={fetchContent}
         isLoading={loading}
       >
-        Play {mode === "sentence" ? "Sentence" : "Word"}
+         {mode === "sentence" ? "Sentence" : "Word"}
       </Button>
     </VStack>
   );

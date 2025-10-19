@@ -405,7 +405,7 @@ export function About({ user, authUser, onUpdate }: AboutProps) {
                     <IconButton
                       icon={<EditIcon />}
                       size="sm"
-                      colorScheme="blue"
+                      
                       position="absolute"
                       bottom={1}
                       right={1}

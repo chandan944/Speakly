@@ -93,7 +93,7 @@ const Meaning = () => {
       prompt = `Define "${word}" in very short:
 **En:** The meaning of ${word} in very easy and understand way.
 **${nativeLang}:** Direct translation.
-**Use:** A natural sentence using the word.
+**Use:** A natural sentence using the word[word should wrap with ** .].
 **Synonyms:** "1" common alternatives.
 Keep it extremely concise.`;
     } else if (mode === "multi") {

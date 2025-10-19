@@ -117,7 +117,7 @@ export function Network() {
         bg={useColorModeValue("white", "gray.800")}
       >
         <Heading size="md" mb={4}>
-          Manage my network
+          My Friends
         </Heading>
         <VStack align="stretch" spacing={3}>
           <NavLink to="invitations">

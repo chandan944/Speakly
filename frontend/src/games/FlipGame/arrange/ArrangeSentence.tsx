@@ -36,7 +36,7 @@ const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:ge
 export default function SentenceBuilderQuest() {
   const [gameState, setGameState] = useState({
     currentChapter: 1,
-    totalChapters: 10,
+    totalChapters: 3,
     correctSentence: "",
     nativeTranslation: "",
     wordTranslations: {},
@@ -295,19 +295,7 @@ WORDS:[word1: ${user?.nativeLanguage},word2:${user?.nativeLanguage},...${user?.n
                 Chapter {gameState.currentChapter} of {gameState.totalChapters}
               </h1>
             </div>
-            <div className="text-right">
-              <div className="flex items-center space-x-2 mb-2">
-                <span className="text-xl">⭐</span>
-                <span className="font-bold text-xl">{gameState.score}</span>
-              </div>
-              <button
-                onClick={resetGame}
-                className="px-4 py-2 rounded-lg transition hover:bg-gray-200 dark:hover:bg-gray-700"
-                title="Reset game"
-              >
-                🔄 Reset
-              </button>
-            </div>
+           
           </div>
 
           {/* Progress Bar (semantic, uses native appearance) */}

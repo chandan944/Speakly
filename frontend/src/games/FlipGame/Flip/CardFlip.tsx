@@ -16,7 +16,6 @@ import {
   Spinner,
   Alert,
   AlertIcon,
-  Divider,
   Wrap,
   WrapItem,
   Center,
@@ -103,6 +102,7 @@ const WordCard = React.memo(({ wordObj, index, flipped, disabled, onSelect }) =>
       _hover={{ transform: disabled ? "none" : `scale(${hoverOpacity})` }}
       
     >
+      
       {/* FRONT */}
       <Box
         position="absolute"
