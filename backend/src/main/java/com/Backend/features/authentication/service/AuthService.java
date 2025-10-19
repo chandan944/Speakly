@@ -115,7 +115,7 @@ public class AuthService {
 
     public AuthResponse googleLoginOrSignup(AuthOauthRequest authOauthRequest) {
         String tokenEndpoint = "https://oauth2.googleapis.com/token";
-        String redirectUri = "http://localhost:5173/authentication/" + authOauthRequest.page();
+        String redirectUri = "https://speakly-weld.vercel.app/authentication/" + authOauthRequest.page();
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 
         body.add("code", authOauthRequest.code());
